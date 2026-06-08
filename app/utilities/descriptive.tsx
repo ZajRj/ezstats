@@ -1,5 +1,6 @@
+import Text from '../../src/components/ui/Text';
 import React, { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, TextInput } from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, TextInput } from 'react-native';
 import { Stack } from 'expo-router';
 import { colors } from '../../src/theme/colors';
 import BoxPlot from '../../src/components/ui/BoxPlot';

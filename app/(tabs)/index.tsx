@@ -1,13 +1,25 @@
-import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Text from '../../src/components/ui/Text';
+import { ScrollView, View, StyleSheet, TouchableOpacity, LayoutAnimation, UIManager, Platform } from 'react-native';
 import { colors } from '../../src/theme/colors';
 import Header from '../../src/components/Header';
 import CourseCard from '../../src/components/CourseCard';
 import ActionCard from '../../src/components/ActionCard';
 import TargetCard from '../../src/components/TargetCard';
+import Background from '../../src/components/ui/Background';
 
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { getRecentActivities } from '../../src/db/database';
+import Svg, { Defs, Pattern, Circle, Rect, RadialGradient, Stop } from 'react-native-svg';
+import { LinearGradient } from 'expo-linear-gradient';
+
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
+import { Dimensions } from 'react-native';
+
+const { width, height } = Dimensions.get('window');
 
 export default function Dashboard() {
   const [recentActivities, setRecentActivities] = useState<any[]>([]);
@@ -16,6 +28,7 @@ export default function Dashboard() {
     useCallback(() => {
       async function loadActivities() {
         const activities = await getRecentActivities(5);
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setRecentActivities(activities);
       }
       loadActivities();
@@ -50,6 +63,7 @@ export default function Dashboard() {
 
   return (
     <View style={styles.container}>
+      <Background />
       <Header />
       
       <ScrollView 
@@ -62,10 +76,10 @@ export default function Dashboard() {
         </View>
 
         {recentActivities.length > 0 && (
-          <>
-            <View style={[styles.sectionHeader, { marginTop: 32 }]}>
+          <View style={{ marginTop: 24 }}>
+            <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Recent actions</Text>
-              <TouchableOpacity onPress={() => router.push('/history')}>
+              <TouchableOpacity onPress={() => router.push('/history')} activeOpacity={0.7}>
                 <Text style={styles.sectionLink}>View History</Text>
               </TouchableOpacity>
             </View>
@@ -86,7 +100,7 @@ export default function Dashboard() {
                 );
               })}
             </View>
-          </>
+          </View>
         )}
       </ScrollView>
     </View>
@@ -96,26 +110,29 @@ export default function Dashboard() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent',
   },
   scrollContent: {
     paddingHorizontal: 20,
-    paddingTop: 10,
+    paddingTop: 16,
     paddingBottom: 40,
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'baseline',
-    marginBottom: 16,
+    marginBottom: 20,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 19,
+    fontFamily: 'Inter_700Bold',
     fontWeight: '700',
     color: colors.text,
+    letterSpacing: -0.3,
   },
   sectionLink: {
     fontSize: 14,
+    fontFamily: 'Inter_600SemiBold',
     fontWeight: '700',
     color: colors.primary,
   },
@@ -123,9 +140,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginBottom: 8,
   },
   modulesContainer: {
-    gap: 10,
+    gap: 4,
   },
 });

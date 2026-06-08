@@ -1,5 +1,6 @@
+import Text from '../../src/components/ui/Text';
 import React, { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import { Stack } from 'expo-router';
 import { colors } from '../../src/theme/colors';
 import Input from '../../src/components/ui/Input';

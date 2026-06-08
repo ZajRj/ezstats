@@ -6,7 +6,8 @@
     "scheme": "zajtistics",
     "plugins": [
       "expo-router",
-      "expo-status-bar"
+      "expo-status-bar",
+      "expo-font"
     ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -26,6 +27,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "9a13fb0f-ca7f-4a25-b3bd-48bbce39843d"
+      }
     }
   }
 }

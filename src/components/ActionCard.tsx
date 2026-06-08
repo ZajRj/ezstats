@@ -1,7 +1,9 @@
-import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
-import { useRef } from 'react';
+import Text from './ui/Text';
+import { TouchableOpacity, StyleSheet, View, Animated } from 'react-native';
+import { useRef, useCallback } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface ActionCardProps {
   title: string;
@@ -11,61 +13,94 @@ interface ActionCardProps {
 
 export default function ActionCard({ title, icon, onPress }: ActionCardProps) {
   const isNavigating = useRef(false);
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  const handlePressIn = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 0.96,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      friction: 4,
+      tension: 40,
+      useNativeDriver: true,
+    }).start();
+  };
 
   const handlePress = () => {
     if (!onPress || isNavigating.current) return;
     isNavigating.current = true;
     onPress();
-    // Re-enable tapping after 500ms to prevent double-navigation
     setTimeout(() => {
       isNavigating.current = false;
     }, 500);
   };
 
   return (
-    <TouchableOpacity style={styles.card} activeOpacity={0.8} onPress={handlePress}>
-      <View style={styles.leftContent}>
-        <View style={styles.iconContainer}>
-          <Ionicons name={icon} size={20} color={colors.card} />
-        </View>
-        <Text style={styles.title}>{title}</Text>
-      </View>
-      <Ionicons name="arrow-forward" size={24} color={colors.card} />
-    </TouchableOpacity>
+    <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+      <TouchableOpacity 
+        activeOpacity={0.9} 
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        onPress={handlePress}
+      >
+        <LinearGradient
+          colors={['#0B3B60', '#1E5D8F']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.card}
+        >
+          <View style={styles.leftContent}>
+            <View style={styles.iconContainer}>
+              <Ionicons name={icon} size={22} color={colors.card} />
+            </View>
+            <Text style={styles.title}>{title}</Text>
+          </View>
+          <Ionicons name="arrow-forward" size={24} color={colors.card} />
+        </LinearGradient>
+      </TouchableOpacity>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.primary,
-    borderRadius: 16,
+    borderRadius: 20,
     padding: 16,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: 16,
     shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    elevation: 6,
   },
   leftContent: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   title: {
-    fontSize: 16,
+    fontSize: 17,
+    fontFamily: 'Inter_700Bold',
     fontWeight: '700',
     color: colors.card,
+    letterSpacing: 0.3,
   },
 });

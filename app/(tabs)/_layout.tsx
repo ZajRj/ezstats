@@ -1,13 +1,17 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../../src/theme/colors';
-import { Platform, TouchableOpacity } from 'react-native';
+import { Platform, TouchableOpacity, View, StyleSheet, Dimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Svg, { Defs, Pattern, Circle, Rect, RadialGradient, Stop } from 'react-native-svg';
+
+const { width, height } = Dimensions.get('window');
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
   return (
     <Tabs
+      sceneContainerStyle={{ backgroundColor: 'transparent' }}
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
@@ -39,10 +43,6 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="grid" size={size} color={color} />
           ),
-          tabBarItemStyle: {
-            // Selected active background styling can be complex to do out-of-the-box with bottom tabs,
-            // we will stick to tint color for now to keep it clean.
-          }
         }}
       />
       <Tabs.Screen
@@ -84,3 +84,10 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+});

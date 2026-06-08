@@ -1,4 +1,4 @@
-export const colors = {
+export const lightTheme = {
   primary: '#0B3B60', // dark blue for tabs and primary buttons
   primaryLight: '#D4E8FC', // light blue for some icons/backgrounds
   background: '#F7F9FC', // app background
@@ -13,3 +13,7 @@ export const colors = {
   progressFillLight: '#6CB5F9', // light blue progress
   tabInactive: '#A0AEC0', // inactive tab icon
 };
+
+// Aliasing the active theme so we don't break existing imports
+// Later we can introduce a ThemeProvider context here.
+export const colors = lightTheme;

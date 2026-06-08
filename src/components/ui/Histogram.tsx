@@ -1,5 +1,6 @@
+import Text from './Text';
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { View, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 import { colors } from '../../theme/colors';
 import { FreqDataRow } from './FrequencyTable';

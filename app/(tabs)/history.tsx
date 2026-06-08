@@ -1,9 +1,11 @@
+import Text from '../../src/components/ui/Text';
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../src/theme/colors';
 import { useHistoryStore } from '../../src/store/historyStore';
 import { Ionicons } from '@expo/vector-icons';
+import Background from '../../src/components/ui/Background';
 
 export default function HistoryScreen() {
   const insets = useSafeAreaInsets();
@@ -28,6 +30,7 @@ export default function HistoryScreen() {
 
   return (
     <View style={styles.container}>
+      <Background />
       <View style={[styles.header, { paddingTop: insets.top + 20 }]}>
         <Text style={styles.headerTitle}>History</Text>
         {items.length > 0 && (
@@ -85,7 +88,7 @@ export default function HistoryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent',
   },
   header: {
     flexDirection: 'row',

@@ -1,4 +1,5 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import Text from './Text';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
 
 interface SegmentedControlProps {

@@ -1,5 +1,6 @@
+import Text from '../../src/components/ui/Text';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
 import { colors } from '../../src/theme/colors';
 import { db, recordActivity } from '../../src/db/database';

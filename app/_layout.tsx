@@ -5,8 +5,23 @@ import { colors } from '../src/theme/colors';
 
 import { useEffect } from 'react';
 import { setupDatabase, seedDatabase } from '../src/db/database';
+import { useFonts, Inter_400Regular, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
+import * as SplashScreen from 'expo-splash-screen';
+
+SplashScreen.preventAutoHideAsync();
+
+import { View, StyleSheet, Dimensions } from 'react-native';
+import Svg, { Defs, Pattern, Circle, Rect, RadialGradient, Stop } from 'react-native-svg';
+
+const { width, height } = Dimensions.get('window');
 
 export default function RootLayout() {
+  const [fontsLoaded] = useFonts({
+    Inter_400Regular,
+    Inter_600SemiBold,
+    Inter_700Bold,
+  });
+
   useEffect(() => {
     async function init() {
       try {
@@ -18,12 +33,25 @@ export default function RootLayout() {
     }
     init();
   }, []);
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <SafeAreaProvider>
       <StatusBar style="dark" />
-      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.background } }}>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+      <View style={{ flex: 1, backgroundColor: colors.background }}>
+        <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: 'transparent' }, sceneStyle: { backgroundColor: 'transparent' } }}>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      </View>
     </SafeAreaProvider>
   );
 }

@@ -1,5 +1,6 @@
+import Text from './Text';
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import Svg, { Rect, Line, Text as SvgText } from 'react-native-svg';
 import { colors } from '../../theme/colors';
 

@@ -1,5 +1,6 @@
+import Text from './Text';
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { colors } from '../../theme/colors';
 
 export interface FreqDataRow {

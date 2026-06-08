@@ -1,11 +1,14 @@
+import Text from '../../src/components/ui/Text';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { colors } from '../../src/theme/colors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { db } from '../../src/db/database';
 import * as schema from '../../src/db/schema';
 import { isNull } from 'drizzle-orm';
 import TaxonomyNodeItem, { TaxonomyNode } from '../../src/components/ui/TaxonomyNodeItem';
+
+import Background from '../../src/components/ui/Background';
 
 export default function ConceptsLibrary() {
   const insets = useSafeAreaInsets();
@@ -45,6 +48,7 @@ export default function ConceptsLibrary() {
 
   return (
     <View style={styles.container}>
+      <Background />
       <View style={[styles.header, { paddingTop: insets.top + 20 }]}>
         <Text style={styles.headerTitle}>Concepts Library</Text>
       </View>
@@ -74,7 +78,7 @@ export default function ConceptsLibrary() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent',
   },
   header: {
     paddingHorizontal: 20,

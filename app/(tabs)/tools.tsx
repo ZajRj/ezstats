@@ -1,15 +1,19 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import Text from '../../src/components/ui/Text';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { colors } from '../../src/theme/colors';
 import ActionCard from '../../src/components/ActionCard';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { router } from 'expo-router';
 
+import Background from '../../src/components/ui/Background';
+
 export default function Utilities() {
   const insets = useSafeAreaInsets();
 
   return (
     <View style={styles.container}>
+      <Background />
       <View style={[styles.header, { paddingTop: insets.top + 20 }]}>
         <Text style={styles.headerTitle}>Utilities</Text>
       </View>
@@ -85,7 +89,7 @@ export default function Utilities() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent',
   },
   header: {
     paddingHorizontal: 20,

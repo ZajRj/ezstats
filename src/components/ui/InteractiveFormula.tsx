@@ -1,5 +1,6 @@
+import Text from './Text';
 import React, { useRef, useState, useMemo } from 'react';
-import { View, StyleSheet, ActivityIndicator, Text, Platform, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, Platform, TouchableOpacity } from 'react-native';
 import { WebView } from 'react-native-webview';
 import BottomSheetModal from './BottomSheetModal';
 import { colors } from '../../theme/colors';

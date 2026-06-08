@@ -1,9 +1,11 @@
+import Text from '../../src/components/ui/Text';
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../src/theme/colors';
 import ProfileImagePicker from '../../src/components/ui/ProfileImagePicker';
 import { getUserProfile, updateUserProfile, UserProfile } from '../../src/db/database';
+import Background from '../../src/components/ui/Background';
 
 export default function Settings() {
   const insets = useSafeAreaInsets();
@@ -43,6 +45,7 @@ export default function Settings() {
       style={styles.flex} 
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
+      <Background />
       <ScrollView 
         contentContainerStyle={[styles.container, { paddingTop: insets.top + 20, paddingBottom: 100 }]}
         keyboardShouldPersistTaps="handled"
@@ -86,7 +89,7 @@ export default function Settings() {
 const styles = StyleSheet.create({
   flex: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent',
   },
   container: {
     paddingHorizontal: 20,
