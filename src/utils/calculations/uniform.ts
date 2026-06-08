@@ -19,7 +19,8 @@ export function generateUniformSamples(a: number, b: number, N: number): number[
 export function getUniformStats(a: number, b: number) {
   return [
     { label: 'E[X]', value: +((a + b) / 2).toFixed(4) },
-    { label: 'Var(X)', value: +(Math.pow(b - a, 2) / 12).toFixed(4) }
+    { label: 'Var(X)', value: +(Math.pow(b - a, 2) / 12).toFixed(4) },
+    { label: 'FGM M(t)', value: '(e^(tb) - e^(ta)) / t(b-a)' }
   ];
 }
 

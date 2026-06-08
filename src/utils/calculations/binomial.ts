@@ -25,7 +25,8 @@ export function generateBinomialSamples(n: number, p: number, N: number): number
 export function getBinomialStats(n: number, p: number) {
   return [
     { label: 'E[X]', value: +(n * p).toFixed(4) },
-    { label: 'Var(X)', value: +(n * p * (1 - p)).toFixed(4) }
+    { label: 'Var(X)', value: +(n * p * (1 - p)).toFixed(4) },
+    { label: 'FGM M(t)', value: '(1-p + p·e^t)^n' }
   ];
 }
 

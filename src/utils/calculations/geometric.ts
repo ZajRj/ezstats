@@ -27,7 +27,8 @@ export function generateGeometricSamples(p: number, N: number): number[] {
 export function getGeometricStats(p: number) {
   return [
     { label: 'E[X]', value: +(1 / p).toFixed(4) },
-    { label: 'Var(X)', value: +((1 - p) / (p * p)).toFixed(4) }
+    { label: 'Var(X)', value: +((1 - p) / (p * p)).toFixed(4) },
+    { label: 'FGM M(t)', value: '(p·e^t) / (1 - (1-p)e^t)' }
   ];
 }
 

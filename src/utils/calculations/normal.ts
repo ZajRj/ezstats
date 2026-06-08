@@ -19,7 +19,8 @@ export function generateNormalSamples(mean: number, stdDev: number, N: number): 
 export function getNormalStats(mean: number, stdDev: number) {
   return [
     { label: 'E[X]', value: mean },
-    { label: 'Var(X)', value: +(stdDev * stdDev).toFixed(4) }
+    { label: 'Var(X)', value: +(stdDev * stdDev).toFixed(4) },
+    { label: 'FGM M(t)', value: 'e^(μt + ½σ²t²)' }
   ];
 }
 

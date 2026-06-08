@@ -66,6 +66,16 @@ export default function Utilities() {
               icon="git-commit" 
               onPress={() => router.push('/utilities/geometric')} 
             />
+            <ActionCard 
+              title="Chi-Square Distribution" 
+              icon="git-network" 
+              onPress={() => router.push('/utilities/chisquare')} 
+            />
+            <ActionCard 
+              title="Weibull Distribution" 
+              icon="water" 
+              onPress={() => router.push('/utilities/weibull')} 
+            />
           </View>
         </View>
         

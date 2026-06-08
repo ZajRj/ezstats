@@ -21,7 +21,8 @@ export function generatePoissonSamples(lambda: number, N: number): number[] {
 export function getPoissonStats(lambda: number) {
   return [
     { label: 'E[X]', value: +lambda.toFixed(4) },
-    { label: 'Var(X)', value: +lambda.toFixed(4) }
+    { label: 'Var(X)', value: +lambda.toFixed(4) },
+    { label: 'FGM M(t)', value: 'e^[λ(e^t - 1)]' }
   ];
 }
 
