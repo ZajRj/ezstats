@@ -44,5 +44,70 @@
       "{p}": "The probability of success on a single trial.",
       "(1-p)^{k-1}": "The probability of encountering exactly k-1 failures before the first success."
     }
+  },
+  "mean_population": {
+    "latex": "\\mu = \\frac{\\sum_{i=1}^{N} x_i}{N}",
+    "tokens": {
+      "\\mu": "The population mean.",
+      "\\sum_{i=1}^{N} x_i": "The sum of all values in the population.",
+      "N": "The total number of items in the population."
+    }
+  },
+  "mean_sample": {
+    "latex": "\\bar{x} = \\frac{\\sum_{i=1}^{n} x_i}{n}",
+    "tokens": {
+      "\\bar{x}": "The sample mean.",
+      "\\sum_{i=1}^{n} x_i": "The sum of all values in the sample.",
+      "n": "The total number of items in the sample."
+    }
+  },
+  "variance_population": {
+    "latex": "\\sigma^2 = \\frac{\\sum_{i=1}^{N} (x_i - \\mu)^2}{N}",
+    "tokens": {
+      "\\sigma^2": "The population variance.",
+      "(x_i - \\mu)^2": "The squared difference between each value and the population mean.",
+      "N": "The total number of items in the population."
+    }
+  },
+  "variance_sample": {
+    "latex": "s^2 = \\frac{\\sum_{i=1}^{n} (x_i - \\bar{x})^2}{n - 1}",
+    "tokens": {
+      "s^2": "The sample variance.",
+      "(x_i - \\bar{x})^2": "The squared difference between each value and the sample mean.",
+      "n - 1": "Bessel's correction (degrees of freedom) for unbiased estimation."
+    }
+  },
+  "std_deviation": {
+    "latex": "\\sigma = \\sqrt{\\sigma^2}",
+    "tokens": {
+      "\\sigma": "The standard deviation, which is the square root of the variance.",
+      "\\sigma^2": "The variance of the dataset."
+    }
+  },
+  "bayes_theorem": {
+    "latex": "P(A|B) = \\frac{P(B|A) \\cdot P(A)}{P(B)}",
+    "tokens": {
+      "P(A|B)": "The posterior probability: probability of A given that B is true.",
+      "P(B|A)": "The likelihood: probability of observing B given that A is true.",
+      "P(A)": "The prior probability of A.",
+      "P(B)": "The marginal probability (total probability) of observing B."
+    }
+  },
+  "combinations": {
+    "latex": "C(n, r) = \\binom{n}{r} = \\frac{n!}{r!(n-r)!}",
+    "tokens": {
+      "C(n, r)": "The number of combinations (order does not matter).",
+      "n!": "Factorial of the total number of items.",
+      "r!": "Factorial of the chosen number of items.",
+      "(n-r)!": "Factorial of the unchosen items."
+    }
+  },
+  "permutations": {
+    "latex": "P(n, r) = \\frac{n!}{(n-r)!}",
+    "tokens": {
+      "P(n, r)": "The number of permutations (order matters).",
+      "n!": "Factorial of the total number of items.",
+      "(n-r)!": "Factorial of the unchosen items."
+    }
   }
 }

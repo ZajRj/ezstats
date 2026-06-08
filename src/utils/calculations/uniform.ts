@@ -39,7 +39,7 @@ export function generateUniformChartPaths(a: number, b: number, x: number, modeI
   const boundedX = Math.max(pA, Math.min(pB, pX));
 
   const points: {x: number, y: number}[] = [];
-  
+  const steps = 200;
   const pA_x = ((pA - vMin) / (vMax - vMin)) * width;
   const pB_x = ((pB - vMin) / (vMax - vMin)) * width;
   

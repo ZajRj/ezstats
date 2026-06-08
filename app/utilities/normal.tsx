@@ -25,6 +25,12 @@ export default function NormalDistribution() {
   const [modeIdx, setModeIdx] = useState(0);
   const [infoVisible, setInfoVisible] = useState(false);
 
+  React.useEffect(() => {
+    import('../../src/db/database').then(({ recordActivity }) => {
+      recordActivity('Normal Calculator', 'TOOL', '/utilities/normal');
+    });
+  }, []);
+
   const [sampleSizeStr, setSampleSizeStr] = useState('100');
   const [freqData, setFreqData] = useState<FreqDataRow[] | null>(null);
 

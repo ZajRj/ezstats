@@ -41,7 +41,7 @@ export function generateNormalChartPaths(mean: number, stdDev: number, x: number
   const boundedZx = Math.max(minZ, Math.min(maxZ, zX));
 
   const points: {x: number, y: number}[] = [];
-  const steps = 100;
+  const steps = 200;
   
   for (let i = 0; i <= steps; i++) {
     const z = minZ + (i / steps) * (maxZ - minZ);
@@ -54,7 +54,7 @@ export function generateNormalChartPaths(mean: number, stdDev: number, x: number
 
   const pathString = points.map((p, i) => (i === 0 ? `M ${p.x} ${p.y}` : `L ${p.x} ${p.y}`)).join(' ');
 
-  let shadedPoints = [];
+  let shadedPoints: {x: number, y: number}[] = [];
   if (isValid) {
     if (modeIdx === 0) { 
       shadedPoints = points.filter((_, i) => {

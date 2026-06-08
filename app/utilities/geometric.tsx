@@ -12,9 +12,9 @@ import InteractiveFormula from '../../src/components/ui/InteractiveFormula';
 import formulas from '../../src/data/formulas.json';
 import { calculateGeometricProb, generateGeometricSamples, getGeometricStats, generateGeometricChartElements } from '../../src/utils/calculations/geometric';
 import { generateDiscreteFrequencyTable } from '../../src/utils/calculations/frequency';
-import Svg, { Rect, Line, Text as SvgText } from 'react-native-svg';
 import { useHistoryStore } from '../../src/store/historyStore';
 import { Ionicons } from '@expo/vector-icons';
+import { BarChart } from 'react-native-chart-kit';
 
 const MODES = ['P(X = x)', 'P(X ≤ x)', 'P(X ≥ x)'];
 
@@ -23,6 +23,12 @@ export default function GeometricDistribution() {
   const [xVal, setXVal] = useState('3');
   const [modeIdx, setModeIdx] = useState(0);
   const [infoVisible, setInfoVisible] = useState(false);
+
+  React.useEffect(() => {
+    import('../../src/db/database').then(({ recordActivity }) => {
+      recordActivity('Geometric Calculator', 'TOOL', '/utilities/geometric');
+    });
+  }, []);
 
   const [sampleSizeStr, setSampleSizeStr] = useState('100');
   const [freqData, setFreqData] = useState<FreqDataRow[] | null>(null);
@@ -61,29 +67,53 @@ export default function GeometricDistribution() {
     setFreqData(tableData);
   };
 
-  const { chartElements, maxX } = useMemo(() => {
-    const { chartData, maxX: maxK } = generateGeometricChartElements(p, x, modeIdx, isValid);
-    
-    const elements = chartData.map((data) => (
-      <React.Fragment key={data.k}>
-        <Rect 
-          x={data.px} 
-          y={data.py} 
-          width={data.barWidth} 
-          height={data.barHeight} 
-          fill={data.isHighlighted ? colors.primary : colors.primaryLight}
-          opacity={data.isHighlighted ? 1 : 0.4}
-          rx={2}
-        />
-        {data.k % Math.ceil(data.maxK/10) === 0 && (
-          <SvgText x={data.px + data.barWidth/2} y={data.height + 15} fontSize="9" fill={colors.textSecondary} textAnchor="middle">
-            {data.k}
-          </SvgText>
-        )}
-      </React.Fragment>
-    ));
+  const chart = useMemo(() => {
+    const { points, displayK } = generateGeometricChartElements(p, x, modeIdx, isValid);
 
-    return { chartElements: elements, maxX: maxK };
+    const labels = points.map(pt => pt.val.toString());
+    const filteredLabels = labels.map((l, i) => (points.length <= 10 || i % Math.ceil(points.length/5) === 0 || i === displayK - 1) ? l : '');
+
+    const data = {
+      labels: filteredLabels,
+      datasets: [
+        {
+          data: points.map(pt => pt.prob),
+          colors: points.map(pt => 
+            pt.isHighlighted 
+              ? (opacity = 1) => colors.primary 
+              : (opacity = 1) => colors.progressBg
+          )
+        }
+      ]
+    };
+
+    return (
+      <BarChart
+        data={data}
+        width={300}
+        height={170}
+        yAxisLabel=""
+        yAxisSuffix=""
+        withCustomBarColorFromData={true}
+        flatColor={true}
+        fromZero={true}
+        withInnerLines={false}
+        showBarTops={false}
+        chartConfig={{
+          backgroundColor: colors.card,
+          backgroundGradientFrom: colors.card,
+          backgroundGradientTo: colors.card,
+          decimalPlaces: 3,
+          color: (opacity = 1) => colors.textSecondary,
+          labelColor: (opacity = 1) => colors.textSecondary,
+          barPercentage: 0.6,
+        }}
+        style={{
+          paddingRight: 0,
+          marginLeft: -20,
+        }}
+      />
+    );
   }, [p, x, modeIdx, isValid]);
 
   return (
@@ -141,10 +171,7 @@ export default function GeometricDistribution() {
           )}
           
           <View style={styles.chartContainer}>
-            <Svg width="300" height="170" viewBox="0 0 300 170">
-              {chartElements}
-              <Line x1="0" y1="149" x2="300" y2="149" stroke={colors.border} strokeWidth="2" />
-            </Svg>
+            {chart}
           </View>
 
           {isValid && (

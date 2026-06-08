@@ -12,9 +12,9 @@ import InteractiveFormula from '../../src/components/ui/InteractiveFormula';
 import formulas from '../../src/data/formulas.json';
 import { calculatePoissonProb, generatePoissonSamples, getPoissonStats, generatePoissonChartPoints } from '../../src/utils/calculations/poisson';
 import { generateDiscreteFrequencyTable } from '../../src/utils/calculations/frequency';
-import Svg, { Rect, Line, Text as SvgText } from 'react-native-svg';
 import { useHistoryStore } from '../../src/store/historyStore';
 import { Ionicons } from '@expo/vector-icons';
+import { BarChart } from 'react-native-chart-kit';
 
 const MODES = ['P(X = x)', 'P(X ≤ x)', 'P(X ≥ x)'];
 
@@ -23,6 +23,12 @@ export default function PoissonDistribution() {
   const [xVal, setXVal] = useState('3');
   const [modeIdx, setModeIdx] = useState(0);
   const [infoVisible, setInfoVisible] = useState(false);
+
+  React.useEffect(() => {
+    import('../../src/db/database').then(({ recordActivity }) => {
+      recordActivity('Poisson Calculator', 'TOOL', '/utilities/poisson');
+    });
+  }, []);
 
   const [sampleSizeStr, setSampleSizeStr] = useState('100');
   const [freqData, setFreqData] = useState<FreqDataRow[] | null>(null);
@@ -62,33 +68,51 @@ export default function PoissonDistribution() {
   };
 
   const chart = useMemo(() => {
-    const { points, maxPdf, barWidth, gap, displayN } = generatePoissonChartPoints(lambda, x, modeIdx, isValid);
+    const { points, displayN } = generatePoissonChartPoints(lambda, x, modeIdx, isValid);
+
+    const labels = points.map(pt => pt.val.toString());
+    const filteredLabels = labels.map((l, i) => (points.length <= 10 || i % Math.ceil(points.length/5) === 0 || i === displayN) ? l : '');
+
+    const data = {
+      labels: filteredLabels,
+      datasets: [
+        {
+          data: points.map(pt => pt.pdf),
+          colors: points.map(pt => 
+            pt.isHighlighted 
+              ? (opacity = 1) => colors.primary 
+              : (opacity = 1) => colors.progressBg
+          )
+        }
+      ]
+    };
 
     return (
-      <Svg width="300" height="170" viewBox="0 0 300 170">
-        {points.map((pt, i) => {
-          const barHeight = (pt.pdf / maxPdf) * (140 - 10);
-          const px = i * (barWidth + gap) + gap;
-          const py = 140 - barHeight;
-
-          return (
-            <Rect 
-              key={i}
-              x={px} 
-              y={py} 
-              width={barWidth} 
-              height={barHeight} 
-              fill={pt.isHighlighted ? colors.primary : colors.progressBg}
-              rx={2}
-            />
-          );
-        })}
-        <Line x1="0" y1="139" x2="300" y2="139" stroke={colors.border} strokeWidth="2" />
-        
-        <SvgText x={gap + barWidth/2} y="156" fontSize="10" fill={colors.textSecondary} textAnchor="middle">0</SvgText>
-        <SvgText x={300/2} y="156" fontSize="10" fill={colors.textSecondary} textAnchor="middle">{Math.round(displayN / 2)}</SvgText>
-        <SvgText x={300 - gap - barWidth/2} y="156" fontSize="10" fill={colors.textSecondary} textAnchor="middle">{displayN}</SvgText>
-      </Svg>
+      <BarChart
+        data={data}
+        width={300}
+        height={170}
+        yAxisLabel=""
+        yAxisSuffix=""
+        withCustomBarColorFromData={true}
+        flatColor={true}
+        fromZero={true}
+        withInnerLines={false}
+        showBarTops={false}
+        chartConfig={{
+          backgroundColor: colors.card,
+          backgroundGradientFrom: colors.card,
+          backgroundGradientTo: colors.card,
+          decimalPlaces: 2,
+          color: (opacity = 1) => colors.textSecondary,
+          labelColor: (opacity = 1) => colors.textSecondary,
+          barPercentage: 0.6,
+        }}
+        style={{
+          paddingRight: 0,
+          marginLeft: -20,
+        }}
+      />
     );
   }, [lambda, x, modeIdx, isValid]);
 

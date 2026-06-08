@@ -35,7 +35,7 @@ export function generateExponentialChartPaths(lambda: number, x: number, modeIdx
   const boundedZx = Math.max(minZ, Math.min(maxZ, pX));
 
   const points: {x: number, y: number}[] = [];
-  const steps = 100;
+  const steps = 200;
   const maxPdf = jStat.exponential.pdf(0, pLambda); 
   
   for (let i = 0; i <= steps; i++) {
@@ -49,7 +49,7 @@ export function generateExponentialChartPaths(lambda: number, x: number, modeIdx
 
   const pathString = points.map((p, i) => (i === 0 ? `M ${p.x} ${p.y}` : `L ${p.x} ${p.y}`)).join(' ');
 
-  let shadedPoints = [];
+  let shadedPoints: {x: number, y: number}[] = [];
   if (isValid) {
     if (modeIdx === 0) { 
       shadedPoints = points.filter((_, i) => {

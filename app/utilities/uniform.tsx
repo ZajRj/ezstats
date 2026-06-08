@@ -25,6 +25,12 @@ export default function UniformDistribution() {
   const [modeIdx, setModeIdx] = useState(0);
   const [infoVisible, setInfoVisible] = useState(false);
 
+  React.useEffect(() => {
+    import('../../src/db/database').then(({ recordActivity }) => {
+      recordActivity('Uniform Calculator', 'TOOL', '/utilities/uniform');
+    });
+  }, []);
+
   const [sampleSizeStr, setSampleSizeStr] = useState('100');
   const [freqData, setFreqData] = useState<FreqDataRow[] | null>(null);
 

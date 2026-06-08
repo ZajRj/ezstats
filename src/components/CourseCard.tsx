@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
 
@@ -10,6 +10,7 @@ type CourseCardProps = {
   progress?: number; // 0 to 100
   bottomText?: string;
   progressColor?: string;
+  onPress?: () => void;
 };
 
 export default function CourseCard({
@@ -20,9 +21,15 @@ export default function CourseCard({
   progress,
   bottomText,
   progressColor = colors.progressFill,
+  onPress,
 }: CourseCardProps) {
   return (
-    <View style={styles.card}>
+    <TouchableOpacity 
+      style={styles.card} 
+      onPress={onPress} 
+      activeOpacity={onPress ? 0.7 : 1}
+      disabled={!onPress}
+    >
       <View style={styles.header}>
         <View style={[styles.iconContainer, { backgroundColor: iconBgColor }]}>
           <Ionicons name={icon} size={20} color={iconColor} />
@@ -44,7 +51,7 @@ export default function CourseCard({
           <Text style={styles.bottomText}>{bottomText}</Text>
         )}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

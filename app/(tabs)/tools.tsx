@@ -65,6 +65,17 @@ export default function Utilities() {
           </View>
         </View>
         
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Simulations</Text>
+          <View style={styles.cardsContainer}>
+            <ActionCard 
+              title="Car Wash Simulation" 
+              icon="car" 
+              onPress={() => router.push('/utilities/carwash')} 
+            />
+          </View>
+        </View>
+
         {/* We can add more sections here like Hypothesis Tests, Descriptive Stats, etc. */}
       </ScrollView>
     </View>

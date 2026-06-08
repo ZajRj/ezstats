@@ -18,6 +18,7 @@ export default function UtilitiesLayout() {
       <Stack.Screen name="normal" options={{ title: 'Normal Distribution' }} />
       <Stack.Screen name="binomial" options={{ title: 'Binomial Distribution' }} />
       <Stack.Screen name="poisson" options={{ title: 'Poisson Distribution' }} />
+      <Stack.Screen name="carwash" options={{ title: 'Simulación Autolavado' }} />
     </Stack>
   );
 }

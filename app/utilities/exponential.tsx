@@ -24,6 +24,12 @@ export default function ExponentialDistribution() {
   const [modeIdx, setModeIdx] = useState(0);
   const [infoVisible, setInfoVisible] = useState(false);
 
+  React.useEffect(() => {
+    import('../../src/db/database').then(({ recordActivity }) => {
+      recordActivity('Exponential Calculator', 'TOOL', '/utilities/exponential');
+    });
+  }, []);
+
   const [sampleSizeStr, setSampleSizeStr] = useState('100');
   const [freqData, setFreqData] = useState<FreqDataRow[] | null>(null);
 

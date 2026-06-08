@@ -41,21 +41,10 @@ export function generateGeometricChartElements(p: number, x: number, modeIdx: nu
 
   const pmf = (k: number) => Math.pow(1 - pP, k - 1) * pP;
   
-  const elements = [];
-  const width = 300;
-  const height = 150;
+  const points = [];
   
-  const maxPmf = pmf(1); 
-
-  const barWidth = Math.min((width / maxK) * 0.6, 20);
-  const spacing = width / maxK;
-
   for (let k = 1; k <= maxK; k++) {
     const prob = pmf(k);
-    const barHeight = (prob / maxPmf) * height * 0.9;
-    
-    const px = (k - 1) * spacing + spacing / 2 - barWidth / 2;
-    const py = height - barHeight;
 
     let isHighlighted = false;
     if (isValid) {
@@ -64,8 +53,8 @@ export function generateGeometricChartElements(p: number, x: number, modeIdx: nu
       if (modeIdx === 2 && k >= pX) isHighlighted = true;
     }
 
-    elements.push({ k, px, py, barWidth, barHeight, isHighlighted, maxK, height });
+    points.push({ val: k, prob, isHighlighted });
   }
 
-  return { chartData: elements, maxX: maxK };
+  return { points, displayK: maxK };
 }

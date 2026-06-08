@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import Svg, { Rect, Line, Text as SvgText } from 'react-native-svg';
+import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { BarChart } from 'react-native-chart-kit';
 import { colors } from '../../theme/colors';
 import { FreqDataRow } from './FrequencyTable';
 
@@ -8,72 +8,63 @@ interface HistogramProps {
   data: FreqDataRow[];
 }
 
+const screenWidth = Dimensions.get("window").width;
+
 export default function Histogram({ data }: HistogramProps) {
   if (!data || data.length === 0) return null;
 
-  const maxFreq = Math.max(...data.map(d => d.absFreq));
+  const minWidthPerBar = 50;
+  // Increase computed width logic so labels fit
+  const computedWidth = Math.max(screenWidth - 64, data.length * minWidthPerBar);
   
-  const minWidthPerBar = 40;
-  const computedWidth = Math.max(330, data.length * minWidthPerBar);
-  const height = 240;
-  const chartHeight = 180;
-  const chartTopMargin = 20;
-  
-  const barWidth = (computedWidth / data.length) * 0.85;
-  const gap = (computedWidth / data.length) * 0.15;
+  const labels = data.map(row => {
+    let lbl = row.midpoint;
+    if (lbl.length > 5 && data.length > 8) {
+      return parseFloat(lbl).toFixed(1);
+    }
+    return lbl;
+  });
+
+  const chartData = {
+    labels: labels,
+    datasets: [
+      {
+        data: data.map(row => row.absFreq)
+      }
+    ]
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Empirical Histogram</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <Svg width={computedWidth} height={height} viewBox={`0 0 ${computedWidth} ${height}`}>
-          {data.map((row, i) => {
-            const barHeight = maxFreq === 0 ? 0 : (row.absFreq / maxFreq) * chartHeight;
-            const px = i * (barWidth + gap) + gap/2;
-            const py = chartTopMargin + chartHeight - barHeight;
-            
-            // Format midpoint text (trim if too long)
-            let lbl = row.midpoint;
-            if (lbl.length > 5 && data.length > 8) {
-              lbl = parseFloat(lbl).toFixed(1);
+        <BarChart
+          data={chartData}
+          width={computedWidth}
+          height={240}
+          yAxisLabel=""
+          yAxisSuffix=""
+          fromZero
+          showValuesOnTopOfBars
+          chartConfig={{
+            backgroundColor: "#ffffff",
+            backgroundGradientFrom: "#ffffff",
+            backgroundGradientTo: "#ffffff",
+            decimalPlaces: 0,
+            color: (opacity = 1) => `rgba(59, 130, 246, ${opacity})`, // primary color approx
+            labelColor: (opacity = 1) => colors.textSecondary,
+            style: {
+              borderRadius: 16
+            },
+            propsForLabels: {
+              fontSize: 10,
             }
-
-            return (
-              <React.Fragment key={i}>
-                <Rect 
-                  x={px} 
-                  y={py} 
-                  width={barWidth} 
-                  height={barHeight} 
-                  fill={colors.primary}
-                  opacity={0.85}
-                  rx={2}
-                />
-                {row.absFreq > 0 && (
-                  <SvgText 
-                    x={px + barWidth/2} 
-                    y={py - 5} 
-                    fontSize="10" 
-                    fill={colors.textSecondary} 
-                    textAnchor="middle"
-                  >
-                    {row.absFreq}
-                  </SvgText>
-                )}
-                <SvgText 
-                  x={px + barWidth/2} 
-                  y={chartTopMargin + chartHeight + 15} 
-                  fontSize="9" 
-                  fill={colors.textSecondary} 
-                  textAnchor="middle"
-                >
-                  {lbl}
-                </SvgText>
-              </React.Fragment>
-            );
-          })}
-          <Line x1="0" y1={chartTopMargin + chartHeight} x2={computedWidth} y2={chartTopMargin + chartHeight} stroke={colors.border} strokeWidth="2" />
-        </Svg>
+          }}
+          style={{
+            marginVertical: 8,
+            borderRadius: 16
+          }}
+        />
       </ScrollView>
     </View>
   );
@@ -92,7 +83,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     color: colors.textSecondary,
-    marginBottom: 16,
+    marginBottom: 8,
     textAlign: 'center',
   },
   scrollContent: {
