@@ -12,16 +12,24 @@ export function calculateGeometricProb(x: number, p: number, modeIdx: number): n
   return 0;
 }
 
-export function generateGeometricSamples(p: number, N: number): number[] {
+export interface GeometricSimulationRow {
+  i: number;
+  u: number;
+  x: number;
+}
+
+export function generateGeometricSamples(p: number, N: number): { samples: number[], tableData: GeometricSimulationRow[] } {
   const samples: number[] = [];
+  const tableData: GeometricSimulationRow[] = [];
   for (let i = 0; i < N; i++) {
-    let trials = 1;
-    while (Math.random() >= p) {
-      trials++;
+    const u = Math.random();
+    const x = Math.ceil(Math.log(1 - u) / Math.log(1 - p));
+    samples.push(x);
+    if (i < 50) {
+      tableData.push({ i: i + 1, u, x });
     }
-    samples.push(trials);
   }
-  return samples;
+  return { samples, tableData };
 }
 
 export function getGeometricStats(p: number) {

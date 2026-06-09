@@ -6,16 +6,21 @@ import { colors } from '../../src/theme/colors';
 import Input from '../../src/components/ui/Input';
 import { Ionicons } from '@expo/vector-icons';
 import { BarChart } from 'react-native-chart-kit';
-import { Stage, DistributionType, runProcessSimulation, calculateMetrics } from '../../src/utils/calculations/simulation';
+import { Stage, DistributionType, runProcessSimulation, calculateMetrics, generatePoisson } from '../../src/utils/calculations/simulation';
 import { generateContinuousFrequencyTable } from '../../src/utils/calculations/frequency';
 import FrequencyTable, { FreqDataRow } from '../../src/components/ui/FrequencyTable';
 import Histogram from '../../src/components/ui/Histogram';
+import BottomSheetModal from '../../src/components/ui/BottomSheetModal';
 
 const screenWidth = Dimensions.get("window").width;
 
 export default function ProcessSimulation() {
   const [kItems, setKItems] = useState('10');
   const [nHoras, setNHoras] = useState('8');
+  const [usePoissonArrivals, setUsePoissonArrivals] = useState(false);
+  const [poissonLambda, setPoissonLambda] = useState('10');
+  const [actualK, setActualK] = useState<number | null>(null);
+  const [infoVisible, setInfoVisible] = useState(false);
   
   const [stages, setStages] = useState<Stage[]>([
     { id: '1', name: 'Stage 1', type: 'Normal', params: { mean: 10, stdDev: 2 } },
@@ -31,6 +36,7 @@ export default function ProcessSimulation() {
     setResults([]);
     setMetrics(null);
     setFreqData(null);
+    setActualK(null);
   };
 
   const addStage = () => {
@@ -54,7 +60,6 @@ export default function ProcessSimulation() {
     clearResults();
     setStages(stages.map(s => {
       if (s.id === id) {
-        // Handle type change defaults
         if (updates.type && updates.type !== s.type) {
           if (updates.type === 'Normal') updates.params = { mean: 10, stdDev: 2 };
           if (updates.type === 'Exponential') updates.params = { mean: 12 };
@@ -81,12 +86,20 @@ export default function ProcessSimulation() {
   };
 
   const runSimulation = () => {
-    const k = parseInt(kItems);
-    const n = parseFloat(nHoras);
-    if (isNaN(k) || k < 1 || k > 500) {
-      Alert.alert('Error', 'K must be between 1 and 500');
-      return;
+    let k = parseInt(kItems);
+    if (usePoissonArrivals) {
+      const lambda = parseFloat(poissonLambda);
+      k = generatePoisson(lambda);
+      setActualK(k);
+    } else {
+      setActualK(null);
+      if (isNaN(k) || k < 1 || k > 500) {
+        Alert.alert('Error', 'K must be between 1 and 500');
+        return;
+      }
     }
+    
+    const n = parseFloat(nHoras);
     if (isNaN(n) || n <= 0) {
       Alert.alert('Error', 'N hours must be greater than 0');
       return;
@@ -108,11 +121,9 @@ export default function ProcessSimulation() {
   };
 
   useEffect(() => {
-    runSimulation();
     import('../../src/db/database').then(({ recordActivity }) => {
       recordActivity('Process Simulator', 'TOOL', '/utilities/process_simulator');
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const exportCSV = () => {
@@ -162,21 +173,50 @@ export default function ProcessSimulation() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
     >
-      <Stack.Screen options={{ title: 'Process Simulator' }} />
+      <Stack.Screen options={{ 
+        title: 'Process Simulator',
+        headerRight: () => (
+          <TouchableOpacity onPress={() => setInfoVisible(true)} style={{ marginRight: 16 }}>
+            <Ionicons name="information-circle-outline" size={24} color={colors.primary} />
+          </TouchableOpacity>
+        )
+      }} />
 
       <ScrollView contentContainerStyle={styles.scroll}>
         
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Global Parameters</Text>
           <View style={styles.row}>
-            <View style={{ flex: 1 }}>
-              <Input label="Number of Items (K)" value={kItems} onChangeText={(v) => { setKItems(v); clearResults(); }} keyboardType="numeric" />
-            </View>
+            <TouchableOpacity 
+              style={[styles.toggleBtn, usePoissonArrivals && styles.toggleBtnActive]}
+              onPress={() => { setUsePoissonArrivals(!usePoissonArrivals); clearResults(); }}
+            >
+              <Text style={[styles.toggleBtnText, usePoissonArrivals && styles.toggleBtnTextActive]}>
+                {usePoissonArrivals ? 'Poisson Arrivals Enabled' : 'Use Poisson Arrivals'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.row}>
+            {!usePoissonArrivals ? (
+              <View style={{ flex: 1 }}>
+                <Input label="Number of Items (K)" value={kItems} onChangeText={(v) => { setKItems(v); clearResults(); }} keyboardType="numeric" />
+              </View>
+            ) : (
+              <View style={{ flex: 1 }}>
+                <Input label="Arrival Rate (λ)" value={poissonLambda} onChangeText={(v) => { setPoissonLambda(v); clearResults(); }} keyboardType="numeric" />
+              </View>
+            )}
             <View style={{ flex: 1 }}>
               <Input label="Available Hours (N)" value={nHoras} onChangeText={(v) => { setNHoras(v); clearResults(); }} keyboardType="numeric" />
             </View>
           </View>
         </View>
+
+        {actualK !== null && (
+          <View style={[styles.card, { backgroundColor: colors.primaryLight, alignItems: 'center' }]}>
+            <Text style={{ color: colors.primary, fontWeight: 'bold' }}>Items generated via Poisson: {actualK}</Text>
+          </View>
+        )}
 
         <View style={styles.card}>
           <View style={styles.stageHeader}>
@@ -295,7 +335,7 @@ export default function ProcessSimulation() {
             
             <View style={styles.indicatorCard}>
               <Text style={styles.indicatorLabel}>Items processed in {nHoras} hours</Text>
-              <Text style={styles.indicatorValue}>{metrics.attendedInTime} / {kItems}</Text>
+              <Text style={styles.indicatorValue}>{metrics.attendedInTime} / {actualK ?? kItems}</Text>
             </View>
 
             <View style={styles.grid}>
@@ -386,6 +426,30 @@ export default function ProcessSimulation() {
         )}
 
       </ScrollView>
+
+      <BottomSheetModal visible={infoVisible} onClose={() => setInfoVisible(false)} title="Random Number Generation">
+        <Text style={styles.modalHeading}>Methods Used</Text>
+        
+        <Text style={styles.modalSubheading}>Normal & Log-Normal</Text>
+        <Text style={styles.modalText}>
+          Uses the Box-Muller transform to generate standard normally distributed random numbers from uniformly distributed random numbers, which are then scaled by the mean and standard deviation.
+        </Text>
+        
+        <Text style={styles.modalSubheading}>Exponential</Text>
+        <Text style={styles.modalText}>
+          Uses Inverse Transform Sampling. A uniform random number U is generated, and the formula x = -(1/λ) * ln(1 - U) is applied.
+        </Text>
+
+        <Text style={styles.modalSubheading}>Poisson</Text>
+        <Text style={styles.modalText}>
+          Uses Knuth's algorithm. It multiplies uniform random numbers together until their product is less than e^(-λ). The number of multiplications needed minus one is the generated sample.
+        </Text>
+
+        <Text style={styles.modalSubheading}>Uniform</Text>
+        <Text style={styles.modalText}>
+          Uses standard linear scaling: x = U * (max - min) + min, where U is a random number between 0 and 1.
+        </Text>
+      </BottomSheetModal>
     </KeyboardAvoidingView>
   );
 }
@@ -425,6 +489,27 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     gap: 12,
+  },
+  toggleBtn: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.border,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  toggleBtnActive: {
+    backgroundColor: colors.primaryLight,
+    borderColor: colors.primary,
+  },
+  toggleBtnText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: colors.textSecondary,
+  },
+  toggleBtnTextActive: {
+    color: colors.primary,
   },
   stageHeader: {
     flexDirection: 'row',
@@ -624,5 +709,24 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     fontStyle: 'italic',
     textAlign: 'center',
+  },
+  modalHeading: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: colors.text,
+    marginTop: 20,
+    marginBottom: 8,
+  },
+  modalSubheading: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.primary,
+    marginTop: 16,
+    marginBottom: 4,
+  },
+  modalText: {
+    fontSize: 15,
+    color: colors.textSecondary,
+    lineHeight: 22,
   }
 });

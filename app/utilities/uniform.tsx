@@ -34,6 +34,7 @@ export default function UniformDistribution() {
 
   const [sampleSizeStr, setSampleSizeStr] = useState('100');
   const [freqData, setFreqData] = useState<FreqDataRow[] | null>(null);
+  const [simData, setSimData] = useState<any[] | null>(null);
 
   const addHistoryItem = useHistoryStore(state => state.addHistoryItem);
 
@@ -64,10 +65,11 @@ export default function UniformDistribution() {
     const N = parseInt(sampleSizeStr, 10);
     if (isNaN(N) || N <= 0) return;
 
-    const samples = generateUniformSamples(a, b, N);
-    const tableData = generateContinuousFrequencyTable(samples);
+    const { samples, tableData } = generateUniformSamples(a, b, N);
+    const tableDataFreq = generateContinuousFrequencyTable(samples);
 
-    setFreqData(tableData);
+    setFreqData(tableDataFreq);
+    setSimData(tableData);
   };
 
   const { curvePath, shadedPath, viewMin, viewMax } = useMemo(() => {
@@ -172,11 +174,33 @@ export default function UniformDistribution() {
               <Text style={styles.simBtnText}>Run</Text>
             </TouchableOpacity>
           </View>
+          {simData && (
+            <View style={{ marginTop: 16 }}>
+              <Text style={{ fontWeight: 'bold', marginBottom: 8, color: colors.textSecondary }}>SIMULATION TABLE {parseInt(sampleSizeStr, 10) > 50 ? '(First 50)' : ''}</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={true} style={{ backgroundColor: '#111827', borderRadius: 8, padding: 8 }}>
+                <View>
+                  <View style={{ flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#374151', paddingBottom: 8, marginBottom: 8 }}>
+                    <Text style={{ width: 40, color: '#9CA3AF', fontSize: 12, fontWeight: 'bold', textAlign: 'center' }}>I</Text>
+                    <Text style={{ width: 100, color: '#9CA3AF', fontSize: 12, fontWeight: 'bold', textAlign: 'center' }}>R_i U(0,1)</Text>
+                    <Text style={{ width: 150, color: '#9CA3AF', fontSize: 12, fontWeight: 'bold', textAlign: 'center' }}>X_i = a + R_i * (b - a)</Text>
+                  </View>
+                  {simData.map((row) => (
+                    <View key={row.i} style={{ flexDirection: 'row', paddingVertical: 4 }}>
+                      <Text style={{ width: 40, color: '#60A5FA', fontSize: 12, textAlign: 'center' }}>{row.i}</Text>
+                      <Text style={{ width: 100, color: '#FBBF24', fontSize: 12, textAlign: 'center' }}>{row.u.toFixed(4)}</Text>
+                      <Text style={{ width: 150, color: '#34D399', fontSize: 12, textAlign: 'center', fontWeight: 'bold' }}>{row.x.toFixed(4)}</Text>
+                    </View>
+                  ))}
+                </View>
+              </ScrollView>
+            </View>
+          )}
+
           {freqData && (
-            <>
+            <View style={{ marginTop: 16 }}>
               <FrequencyTable data={freqData} />
               <Histogram data={freqData} />
-            </>
+            </View>
           )}
         </View>
 

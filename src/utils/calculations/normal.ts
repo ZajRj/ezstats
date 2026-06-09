@@ -8,12 +8,26 @@ export function calculateNormalProb(x: number, mean: number, stdDev: number, mod
   return prob;
 }
 
-export function generateNormalSamples(mean: number, stdDev: number, N: number): number[] {
+export interface NormalSimulationRow {
+  i: number;
+  u: number;
+  z: number;
+  x: number;
+}
+
+export function generateNormalSamples(mean: number, stdDev: number, N: number): { samples: number[], tableData: NormalSimulationRow[] } {
   const samples: number[] = [];
+  const tableData: NormalSimulationRow[] = [];
   for (let i = 0; i < N; i++) {
-    samples.push(jStat.normal.sample(mean, stdDev));
+    const u = Math.random();
+    const z = jStat.normal.inv(u, 0, 1);
+    const x = mean + z * stdDev;
+    samples.push(x);
+    if (i < 50) {
+      tableData.push({ i: i + 1, u, z, x });
+    }
   }
-  return samples;
+  return { samples, tableData };
 }
 
 export function getNormalStats(mean: number, stdDev: number) {

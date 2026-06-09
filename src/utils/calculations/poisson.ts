@@ -10,12 +10,32 @@ export function calculatePoissonProb(x: number, lambda: number, modeIdx: number)
   }
 }
 
-export function generatePoissonSamples(lambda: number, N: number): number[] {
+export interface PoissonSimulationRow {
+  i: number;
+  u_prod: number;
+  x: number;
+}
+
+export function generatePoissonSamples(lambda: number, N: number): { samples: number[], tableData: PoissonSimulationRow[] } {
   const samples: number[] = [];
+  const tableData: PoissonSimulationRow[] = [];
+  const L = Math.exp(-lambda);
+  
   for (let i = 0; i < N; i++) {
-    samples.push(jStat.poisson.sample(lambda));
+    let k = 0;
+    let p = 1.0;
+    do {
+      k++;
+      p *= Math.random();
+    } while (p > L);
+    
+    const x = k - 1;
+    samples.push(x);
+    if (i < 50) {
+      tableData.push({ i: i + 1, u_prod: p, x });
+    }
   }
-  return samples;
+  return { samples, tableData };
 }
 
 export function getPoissonStats(lambda: number) {

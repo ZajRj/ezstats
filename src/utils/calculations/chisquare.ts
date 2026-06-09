@@ -8,12 +8,24 @@ export function calculateChiSquareProb(x: number, dof: number, modeIdx: number):
   return prob;
 }
 
-export function generateChiSquareSamples(dof: number, N: number): number[] {
+export interface ChiSquareSimulationRow {
+  i: number;
+  u: number;
+  x: number;
+}
+
+export function generateChiSquareSamples(dof: number, N: number): { samples: number[], tableData: ChiSquareSimulationRow[] } {
   const samples: number[] = [];
+  const tableData: ChiSquareSimulationRow[] = [];
   for (let i = 0; i < N; i++) {
-    samples.push(jStat.chisquare.sample(dof));
+    const u = Math.random();
+    const x = jStat.chisquare.inv(u, dof);
+    samples.push(x);
+    if (i < 50) {
+      tableData.push({ i: i + 1, u, x });
+    }
   }
-  return samples;
+  return { samples, tableData };
 }
 
 export function getChiSquareStats(dof: number) {

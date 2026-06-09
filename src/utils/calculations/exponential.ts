@@ -8,12 +8,24 @@ export function calculateExponentialProb(x: number, lambda: number, modeIdx: num
   return prob;
 }
 
-export function generateExponentialSamples(lambda: number, N: number): number[] {
+export interface ExponentialSimulationRow {
+  i: number;
+  u: number;
+  x: number;
+}
+
+export function generateExponentialSamples(lambda: number, N: number): { samples: number[], tableData: ExponentialSimulationRow[] } {
   const samples: number[] = [];
+  const tableData: ExponentialSimulationRow[] = [];
   for (let i = 0; i < N; i++) {
-    samples.push(jStat.exponential.sample(lambda));
+    const u = Math.random();
+    const x = -(1 / lambda) * Math.log(1 - u);
+    samples.push(x);
+    if (i < 50) {
+      tableData.push({ i: i + 1, u, x });
+    }
   }
-  return samples;
+  return { samples, tableData };
 }
 
 export function getExponentialStats(lambda: number) {

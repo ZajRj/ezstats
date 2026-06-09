@@ -10,16 +10,32 @@ export function calculateBinomialProb(x: number, n: number, p: number, modeIdx: 
   }
 }
 
-export function generateBinomialSamples(n: number, p: number, N: number): number[] {
+export interface BinomialSimulationRow {
+  i: number;
+  u_sequence: number[];
+  x: number;
+}
+
+export function generateBinomialSamples(n: number, p: number, N: number): { samples: number[], tableData: BinomialSimulationRow[] } {
   const samples: number[] = [];
+  const tableData: BinomialSimulationRow[] = [];
   for (let i = 0; i < N; i++) {
     let successes = 0;
+    const u_sequence: number[] = [];
     for (let j = 0; j < n; j++) {
-      if (Math.random() < p) successes++;
+      const u = Math.random();
+      if (i < 50) {
+        // Keep only first 5 uniform draws if n is large to prevent huge arrays in table
+        if (j < 5) u_sequence.push(u);
+      }
+      if (u < p) successes++;
     }
     samples.push(successes);
+    if (i < 50) {
+      tableData.push({ i: i + 1, u_sequence, x: successes });
+    }
   }
-  return samples;
+  return { samples, tableData };
 }
 
 export function getBinomialStats(n: number, p: number) {

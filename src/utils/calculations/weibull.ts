@@ -8,12 +8,24 @@ export function calculateWeibullProb(x: number, scale: number, shape: number, mo
   return prob;
 }
 
-export function generateWeibullSamples(scale: number, shape: number, N: number): number[] {
+export interface WeibullSimulationRow {
+  i: number;
+  u: number;
+  x: number;
+}
+
+export function generateWeibullSamples(lambda: number, k: number, N: number): { samples: number[], tableData: WeibullSimulationRow[] } {
   const samples: number[] = [];
+  const tableData: WeibullSimulationRow[] = [];
   for (let i = 0; i < N; i++) {
-    samples.push(jStat.weibull.sample(scale, shape));
+    const u = Math.random();
+    const x = lambda * Math.pow(-Math.log(1 - u), 1 / k);
+    samples.push(x);
+    if (i < 50) {
+      tableData.push({ i: i + 1, u, x });
+    }
   }
-  return samples;
+  return { samples, tableData };
 }
 
 export function getWeibullStats(scale: number, shape: number) {

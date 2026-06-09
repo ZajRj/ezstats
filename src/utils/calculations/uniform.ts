@@ -8,12 +8,24 @@ export function calculateUniformProb(x: number, a: number, b: number, modeIdx: n
   return prob;
 }
 
-export function generateUniformSamples(a: number, b: number, N: number): number[] {
+export interface UniformSimulationRow {
+  i: number;
+  u: number;
+  x: number;
+}
+
+export function generateUniformSamples(a: number, b: number, N: number): { samples: number[], tableData: UniformSimulationRow[] } {
   const samples: number[] = [];
+  const tableData: UniformSimulationRow[] = [];
   for (let i = 0; i < N; i++) {
-    samples.push(jStat.uniform.sample(a, b));
+    const u = Math.random();
+    const x = a + u * (b - a);
+    samples.push(x);
+    if (i < 50) {
+      tableData.push({ i: i + 1, u, x });
+    }
   }
-  return samples;
+  return { samples, tableData };
 }
 
 export function getUniformStats(a: number, b: number) {
