@@ -138,6 +138,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   conceptTitleRow: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -148,19 +149,23 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   mainTopicText: {
+    flex: 1,
     fontSize: 22,
     fontWeight: 'bold',
     color: colors.text,
     textTransform: 'uppercase',
     letterSpacing: 1,
+    marginRight: 10,
   },
   chapterContainer: {
     paddingVertical: 10,
   },
   chapterText: {
+    flex: 1,
     fontSize: 18,
     fontWeight: '600',
     color: colors.textSecondary,
+    marginRight: 10,
   },
   conceptContainer: {
     backgroundColor: colors.card,
@@ -171,9 +176,11 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   conceptText: {
+    flex: 1,
     fontSize: 16,
     fontWeight: '500',
     color: colors.text,
+    marginRight: 10,
   },
   childrenContainer: {
     marginTop: 4,

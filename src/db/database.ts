@@ -122,7 +122,7 @@ export async function seedDatabase() {
             orderIndex: index,
             type: block.type as any,
             bodyContent: block.content,
-            metadataJson: block.metadata ? JSON.stringify(block.metadata) : null,
+            metadataJson: block.metadata ? block.metadata : null,
           }));
 
           await db.insert(schema.articleBlocks).values(blocksToInsert);
