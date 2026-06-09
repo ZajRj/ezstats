@@ -397,31 +397,31 @@ export default function ProcessSimulation() {
         {results.length > 0 && (
           <View style={styles.card}>
             <Text style={styles.sectionTitle}>Results Table</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={true}>
-              <View>
-                <View style={styles.tableHeader}>
-                  <Text style={[styles.tableCell, styles.tableHeaderCell, { width: 60 }]}>Item</Text>
-                  {stages.map(s => (
-                    <Text key={s.id} style={[styles.tableCell, styles.tableHeaderCell]}>{s.name}</Text>
-                  ))}
-                  <Text style={[styles.tableCell, styles.tableHeaderCell, { fontWeight: 'bold' }]}>Total Processing</Text>
-                  <Text style={[styles.tableCell, styles.tableHeaderCell, { fontWeight: 'bold', width: 80 }]}>System Exit</Text>
-                </View>
-                {results.slice(0, 100).map((r, i) => (
-                  <View key={i} style={styles.tableRow}>
-                    <Text style={[styles.tableCell, { width: 60 }]}>{r.id}</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={true} style={{ borderWidth: 1, borderColor: colors.border, borderRadius: 8, backgroundColor: '#FFFFFF' }}>
+                <View>
+                  <View style={{ flexDirection: 'row', backgroundColor: '#F3F4F6', paddingVertical: 12, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: colors.border }}>
+                    <Text style={{ width: 80, fontSize: 11, fontWeight: 'bold', color: colors.textSecondary, textAlign: 'center' }}>ITEM</Text>
                     {stages.map(s => (
-                      <Text key={s.id} style={styles.tableCell}>{(r.stageTimes[s.id] ?? 0).toFixed(2)}</Text>
+                      <Text key={s.id} style={{ width: 100, fontSize: 11, fontWeight: 'bold', color: colors.textSecondary, textAlign: 'center' }}>{s.name.toUpperCase()}</Text>
                     ))}
-                    <Text style={[styles.tableCell, { fontWeight: 'bold', color: colors.primary }]}>{r.totalProcessingTime.toFixed(2)}</Text>
-                    <Text style={[styles.tableCell, { fontWeight: 'bold', width: 80 }]}>{r.exitTime.toFixed(2)}</Text>
+                    <Text style={{ width: 140, fontSize: 11, fontWeight: 'bold', color: colors.textSecondary, textAlign: 'center' }}>TOTAL PROCESSING</Text>
+                    <Text style={{ width: 120, fontSize: 11, fontWeight: 'bold', color: colors.textSecondary, textAlign: 'center' }}>SYSTEM EXIT</Text>
                   </View>
-                ))}
-                {results.length > 100 && (
-                  <Text style={styles.limitText}>Showing first 100 results. Export CSV to view all.</Text>
-                )}
-              </View>
-            </ScrollView>
+                  {results.slice(0, 100).map((r, i) => (
+                    <View key={i} style={[{ flexDirection: 'row', paddingVertical: 10, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: '#F3F4F6' }, i % 2 === 1 && { backgroundColor: '#FAFAFA' }]}>
+                      <Text style={{ width: 80, fontSize: 13, color: colors.text, textAlign: 'center', fontWeight: '600' }}>{r.id}</Text>
+                      {stages.map(s => (
+                        <Text key={s.id} style={{ width: 100, fontSize: 13, color: colors.text, textAlign: 'center' }}>{(r.stageTimes[s.id] ?? 0).toFixed(2)}</Text>
+                      ))}
+                      <Text style={{ width: 140, fontSize: 13, color: colors.text, textAlign: 'center', fontWeight: '600' }}>{r.totalProcessingTime.toFixed(2)}</Text>
+                      <Text style={{ width: 120, fontSize: 13, color: colors.text, textAlign: 'center' }}>{r.exitTime.toFixed(2)}</Text>
+                    </View>
+                  ))}
+                  {results.length > 100 && (
+                    <Text style={{ padding: 12, fontSize: 12, color: colors.textSecondary, fontStyle: 'italic', textAlign: 'center' }}>Showing first 100 results. Export CSV to view all.</Text>
+                  )}
+                </View>
+              </ScrollView>
           </View>
         )}
 

@@ -5,6 +5,9 @@ import { Stack } from 'expo-router';
 import { colors } from '../../src/theme/colors';
 import BoxPlot from '../../src/components/ui/BoxPlot';
 import { calculateDescriptiveStats } from '../../src/utils/calculations/descriptive';
+import FrequencyTable from '../../src/components/ui/FrequencyTable';
+import Histogram from '../../src/components/ui/Histogram';
+import { generateContinuousFrequencyTable, generateDiscreteFrequencyTable } from '../../src/utils/calculations/frequency';
 
 export default function DescriptiveStatistics() {
   const [dataStr, setDataStr] = useState('');
@@ -79,6 +82,25 @@ export default function DescriptiveStatistics() {
             </View>
 
             <BoxPlot min={stats.min} q1={stats.q1} median={stats.median} q3={stats.q3} max={stats.max} />
+            
+            {stats.rawData && stats.rawData.length > 0 && (
+              <View style={[styles.card, { marginTop: 16 }]}>
+                <Text style={styles.cardTitle}>Frequency Distribution</Text>
+                {(() => {
+                  const uniqueCount = new Set(stats.rawData).size;
+                  const freqData = uniqueCount <= 10 
+                    ? generateDiscreteFrequencyTable(stats.rawData) 
+                    : generateContinuousFrequencyTable(stats.rawData);
+                  
+                  return (
+                    <>
+                      <Histogram data={freqData} />
+                      <FrequencyTable data={freqData} />
+                    </>
+                  );
+                })()}
+              </View>
+            )}
             
           </View>
         )}

@@ -13,6 +13,7 @@ export interface DescriptiveStats {
   iqr: number;
   variance: number;
   stdev: number;
+  rawData: number[];
 }
 
 export function calculateDescriptiveStats(dataStr: string): DescriptiveStats | null {
@@ -47,6 +48,6 @@ export function calculateDescriptiveStats(dataStr: string): DescriptiveStats | n
   const stdev = n > 1 ? jStat.stdev(arr, true) : 0;
   
   return {
-    n, mean, median, mode, min, max, range, q1, q3, iqr, variance, stdev
+    n, mean, median, mode, min, max, range, q1, q3, iqr, variance, stdev, rawData: arr
   };
 }
