@@ -2988,6 +2988,606 @@
               ]
             }
           ]
+        },
+        {
+          "slug": "derivatives-inverse-trig",
+          "name": "10.6 Inverse Trigonometric Derivatives",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "arcsin-arccos",
+              "name": "Arcsin & Arccos",
+              "type": "CONCEPT",
+              "articleTitle": "Arcsin & Arccos",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "The derivatives of inverse trigonometric functions appear in many integrals and physics problems. Arcsin and Arccos are complementary: their derivatives are identical in magnitude but opposite in sign, because arcsin(x) + arccos(x) = π/2 (a constant), so their derivatives must sum to zero."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\arcsin(x)] = \\frac{1}{\\sqrt{1 - x^2}}",
+                  "metadata": {
+                    "\\frac{1}{\\sqrt{1-x^2}}": "Defined only for |x| < 1 (the domain of arcsin).",
+                    "\\text{Proof sketch}": "If y = arcsin(x), then sin(y) = x. Differentiating both sides: cos(y)·y' = 1, so y' = 1/cos(y) = 1/√(1-sin²(y)) = 1/√(1-x²)."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\arccos(x)] = -\\frac{1}{\\sqrt{1 - x^2}}",
+                  "metadata": {
+                    "-\\frac{1}{\\sqrt{1-x^2}}": "Negative of the arcsin derivative, because arcsin(x) + arccos(x) = π/2 is constant.",
+                    "\\text{Domain}": "Defined for |x| < 1."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Memory trick: arcsin gets the POSITIVE version, arccos gets the NEGATIVE version. Both have the same denominator √(1−x²). They're like mirror images."
+                }
+              ]
+            },
+            {
+              "slug": "arctan-arccot",
+              "name": "Arctan & Arccot",
+              "type": "CONCEPT",
+              "articleTitle": "Arctan & Arccot",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Arctan is one of the most important inverse trig functions in calculus and statistics. Its derivative produces a simple rational function, and its integral is arctan itself. Like arcsin/arccos, arctan and arccot are complementary: arctan(x) + arccot(x) = π/2."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\arctan(x)] = \\frac{1}{1 + x^2}",
+                  "metadata": {
+                    "\\frac{1}{1+x^2}": "A beautiful rational function. Defined for ALL real x (arctan has domain ℝ).",
+                    "\\text{Key application}": "∫ 1/(1+x²) dx = arctan(x) + C. This integral appears constantly in probability and physics."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\text{arccot}(x)] = -\\frac{1}{1 + x^2}",
+                  "metadata": {
+                    "-\\frac{1}{1+x^2}": "Negative of arctan's derivative, by the same complementarity argument.",
+                    "\\text{Domain}": "All real numbers ℝ."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "The Cauchy distribution in statistics has a PDF proportional to 1/(1+x²) — its CDF involves arctan! Also: lim(x→∞) arctan(x) = π/2 and lim(x→-∞) arctan(x) = -π/2."
+                }
+              ]
+            },
+            {
+              "slug": "arcsec-arccsc",
+              "name": "Arcsec & Arccsc",
+              "type": "CONCEPT",
+              "articleTitle": "Arcsec & Arccsc",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Arcsec and Arccsc are the least common inverse trig derivatives, but they appear in integrals involving √(x²−1). Their domains are |x| ≥ 1 (x can't be between −1 and 1, since |sec(θ)| ≥ 1). The absolute value |x| in the denominator is needed to handle both positive and negative x consistently."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\text{arcsec}(x)] = \\frac{1}{|x|\\sqrt{x^2 - 1}}",
+                  "metadata": {
+                    "|x|": "Absolute value required — ensures the derivative is positive in both the positive and negative regions of the domain.",
+                    "\\sqrt{x^2-1}": "Defined only for |x| > 1.",
+                    "\\text{Domain}": "|x| ≥ 1, i.e., x ∈ (−∞, −1] ∪ [1, ∞)."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\text{arccsc}(x)] = -\\frac{1}{|x|\\sqrt{x^2 - 1}}",
+                  "metadata": {
+                    "-\\frac{1}{|x|\\sqrt{x^2-1}}": "Negative of arcsec's derivative, because arcsec(x) + arccsc(x) = π/2.",
+                    "\\text{Domain}": "|x| ≥ 1."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Symmetry pattern for all 6 inverse trig pairs: arcsin↔arccos, arctan↔arccot, arcsec↔arccsc. Each pair sums to π/2, so their derivatives are equal in magnitude and opposite in sign. Just memorize the three POSITIVE versions (arcsin, arctan, arcsec) and negate for the other three."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "derivatives-hyperbolic",
+          "name": "10.7 Hyperbolic Function Derivatives",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "sinh-cosh",
+              "name": "Sinh & Cosh",
+              "type": "CONCEPT",
+              "articleTitle": "Hyperbolic Sine & Cosine",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Hyperbolic functions are defined using the natural exponential function e^x and arise in solutions to differential equations, physics (catenary curves, special relativity), and ML (the tanh activation function). They are defined as: sinh(x) = (eˣ − e⁻ˣ)/2 and cosh(x) = (eˣ + e⁻ˣ)/2. Unlike trig functions, their derivatives do NOT introduce sign changes in a cycle — they reinforce each other."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\sinh(x)] = \\cosh(x)",
+                  "metadata": {
+                    "\\cosh(x)": "Hyperbolic cosine. Note: NO negative sign, unlike d/dx[sin(x)] = cos(x) → d/dx[cos(x)] = -sin(x). Hyperbolic functions never cycle through negatives!",
+                    "\\text{Proof}": "d/dx[(eˣ - e⁻ˣ)/2] = (eˣ + e⁻ˣ)/2 = cosh(x)."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\cosh(x)] = \\sinh(x)",
+                  "metadata": {
+                    "\\sinh(x)": "Hyperbolic sine. Again, NO negative sign — cosh differentiates to +sinh, unlike regular cos which differentiates to −sin.",
+                    "\\text{Key identity}": "cosh²(x) − sinh²(x) = 1. This is the hyperbolic analogue of sin²+cos²=1."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Trig vs Hyperbolic comparison: d/dx[sin] = cos ✓ same; d/dx[cos] = −sin (trig) vs +sinh (hyperbolic) ✗ different sign! Hyperbolic derivatives stay positive — think of them as 'easier' than trig because there's no sign cycling."
+                }
+              ]
+            },
+            {
+              "slug": "tanh-coth",
+              "name": "Tanh & Coth",
+              "type": "CONCEPT",
+              "articleTitle": "Hyperbolic Tan & Cot",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "The hyperbolic tangent (tanh) is critically important in machine learning as a neural network activation function. It squashes inputs to the range (−1, 1) and its derivative — sech²(x) — is always between 0 and 1, making it useful for gradient-based learning. tanh is defined as sinh(x)/cosh(x) = (eˣ − e⁻ˣ)/(eˣ + e⁻ˣ)."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\tanh(x)] = \\text{sech}^2(x) = 1 - \\tanh^2(x)",
+                  "metadata": {
+                    "\\text{sech}^2(x)": "Hyperbolic secant squared: sech(x) = 1/cosh(x), so sech²(x) = 1/cosh²(x). Always positive and bounded in (0,1].",
+                    "1 - \\tanh^2(x)": "Equivalent alternative form. In ML, if you store tanh(x) from the forward pass, you compute its derivative as 1 − tanh²(x) without any extra computation!",
+                    "\\text{Range}": "sech²(x) ∈ (0, 1]. Maximum is 1 at x=0."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\coth(x)] = -\\text{csch}^2(x)",
+                  "metadata": {
+                    "-\\text{csch}^2(x)": "Negative hyperbolic cosecant squared: csch(x) = 1/sinh(x). Defined for x ≠ 0.",
+                    "\\text{Analogy}": "Mirrors d/dx[cot(x)] = −csc²(x) in regular trig."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "In deep learning: tanh was the standard activation before ReLU. Its key advantage over sigmoid: tanh is zero-centered (output range −1 to 1), which helps gradient flow. Its derivative 1−tanh²(x) is efficient to compute during backpropagation since tanh(x) is already known from the forward pass."
+                }
+              ]
+            },
+            {
+              "slug": "sech-csch",
+              "name": "Sech & Csch",
+              "type": "CONCEPT",
+              "articleTitle": "Hyperbolic Sec & Csc",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Sech (hyperbolic secant) and Csch (hyperbolic cosecant) are the reciprocals of cosh and sinh respectively. Their derivatives involve BOTH hyperbolic functions in a product, making them slightly harder to memorize — but they follow the same pattern as their regular trig counterparts (sec and csc), with the key difference that all signs become consistent with the hyperbolic system."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\text{sech}(x)] = -\\text{sech}(x)\\tanh(x)",
+                  "metadata": {
+                    "-\\text{sech}(x)\\tanh(x)": "Product of sech and tanh with a negative sign.",
+                    "\\text{Analogy}": "Mirrors d/dx[sec(x)] = sec(x)tan(x), but with a negative sign. In regular trig: positive; in hyperbolic: negative.",
+                    "\\text{Proof}": "d/dx[1/cosh(x)] = −sinh(x)/cosh²(x) = −(1/cosh(x))·(sinh(x)/cosh(x)) = −sech(x)tanh(x)."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\text{csch}(x)] = -\\text{csch}(x)\\coth(x)",
+                  "metadata": {
+                    "-\\text{csch}(x)\\coth(x)": "Product of csch and coth with a negative sign.",
+                    "\\text{Analogy}": "Mirrors d/dx[csc(x)] = −csc(x)cot(x). Here the negative sign is preserved.",
+                    "\\text{Domain}": "x ≠ 0 (since csch(0) = 1/sinh(0) = 1/0 is undefined)."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Summary of all 6 hyperbolic derivatives: d/dx[sinh]=cosh, d/dx[cosh]=sinh, d/dx[tanh]=sech², d/dx[coth]=−csch², d/dx[sech]=−sech·tanh, d/dx[csch]=−csch·coth. The pattern mirrors trig exactly, EXCEPT sinh↔cosh never produce negatives."
+                }
+              ]
+            },
+            {
+              "slug": "inverse-hyperbolic",
+              "name": "Inverse Hyperbolic Derivatives",
+              "type": "CONCEPT",
+              "articleTitle": "Inverse Hyperbolic",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "The inverse hyperbolic functions (arcsinh, arccosh, arctanh) have elegant derivatives expressed purely in terms of logarithms and square roots — because the hyperbolic functions themselves are defined via exponentials. These appear in integration problems involving √(x²+1), √(x²−1), and 1/(1−x²)."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\sinh^{-1}(x)] = \\frac{1}{\\sqrt{x^2 + 1}}",
+                  "metadata": {
+                    "\\frac{1}{\\sqrt{x^2+1}}": "Similar to d/dx[arcsin] = 1/√(1−x²), but with x²+1 instead of 1−x².",
+                    "\\text{Domain}": "All real numbers ℝ. Note the +1 (not −1) under the radical — no domain restriction needed!"
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\cosh^{-1}(x)] = \\frac{1}{\\sqrt{x^2 - 1}}",
+                  "metadata": {
+                    "\\frac{1}{\\sqrt{x^2-1}}": "Defined only for x > 1.",
+                    "\\text{Comparison}": "Similar denominator to d/dx[arcsec], but without the |x| factor."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\tanh^{-1}(x)] = \\frac{1}{1 - x^2}",
+                  "metadata": {
+                    "\\frac{1}{1-x^2}": "Defined only for |x| < 1.",
+                    "\\text{Compare with arctan}": "d/dx[arctan(x)] = 1/(1+x²). The sign in the denominator flips: arctan has (1+x²), arctanh has (1−x²)."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Integration shortcut table: ∫ 1/√(x²+1) dx = arcsinh(x)+C, ∫ 1/√(x²−1) dx = arccosh(x)+C, ∫ 1/(1−x²) dx = arctanh(x)+C for |x|<1. These are extremely useful substitutes for trigonometric substitution."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "advanced-differentiation",
+          "name": "10.8 Advanced Differentiation Techniques",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "higher-order-derivatives",
+              "name": "Higher-Order Derivatives",
+              "type": "CONCEPT",
+              "articleTitle": "Higher-Order Derivatives",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "The second derivative is the derivative of the derivative — it measures the rate of change of the slope. Geometrically, it describes the curvature (concavity) of a function. The n-th derivative is obtained by differentiating n times successively. Multiple notation systems exist and are used interchangeably in different fields."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "f''(x) = \\frac{d^2y}{dx^2} = \\frac{d}{dx}\\left[\\frac{dy}{dx}\\right]",
+                  "metadata": {
+                    "f''(x)": "Lagrange notation for the second derivative (also written f⁽²⁾(x)).",
+                    "\\frac{d^2y}{dx^2}": "Leibniz notation: 'd² y over d x²'. NOT (dy/dx)² — it means differentiate twice.",
+                    "\\frac{d}{dx}[\\frac{dy}{dx}]": "Explicit definition: apply the d/dx operator to the first derivative."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "f^{(n)}(x) = \\frac{d^n y}{dx^n}",
+                  "metadata": {
+                    "f^{(n)}(x)": "The n-th derivative of f. Parentheses distinguish it from f^n(x) = [f(x)]^n (a power).",
+                    "\\frac{d^n y}{dx^n}": "Leibniz notation for the n-th derivative.",
+                    "\\text{Examples}": "f'''(x) = third derivative; f⁽⁴⁾(x) = fourth derivative."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Second derivative test for extrema: if f'(c)=0 and f''(c) > 0, then c is a LOCAL MINIMUM (curve is concave up). If f''(c) < 0, then c is a LOCAL MAXIMUM (curve is concave down). If f''(c) = 0, the test is inconclusive — use the first derivative test instead."
+                }
+              ]
+            },
+            {
+              "slug": "implicit-differentiation",
+              "name": "Implicit Differentiation",
+              "type": "CONCEPT",
+              "articleTitle": "Implicit Differentiation",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Implicit differentiation is used when a curve is defined implicitly by an equation F(x, y) = 0, where y cannot be easily isolated as an explicit function of x (e.g., a circle x² + y² = r²). The technique: differentiate BOTH sides of the equation with respect to x, treating y as an implicit function of x — so every y term produces a dy/dx factor by the Chain Rule. Then solve algebraically for dy/dx."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[F(x, y) = 0] \\Rightarrow \\frac{\\partial F}{\\partial x} + \\frac{\\partial F}{\\partial y} \\cdot \\frac{dy}{dx} = 0",
+                  "metadata": {
+                    "\\frac{\\partial F}{\\partial x}": "Partial derivative of F with respect to x (treating y as constant).",
+                    "\\frac{\\partial F}{\\partial y}": "Partial derivative of F with respect to y (treating x as constant).",
+                    "\\frac{dy}{dx}": "The slope we want to find. Solving: dy/dx = −(∂F/∂x)/(∂F/∂y)."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{dy}{dx} = -\\frac{F_x}{F_y} = -\\frac{\\partial F / \\partial x}{\\partial F / \\partial y}",
+                  "metadata": {
+                    "F_x": "Shorthand for the partial derivative ∂F/∂x.",
+                    "F_y": "Shorthand for the partial derivative ∂F/∂y.",
+                    "\\text{Example}": "For x² + y² = r²: F_x = 2x, F_y = 2y, so dy/dx = −2x/2y = −x/y. This is the slope of a circle at any point!"
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "The Chain Rule is the engine of implicit differentiation. Every time you differentiate a y term with respect to x, multiply by dy/dx. Example: d/dx[y³] = 3y² · dy/dx, and d/dx[sin(y)] = cos(y) · dy/dx. Collect all dy/dx terms on one side, factor it out, and divide."
+                }
+              ]
+            },
+            {
+              "slug": "logarithmic-differentiation",
+              "name": "Logarithmic Differentiation",
+              "type": "CONCEPT",
+              "articleTitle": "Logarithmic Differentiation",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Logarithmic differentiation is a powerful technique for differentiating functions of the form y = [f(x)]^[g(x)] — where BOTH the base AND the exponent are functions of x. Neither the power rule nor the exponential rule alone handles this case. The strategy: take the natural log of both sides (using ln's properties to simplify products/powers into sums), then differentiate implicitly."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "y = f(x)^{g(x)} \\Rightarrow \\ln(y) = g(x) \\cdot \\ln(f(x)) \\Rightarrow \\frac{y'}{y} = g'(x)\\ln(f(x)) + g(x)\\frac{f'(x)}{f(x)}",
+                  "metadata": {
+                    "\\ln(y) = g(x)\\ln(f(x))": "Step 1: Take ln of both sides. Use ln(aᵇ) = b·ln(a) to bring the exponent down.",
+                    "\\frac{y'}{y}": "Step 2: Differentiate both sides with respect to x. The left side becomes y'/y by the Chain Rule.",
+                    "g'(x)\\ln(f(x)) + g(x)\\frac{f'(x)}{f(x)}": "Step 3: Apply the product rule to the right side.",
+                    "y'": "Step 4: Multiply both sides by y = f(x)^g(x) to get y' explicitly."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[x^x] = x^x(1 + \\ln x)",
+                  "metadata": {
+                    "x^x": "Classic example: both base and exponent are x.",
+                    "x^x(1 + \\ln x)": "Result after applying logarithmic differentiation: ln(y) = x·ln(x) → y'/y = ln(x)+1 → y' = xˣ(1+ln x)."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Logarithmic differentiation is also VERY useful for simplifying messy products/quotients. For y = [x²·sin(x)·e^x] / [√(x³+1)], taking ln gives: ln(y) = 2ln(x) + ln(sin(x)) + x − ½ln(x³+1). Then differentiate term by term — much easier than the quotient rule!"
+                }
+              ]
+            },
+            {
+              "slug": "lhopital",
+              "name": "L'Hôpital's Rule",
+              "type": "CONCEPT",
+              "articleTitle": "L'Hôpital's Rule",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "L'Hôpital's Rule resolves indeterminate forms — limits where direct substitution produces 0/0 or ∞/∞. The rule states: if a limit produces one of these forms, you may replace the limit with the limit of the RATIO OF THE DERIVATIVES. This can be applied repeatedly until the limit is no longer indeterminate. Other indeterminate forms (0·∞, ∞−∞, 1^∞, 0^0, ∞^0) must first be algebraically rewritten into 0/0 or ∞/∞ form."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\lim_{x \\to c} \\frac{f(x)}{g(x)} = \\frac{0}{0} \\text{ or } \\frac{\\infty}{\\infty} \\Rightarrow \\lim_{x \\to c} \\frac{f(x)}{g(x)} = \\lim_{x \\to c} \\frac{f'(x)}{g'(x)}",
+                  "metadata": {
+                    "\\frac{0}{0} \\text{ or } \\frac{\\infty}{\\infty}": "The two trigger conditions. You MUST verify the indeterminate form exists before applying the rule.",
+                    "\\frac{f'(x)}{g'(x)}": "Differentiate numerator and denominator SEPARATELY (NOT the quotient rule!).",
+                    "\\text{Apply repeatedly}": "If f'/g' still gives 0/0 or ∞/∞, apply the rule again to f'/g'."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\lim_{x \\to 0} \\frac{\\sin(x)}{x} = \\lim_{x \\to 0} \\frac{\\cos(x)}{1} = 1",
+                  "metadata": {
+                    "\\frac{\\sin(x)}{x}": "Classic 0/0 indeterminate form as x→0.",
+                    "\\frac{\\cos(x)}{1}": "After applying L'Hôpital: differentiate sin(x)→cos(x) and x→1.",
+                    "= 1": "The famous limit. This result is the foundation for the derivative of sin(x)!"
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Common indeterminate forms and how to convert them: 0·∞ → rewrite as 0/(1/∞) = 0/0. ∞−∞ → find a common denominator to create a fraction. 1^∞, 0^0, ∞^0 → take ln to create a 0·∞ form, then apply L'Hôpital. After applying L'Hôpital, always check the new limit again — don't blindly assume it's resolved."
+                }
+              ]
+            },
+            {
+              "slug": "parametric-derivatives",
+              "name": "Parametric Derivatives",
+              "type": "CONCEPT",
+              "articleTitle": "Parametric Differentiation",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "When a curve is defined parametrically as x = x(t) and y = y(t), we cannot differentiate y directly with respect to x in the usual way. Instead, we use the Chain Rule to express dy/dx in terms of the parameter t. The second derivative also has a specific parametric formula."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt} = \\frac{\\dot{y}}{\\dot{x}}",
+                  "metadata": {
+                    "dy/dt": "Rate of change of y with respect to the parameter t.",
+                    "dx/dt": "Rate of change of x with respect to the parameter t.",
+                    "\\dot{y}, \\dot{x}": "Newton's dot notation for time derivatives (common in physics).",
+                    "\\text{Condition}": "Valid as long as dx/dt ≠ 0 at the point of interest."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d^2y}{dx^2} = \\frac{\\frac{d}{dt}\\left[\\frac{dy}{dx}\\right]}{\\frac{dx}{dt}}",
+                  "metadata": {
+                    "\\frac{d}{dt}[dy/dx]": "Differentiate the first derivative (dy/dx) with respect to t (not x!).",
+                    "\\frac{dx}{dt}": "Divide by dx/dt again.",
+                    "\\text{Warning}": "Do NOT compute d²y/dt² ÷ d²x/dt² — that is WRONG. You must differentiate dy/dx with respect to t."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Example: For a circle x = r·cos(t), y = r·sin(t): dy/dx = (r·cos(t))/(−r·sin(t)) = −cos(t)/sin(t) = −cot(t). This matches the implicit result dy/dx = −x/y = −r·cos(t)/(r·sin(t)) = −cot(t). Parametric and implicit differentiation give the same answer!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "derivative-applications",
+          "name": "10.9 Applications of Derivatives",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "critical-points",
+              "name": "Critical Points & Extrema",
+              "type": "CONCEPT",
+              "articleTitle": "Critical Points",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "A critical point of f(x) is any value c in the domain where f'(c) = 0 OR f'(c) is undefined. Critical points are the ONLY candidates for local maxima and minima — if a differentiable function has a local extremum at c, then f'(c) MUST equal zero (Fermat's Theorem). However, not every critical point is an extremum (it may be an inflection point)."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "f'(c) = 0 \\text{ or } f'(c) \\text{ undefined} \\Rightarrow c \\text{ is a critical point}",
+                  "metadata": {
+                    "f'(c) = 0": "The slope of the tangent line is zero — a horizontal tangent. Potential max, min, or saddle.",
+                    "f'(c) \\text{ undefined}": "The function has a corner, cusp, or vertical tangent at c. Still a critical point candidate.",
+                    "\\text{First Derivative Test}": "If f' changes from + to − at c: local MAX. If f' changes from − to + at c: local MIN. If no sign change: neither."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\text{Second Derivative Test: } f'(c) = 0 \\text{ and } \\begin{cases} f''(c) > 0 \\Rightarrow \\text{local min} \\\\ f''(c) < 0 \\Rightarrow \\text{local max} \\\\ f''(c) = 0 \\Rightarrow \\text{inconclusive} \\end{cases}",
+                  "metadata": {
+                    "f''(c) > 0": "Concave up at c (like a bowl) → local minimum.",
+                    "f''(c) < 0": "Concave down at c (like a hill) → local maximum.",
+                    "f''(c) = 0": "The test fails. Use the first derivative test or check higher-order derivatives."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "For a GLOBAL (absolute) extremum on a CLOSED interval [a, b]: evaluate f at all critical points IN [a,b] AND at the two endpoints a and b. The largest value is the global maximum; the smallest is the global minimum. Don't forget the endpoints!"
+                }
+              ]
+            },
+            {
+              "slug": "mean-value-theorem",
+              "name": "Mean Value Theorem",
+              "type": "CONCEPT",
+              "articleTitle": "Mean Value Theorem",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "The Mean Value Theorem (MVT) is one of the most important theorems in calculus. It guarantees that for any smooth curve connecting two points, there is at least one point in between where the instantaneous slope (tangent line) exactly equals the average slope (secant line) between the endpoints. Conditions: f must be continuous on [a, b] AND differentiable on (a, b)."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\exists\\, c \\in (a, b) \\text{ such that } f'(c) = \\frac{f(b) - f(a)}{b - a}",
+                  "metadata": {
+                    "\\exists\\, c": "Existence guaranteed — at least one such c exists, though there may be more.",
+                    "f'(c)": "The instantaneous rate of change (slope of tangent) at c.",
+                    "\\frac{f(b)-f(a)}{b-a}": "The average rate of change (slope of secant line) over the interval [a,b].",
+                    "\\text{Proof idea}": "Define g(x) = f(x) − [secant line]. Then g(a) = g(b) = 0, and Rolle's Theorem guarantees g'(c) = 0 somewhere, which gives f'(c) = average rate of change."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Real-world analogy: if you drive 120 miles in 2 hours, your average speed is 60 mph. The MVT guarantees your speedometer read EXACTLY 60 mph at least once during the trip — even if you sped up and slowed down. Rolle's Theorem is the special case where f(a) = f(b), forcing f'(c) = 0."
+                }
+              ]
+            },
+            {
+              "slug": "concavity-inflection",
+              "name": "Concavity & Inflection Points",
+              "type": "CONCEPT",
+              "articleTitle": "Concavity",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Concavity describes the direction a curve 'bends'. A function is concave UP on an interval when f''(x) > 0 there (the curve curves upward, like a bowl). It is concave DOWN when f''(x) < 0 (curves downward, like a hill). An inflection point is where concavity changes — where f'' changes sign. At an inflection point, the curve transitions from bending one way to bending the other."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\begin{cases} f''(x) > 0 \\Rightarrow f \\text{ is concave UP on that interval} \\\\ f''(x) < 0 \\Rightarrow f \\text{ is concave DOWN on that interval} \\end{cases}",
+                  "metadata": {
+                    "f''(x) > 0": "Concave up: the tangent line lies BELOW the curve. The derivative f' is increasing.",
+                    "f''(x) < 0": "Concave down: the tangent line lies ABOVE the curve. The derivative f' is decreasing.",
+                    "\\text{Mnemonic}": "Concave UP = holds water like a CUP. Concave DOWN = an upside-down cup (hill shape)."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\text{Inflection point at } x = c \\iff f''(c) = 0 \\text{ AND } f'' \\text{ changes sign at } c",
+                  "metadata": {
+                    "f''(c) = 0": "Necessary but NOT sufficient condition. f'' must also CHANGE SIGN (from + to − or − to +).",
+                    "\\text{Counterexample}": "f(x) = x⁴ has f''(0) = 0, but f'' = 12x² ≥ 0 always — no sign change, so x=0 is NOT an inflection point."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "The second derivative f''(x) tells you the 'acceleration' of the slope. Where f'' > 0, the slope is increasing (even if f' < 0, it's becoming less negative). Where f'' < 0, the slope is decreasing. This is why f''(c) > 0 at a critical point confirms a minimum — the slope is 'accelerating upward' through zero."
+                }
+              ]
+            },
+            {
+              "slug": "taylor-series",
+              "name": "Taylor & Maclaurin Series",
+              "type": "CONCEPT",
+              "articleTitle": "Taylor Series",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "A Taylor series expresses any infinitely differentiable function as an infinite polynomial — the most powerful approximation tool in all of calculus. The idea: build a polynomial that exactly matches f at a point 'a', and whose derivatives of all orders also match f's derivatives at 'a'. The more terms you include, the better the approximation. When centered at a = 0, it's called a Maclaurin series."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "f(x) = \\sum_{n=0}^{\\infty} \\frac{f^{(n)}(a)}{n!} (x - a)^n = f(a) + f'(a)(x-a) + \\frac{f''(a)}{2!}(x-a)^2 + \\cdots",
+                  "metadata": {
+                    "f^{(n)}(a)": "The n-th derivative of f evaluated at the center point a.",
+                    "n!": "Factorial of n — the normalization that makes each term's contribution correct.",
+                    "(x-a)^n": "Polynomial terms that grow as x moves away from the center a.",
+                    "a": "The center of expansion. At a=0, this is a Maclaurin series."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "e^x = \\sum_{n=0}^{\\infty} \\frac{x^n}{n!} \\qquad \\sin(x) = \\sum_{n=0}^{\\infty} \\frac{(-1)^n x^{2n+1}}{(2n+1)!} \\qquad \\cos(x) = \\sum_{n=0}^{\\infty} \\frac{(-1)^n x^{2n}}{(2n)!}",
+                  "metadata": {
+                    "e^x": "Maclaurin series: 1 + x + x²/2! + x³/3! + ⋯. All coefficients are f⁽ⁿ⁾(0)/n! = 1/n! since every derivative of eˣ is eˣ.",
+                    "\\sin(x)": "Only odd powers with alternating signs: x − x³/3! + x⁵/5! − ⋯",
+                    "\\cos(x)": "Only even powers with alternating signs: 1 − x²/2! + x⁴/4! − ⋯"
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Euler's Formula uses these series: eⁱˣ = cos(x) + i·sin(x). At x=π: eⁱᵖ + 1 = 0 — Euler's Identity, considered the most beautiful equation in mathematics. In ML, Taylor series are used to derive gradient descent update rules and to approximate non-linear activation functions."
+                }
+              ]
+            },
+            {
+              "slug": "gradient-descent-calc",
+              "name": "Gradient Descent (Calculus View)",
+              "type": "CONCEPT",
+              "articleTitle": "Gradient Descent",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Gradient Descent is the optimization algorithm that powers all of modern machine learning. It uses derivatives (or partial derivatives/gradients for multivariable functions) to iteratively find the minimum of a cost function J(θ). Starting from an initial guess, each update step moves θ in the direction OPPOSITE to the gradient — because the gradient points toward the steepest ascent, and we want to descend."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\theta_{t+1} = \\theta_t - \\alpha \\cdot \\nabla_\\theta J(\\theta_t)",
+                  "metadata": {
+                    "\\theta_{t+1}": "Updated parameter value after one gradient descent step.",
+                    "\\theta_t": "Current parameter value at iteration t.",
+                    "\\alpha": "Learning rate (step size): controls how far we move each step. Too large → oscillates/diverges. Too small → converges very slowly.",
+                    "\\nabla_\\theta J(\\theta_t)": "Gradient of the cost function with respect to θ, evaluated at current θ_t. Points toward steepest increase.",
+                    "-": "Negative sign: we move OPPOSITE to the gradient to descend toward the minimum."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{\\partial J}{\\partial \\theta_j} = \\frac{1}{m} \\sum_{i=1}^{m} (\\hat{y}^{(i)} - y^{(i)}) x_j^{(i)}",
+                  "metadata": {
+                    "\\frac{\\partial J}{\\partial \\theta_j}": "Partial derivative of the MSE cost function with respect to parameter θ_j (for linear regression).",
+                    "\\hat{y}^{(i)} - y^{(i)}": "The prediction error for training example i.",
+                    "x_j^{(i)}": "The j-th feature of the i-th training example.",
+                    "\\frac{1}{m}": "Average over all m training examples."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Variants: Batch GD uses ALL training examples each step (stable, slow for large datasets). Stochastic GD (SGD) uses ONE example at a time (noisy, but fast). Mini-batch GD uses a small batch of k examples (best of both worlds — the industry standard). Adam, RMSProp, and AdaGrad are advanced optimizers that adapt the learning rate α automatically per parameter."
+                }
+              ]
+            }
+          ]
         }
       ]
     }
