@@ -105,11 +105,27 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "Mutually exclusive events cannot happen at the same time. Independent events can happen at the same time, but do not affect each other."
+                  "content": "These are two distinct and often confused concepts. Mutually exclusive (disjoint) events CANNOT occur simultaneously — if one happens, the other is impossible. Independent events CAN both occur, but the occurrence of one provides zero information about the other. A crucial insight: if two events have non-zero probability and are mutually exclusive, they CANNOT be independent, because knowing A occurred makes B impossible (P(B|A) = 0 ≠ P(B))."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\text{Mutually Exclusive: } P(A \\cap B) = 0",
+                  "metadata": {
+                    "P(A \\cap B) = 0": "The two events share NO outcomes — their intersection is the empty set.",
+                    "\\text{Consequence}": "The Addition Rule simplifies: P(A ∪ B) = P(A) + P(B), with no subtraction needed."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\text{Independent: } P(A \\cap B) = P(A) \\cdot P(B)",
+                  "metadata": {
+                    "P(A) \\cdot P(B)": "The joint probability factors into a simple product when events don't influence each other.",
+                    "\\text{Equivalent condition}": "P(A|B) = P(A) and P(B|A) = P(B) — knowing one tells you nothing about the other."
+                  }
                 },
                 {
                   "type": "TIP",
-                  "content": "If A and B are mutually exclusive, P(A and B) = 0. If they are independent, P(A and B) = P(A)*P(B)."
+                  "content": "Memory aid: 'Mutually Exclusive' means they FIGHT for the same slot (can't coexist). 'Independent' means they DON'T CARE about each other (coexistence is fine, but irrelevant). Rolling a 1 and rolling a 6 on a single die are mutually exclusive. Rolling a die and flipping a coin are independent."
                 }
               ]
             }
@@ -203,11 +219,27 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "Tree diagrams map out all possible paths of sequential events. You multiply probabilities along a branch, and add probabilities across different branches."
+                  "content": "Tree diagrams provide a visual, systematic way to enumerate all possible outcomes of sequential experiments. Each node represents a state, each branch represents a possible outcome with its probability, and each full path from root to leaf represents one possible scenario. There are two fundamental rules: (1) MULTIPLY probabilities along any single branch (this is the Multiplication Rule in action), and (2) ADD probabilities across separate, mutually exclusive branches leading to the same event (this is the Law of Total Probability in action)."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "P(\\text{path}) = \\prod_{i} P(\\text{branch}_i)",
+                  "metadata": {
+                    "\\prod_{i}": "Product symbol — multiply all branch probabilities along a single path from root to leaf.",
+                    "P(\\text{branch}_i)": "The probability labeled on each individual branch (may be conditional)."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "P(A) = \\sum_{\\text{paths ending in } A} P(\\text{path})",
+                  "metadata": {
+                    "\\sum": "Sum over all branches (paths) that end in outcome A.",
+                    "P(\\text{path})": "The product of all probabilities along that particular path."
+                  }
                 },
                 {
                   "type": "TIP",
-                  "content": "Tree diagrams are just visual representations of the Multiplication Rule and the Law of Total Probability."
+                  "content": "Tree diagrams are just visual representations of the Multiplication Rule and the Law of Total Probability. A key check: all probabilities on branches leaving any single node must sum to exactly 1.0. If they don't, you've made an error!"
                 }
               ]
             }
@@ -226,11 +258,20 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "If one event has m possible outcomes and a second event has n possible outcomes, there are m * n total combinations."
+                  "content": "The Fundamental Counting Principle (also called the Multiplication Principle) is the bedrock of combinatorics. If a task consists of a sequence of k independent steps, where step 1 can be done in n₁ ways, step 2 in n₂ ways, ..., and step k in nₖ ways, then the entire task can be completed in n₁ × n₂ × ... × nₖ total ways. The key requirement is that the number of choices at each step is independent of what was chosen in previous steps."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "|\\Omega| = n_1 \\times n_2 \\times \\cdots \\times n_k",
+                  "metadata": {
+                    "|\\Omega|": "Total number of possible outcomes (size of the sample space).",
+                    "n_i": "Number of independent choices available at the i-th step.",
+                    "\\times": "Multiplication — applied because stages are independent and sequential."
+                  }
                 },
                 {
                   "type": "TIP",
-                  "content": "If you have 3 shirts and 4 pants, you have 12 outfits!"
+                  "content": "If you have 3 shirts, 4 pants, and 2 pairs of shoes, you have 3 × 4 × 2 = 24 outfits! A PIN code with 4 digits (0–9), where repetition is allowed, has 10 × 10 × 10 × 10 = 10,000 possible codes."
                 }
               ]
             },
@@ -430,7 +471,29 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "Educational content for Bernoulli Trials is coming soon. Stay tuned for future app updates!"
+                  "content": "A Bernoulli trial is the simplest possible random experiment: a single trial with exactly two outcomes, canonically called 'Success' (1) and 'Failure' (0). The probability of success is p, and the probability of failure is q = 1 − p. It is the atomic building block of all other discrete distributions. The Binomial distribution counts successes over n Bernoulli trials; the Geometric counts trials until the first success; the Negative Binomial counts trials until the r-th success."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "P(X = x) = p^x (1-p)^{1-x}, \\quad x \\in \\{0, 1\\}",
+                  "metadata": {
+                    "P(X = x)": "PMF of the Bernoulli distribution.",
+                    "p^x": "When x=1 (success), this equals p. When x=0 (failure), this equals 1.",
+                    "(1-p)^{1-x}": "When x=1, this equals 1. When x=0, this equals (1-p). Together they give p for success and (1-p) for failure.",
+                    "x \\in \\{0, 1\\}": "X can only take the value 0 (failure) or 1 (success)."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "E[X] = p \\qquad Var(X) = p(1-p)",
+                  "metadata": {
+                    "E[X] = p": "The expected value is simply the probability of success.",
+                    "Var(X) = p(1-p)": "Variance is maximized at p=0.5 (maximum uncertainty) and is zero when p=0 or p=1 (certain outcome)."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Any yes/no question is a Bernoulli trial: Will the coin land heads? Will this customer buy? Will this email be spam? If you repeat n independent Bernoulli(p) trials, you get a Binomial(n, p) distribution."
                 }
               ]
             },
@@ -516,7 +579,32 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "Educational content for Hypergeometric Distribution is coming soon. Stay tuned for future app updates!"
+                  "content": "The Hypergeometric distribution models the number of successes when drawing without replacement from a finite population. It differs critically from the Binomial: in the Binomial, trials are independent (with replacement); in the Hypergeometric, each draw changes the composition of the remaining population (without replacement). Classic example: a population of N items contains K 'defective' ones. You draw n items without replacement. How many defectives do you get?"
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "P(X = k) = \\frac{\\binom{K}{k} \\binom{N-K}{n-k}}{\\binom{N}{n}}",
+                  "metadata": {
+                    "N": "Total population size.",
+                    "K": "Total number of 'success' items in the population.",
+                    "n": "Number of draws (sample size).",
+                    "k": "Number of successes observed in the sample.",
+                    "\\binom{K}{k}": "Ways to choose k successes from the K available success items.",
+                    "\\binom{N-K}{n-k}": "Ways to choose the remaining (n-k) failures from the (N-K) failure items.",
+                    "\\binom{N}{n}": "Total ways to choose any n items from the population of N (denominator normalizes to a probability)."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "E[X] = n \\frac{K}{N} \\qquad Var(X) = n\\frac{K}{N}\\frac{N-K}{N}\\frac{N-n}{N-1}",
+                  "metadata": {
+                    "E[X] = n \\frac{K}{N}": "Mean: intuitive — if K/N fraction of the population is 'success', expect that fraction of your n draws to be successes.",
+                    "\\frac{N-n}{N-1}": "The Finite Population Correction Factor (FPC). As n approaches N, variance approaches 0 — if you sample the whole population, there's no randomness left!"
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Key distinction: Use Binomial when sampling WITH replacement (or from a very large population). Use Hypergeometric when sampling WITHOUT replacement from a small, finite population. Quality control in manufacturing (checking a batch of products for defects) is a classic application."
                 }
               ]
             },
@@ -528,7 +616,30 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "Educational content for Negative Binomial is coming soon. Stay tuned for future app updates!"
+                  "content": "The Negative Binomial distribution is a natural generalization of the Geometric distribution. While the Geometric asks 'How many trials until the FIRST success?', the Negative Binomial asks 'How many trials until the r-th success?' It models X = the total number of trials needed to achieve exactly r successes in repeated independent Bernoulli trials with success probability p."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "P(X = k) = \\binom{k-1}{r-1} p^r (1-p)^{k-r}",
+                  "metadata": {
+                    "k": "Total number of trials performed (k ≥ r).",
+                    "r": "The target number of successes required.",
+                    "\\binom{k-1}{r-1}": "The number of ways to arrange the first (r-1) successes among the first (k-1) trials — the k-th trial MUST be the r-th success.",
+                    "p^r": "Probability of achieving exactly r successes.",
+                    "(1-p)^{k-r}": "Probability of the accompanying (k-r) failures."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "E[X] = \\frac{r}{p} \\qquad Var(X) = \\frac{r(1-p)}{p^2}",
+                  "metadata": {
+                    "E[X] = \\frac{r}{p}": "On average, you need r/p trials to get r successes. When r=1, this reduces to 1/p — exactly the Geometric distribution's mean!",
+                    "Var(X) = \\frac{r(1-p)}{p^2}": "Variance also scales with r, reflecting the accumulated uncertainty of waiting for r successes."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "The Negative Binomial is a superposition of r independent Geometric distributions. When r=1, it IS the Geometric distribution. Real-world applications: 'How many times must I flip a coin until I get 5 heads?', or modelling over-dispersed count data where variance exceeds the mean (unlike Poisson where they're equal)."
                 }
               ]
             }
@@ -694,7 +805,31 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "Educational content for Standard Normal is coming soon. Stay tuned for future app updates!"
+                  "content": "The Standard Normal Distribution is the 'canonical' normal distribution with mean μ = 0 and standard deviation σ = 1. Any normal distribution N(μ, σ²) can be converted to the Standard Normal by standardizing (computing Z-scores). This is essential because we only need ONE table (the Z-table or Φ-table) to find probabilities for ANY normal distribution in the universe, regardless of its mean or spread."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "Z = \\frac{X - \\mu}{\\sigma} \\sim N(0, 1)",
+                  "metadata": {
+                    "Z": "The standardized score (Z-score).",
+                    "X": "A value from any normal distribution N(μ, σ²).",
+                    "\\mu": "The mean of the original distribution.",
+                    "\\sigma": "The standard deviation of the original distribution.",
+                    "\\sim N(0, 1)": "The result Z follows the Standard Normal distribution with mean 0 and variance 1."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\Phi(z) = P(Z \\le z) = \\int_{-\\infty}^{z} \\frac{1}{\\sqrt{2\\pi}} e^{-t^2/2} dt",
+                  "metadata": {
+                    "\\Phi(z)": "The CDF of the Standard Normal — the area under the bell curve to the LEFT of z.",
+                    "\\frac{1}{\\sqrt{2\\pi}}": "The normalization constant for σ=1.",
+                    "e^{-t^2/2}": "The Standard Normal kernel — the bell curve shape centered at 0."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "The 68-95-99.7 Empirical Rule: P(−1 ≤ Z ≤ 1) ≈ 68.3%, P(−2 ≤ Z ≤ 2) ≈ 95.4%, P(−3 ≤ Z ≤ 3) ≈ 99.7%. Also remember: P(Z ≤ 1.96) ≈ 0.975, which is why the 95% confidence interval uses Zₐ/₂ = 1.96."
                 }
               ]
             },
@@ -730,7 +865,30 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "Educational content for Gamma Distribution is coming soon. Stay tuned for future app updates!"
+                  "content": "The Gamma distribution is a flexible, right-skewed continuous distribution that generalizes the Exponential distribution. While Exponential(λ) models the wait time until the FIRST event in a Poisson process, the Gamma(α, λ) models the wait time until the α-th event. It is defined using the Gamma function Γ(α), which generalizes the factorial to real numbers: Γ(n) = (n-1)! for positive integers n."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "f(x; \\alpha, \\lambda) = \\frac{\\lambda^{\\alpha} x^{\\alpha - 1} e^{-\\lambda x}}{\\Gamma(\\alpha)}, \\quad x > 0",
+                  "metadata": {
+                    "\\alpha": "Shape parameter (number of events to wait for). Must be > 0.",
+                    "\\lambda": "Rate parameter (events per unit time). Must be > 0.",
+                    "x^{\\alpha - 1}": "The polynomial term that controls the shape: when α=1, this is x⁰=1, and the distribution simplifies to the Exponential.",
+                    "e^{-\\lambda x}": "Exponential decay term.",
+                    "\\Gamma(\\alpha)": "The Gamma function: Γ(α) = ∫₀⁾ t^(α-1) e^(-t) dt. It is the normalization constant ensuring the total area is 1."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "E[X] = \\frac{\\alpha}{\\lambda} \\qquad Var(X) = \\frac{\\alpha}{\\lambda^2}",
+                  "metadata": {
+                    "E[X] = \\frac{\\alpha}{\\lambda}": "Mean: the expected wait is α times the average inter-event time (1/λ). When α=1, E[X]=1/λ, matching the Exponential.",
+                    "Var(X) = \\frac{\\alpha}{\\lambda^2}": "Variance grows linearly with α, reflecting the accumulation of uncertainty over multiple waits."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Special cases: Gamma(α=1, λ) = Exponential(λ). Gamma(α=k/2, λ=1/2) = Chi-Squared(ν=k), making it the parent of the chi-squared distribution used in hypothesis testing! The Gamma is extremely versatile for modeling non-negative, skewed data like insurance claims or service times."
                 }
               ]
             },
@@ -742,7 +900,30 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "Educational content for Beta Distribution is coming soon. Stay tuned for future app updates!"
+                  "content": "The Beta distribution is a continuous distribution defined exclusively on the interval [0, 1], making it the natural choice for modelling probabilities, proportions, and rates. It is parametrized by two shape parameters α and β, giving it extraordinary flexibility: it can be uniform (α=β=1), U-shaped (α,β < 1), bell-shaped (α,β > 1), or skewed in either direction."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "f(x; \\alpha, \\beta) = \\frac{x^{\\alpha-1}(1-x)^{\\beta-1}}{B(\\alpha, \\beta)}, \\quad 0 \\le x \\le 1",
+                  "metadata": {
+                    "\\alpha": "First shape parameter. Larger α pushes mass toward 1 (more successes in prior).",
+                    "\\beta": "Second shape parameter. Larger β pushes mass toward 0 (more failures in prior).",
+                    "x^{\\alpha-1}": "Polynomial term weighting values near 1.",
+                    "(1-x)^{\\beta-1}": "Polynomial term weighting values near 0.",
+                    "B(\\alpha, \\beta)": "The Beta function: B(α, β) = Γ(α)Γ(β)/Γ(α+β). It normalizes the distribution so it integrates to 1."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "E[X] = \\frac{\\alpha}{\\alpha + \\beta} \\qquad Var(X) = \\frac{\\alpha\\beta}{(\\alpha+\\beta)^2(\\alpha+\\beta+1)}",
+                  "metadata": {
+                    "E[X] = \\frac{\\alpha}{\\alpha + \\beta}": "The mean is a ratio of the first shape parameter to the total. Intuitively: think of α as prior 'successes' and β as prior 'failures' — the mean is the historical success rate.",
+                    "Var(X)": "Variance decreases as (α+β) grows, reflecting greater certainty with more 'prior evidence'."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "The Beta distribution is the conjugate prior for the Bernoulli and Binomial in Bayesian statistics. If your prior on a probability p is Beta(α, β) and you observe k successes in n trials, the posterior is Beta(α+k, β+n-k) — this is Bayesian updating done beautifully."
                 }
               ]
             }
@@ -924,7 +1105,31 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "Educational content for Linear Combinations is coming soon. Stay tuned for future app updates!"
+                  "content": "A linear combination of random variables is an expression of the form Z = aX + bY, where a and b are constants. Two fundamental properties make these easy to work with: (1) The Expected Value (mean) is always linear — regardless of whether X and Y are independent. (2) The Variance is only additive when X and Y are independent; when they are correlated, a covariance term must be added."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "E[aX + bY] = a \\cdot E[X] + b \\cdot E[Y]",
+                  "metadata": {
+                    "E[aX + bY]": "Expected value of the linear combination.",
+                    "a \\cdot E[X]": "The constant 'a' scales the mean of X.",
+                    "b \\cdot E[Y]": "The constant 'b' scales the mean of Y.",
+                    "\\text{Note}": "This linearity of expectation holds for ANY random variables, independent or not!"
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "Var(aX + bY) = a^2 Var(X) + b^2 Var(Y) + 2ab \\cdot Cov(X, Y)",
+                  "metadata": {
+                    "a^2 Var(X)": "Variance scales by the SQUARE of the constant.",
+                    "b^2 Var(Y)": "Variance scales by the SQUARE of the constant.",
+                    "2ab \\cdot Cov(X, Y)": "The covariance cross-term. If X and Y are independent, Cov(X,Y)=0 and this term vanishes entirely.",
+                    "\\text{Subtraction case}": "For Z = aX - bY, the covariance term becomes -2ab · Cov(X,Y), so SUBTRACTING positively correlated variables REDUCES variance!"
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Portfolio theory in finance is built entirely on these formulas! The expected return of a portfolio is the weighted average of its assets' returns. The risk (variance) depends on correlations: diversifying into UNCORRELATED assets (Cov=0) is the optimal way to reduce total variance."
                 }
               ]
             }
@@ -984,11 +1189,19 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "The median is the middle value when data is sorted. The mode is the most frequently occurring value."
+                  "content": "The median is the value that splits an ordered dataset exactly in half — 50% of observations fall below it, and 50% above it. For an odd number of values, it is the middle element. For an even number, it is the average of the two middle elements. The mode is the most frequently occurring value in a dataset. A dataset can be unimodal (one mode), bimodal (two modes), or multimodal."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\text{Median position} = \\frac{n+1}{2}",
+                  "metadata": {
+                    "n": "Total number of data points (sorted in ascending order).",
+                    "\\frac{n+1}{2}": "The position of the median in the ordered list. If n is odd, this is an integer (e.g., position 3 of 5). If n is even, this is a half-integer (e.g., position 3.5 of 6), meaning average the 3rd and 4th values."
+                  }
                 },
                 {
                   "type": "TIP",
-                  "content": "The median is robust to outliers, while the mean will get pulled heavily by extreme values."
+                  "content": "The median is robust to outliers, while the mean will get pulled heavily by extreme values. Example: in the dataset {1, 2, 3, 4, 100}, the mean is 22 but the median is 3. The mode is the only measure that can be used for NOMINAL (categorical) data, such as 'most popular color'."
                 }
               ]
             },
@@ -1099,7 +1312,30 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "Educational content for Standard Deviation is coming soon. Stay tuned for future app updates!"
+                  "content": "The Standard Deviation is the square root of the Variance. While variance is measured in SQUARED units of the original data (e.g., dollars²), the standard deviation brings the spread back into the original, interpretable units (e.g., dollars). It is the most commonly reported measure of spread precisely because it is on the same scale as the data and the mean."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\sigma = \\sqrt{\\sigma^2} = \\sqrt{\\frac{\\sum_{i=1}^{N}(x_i - \\mu)^2}{N}}",
+                  "metadata": {
+                    "\\sigma": "Population standard deviation.",
+                    "\\sigma^2": "Population variance (the thing we take the square root of).",
+                    "\\sum(x_i - \\mu)^2": "Sum of squared deviations from the population mean.",
+                    "N": "Total population size."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "s = \\sqrt{s^2} = \\sqrt{\\frac{\\sum_{i=1}^{n}(x_i - \\bar{x})^2}{n-1}}",
+                  "metadata": {
+                    "s": "Sample standard deviation.",
+                    "s^2": "Sample variance.",
+                    "n-1": "Bessel's correction: dividing by n-1 instead of n gives an unbiased estimate of the population standard deviation."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Interpretation: roughly 68% of data falls within 1σ of the mean, 95% within 2σ, and 99.7% within 3σ (the Empirical Rule, valid for bell-shaped distributions). A small σ means data is tightly clustered around the mean; a large σ means it is widely spread."
                 }
               ]
             },
@@ -1111,7 +1347,21 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "Educational content for Coefficient of Variation is coming soon. Stay tuned for future app updates!"
+                  "content": "The Coefficient of Variation (CV) is a standardized, dimensionless measure of relative dispersion. It expresses the standard deviation as a percentage of the mean. Because it is unit-free, it allows meaningful comparison of variability between datasets that have different units or vastly different means — something raw standard deviation cannot do."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "CV = \\frac{\\sigma}{\\mu} \\times 100\\%",
+                  "metadata": {
+                    "CV": "Coefficient of Variation (expressed as a percentage).",
+                    "\\sigma": "Standard deviation of the dataset.",
+                    "\\mu": "Mean of the dataset (must be non-zero and positive for CV to be meaningful).",
+                    "\\times 100\\%": "Converts the ratio to a percentage for interpretability."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Example: Stock A has mean return = $100 and σ = $10 (CV = 10%). Stock B has mean return = $1 and σ = $0.50 (CV = 50%). Even though Stock B has a smaller absolute standard deviation, it is FIVE TIMES more volatile relative to its price. CV reveals this. A CV ≤ 15% is often considered 'low' variability, and CV > 30% is typically 'high'."
                 }
               ]
             }
@@ -1130,11 +1380,21 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "A percentile indicates the value below which a given percentage of observations fall."
+                  "content": "A percentile indicates the value below which a given percentage of observations in a dataset fall. Quartiles are the three specific percentiles that divide ordered data into four equal quarters: Q1 (25th percentile), Q2 (50th percentile = the Median), and Q3 (75th percentile). The difference Q3 − Q1 is the Interquartile Range (IQR), which measures the spread of the middle 50% of data."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "L_p = \\frac{p}{100} \\cdot n",
+                  "metadata": {
+                    "L_p": "The locator value (position index) for the p-th percentile.",
+                    "p": "The desired percentile (e.g., p=75 for Q3).",
+                    "n": "The total number of data points (sorted in ascending order).",
+                    "\\text{Rule}": "If L_p is a whole number, the percentile is the average of the L_p-th and (L_p+1)-th values. If L_p is not a whole number, round UP to the nearest integer."
+                  }
                 },
                 {
                   "type": "TIP",
-                  "content": "The 50th percentile is exactly the median."
+                  "content": "The 50th percentile is exactly the median. Standardized test scores (SAT, IQ) are reported as percentiles for this reason — a score at the 90th percentile means you scored better than 90% of test takers. The five-number summary (Min, Q1, Median, Q3, Max) completely describes the shape of a dataset for a box plot."
                 }
               ]
             },
@@ -1220,11 +1480,21 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "A box-and-whisker plot visually displays the five-number summary: minimum, first quartile, median, third quartile, and maximum."
+                  "content": "A box-and-whisker plot compactly visualizes the five-number summary of a dataset: Minimum, Q1 (25th percentile), Median (Q2), Q3 (75th percentile), and Maximum. The rectangular 'box' spans from Q1 to Q3 (covering the middle 50% of data — the IQR). The median is marked as a line inside the box. 'Whiskers' extend from the box to the most extreme values that are NOT outliers. Points beyond the whisker fences are plotted individually as outliers."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\text{Lower fence} = Q_1 - 1.5 \\cdot IQR \\qquad \\text{Upper fence} = Q_3 + 1.5 \\cdot IQR",
+                  "metadata": {
+                    "Q_1": "First quartile (25th percentile).",
+                    "Q_3": "Third quartile (75th percentile).",
+                    "IQR": "Interquartile Range = Q₃ − Q₁.",
+                    "1.5 \\cdot IQR": "Tukey's fence multiplier — any observation beyond these boundaries is flagged as a potential outlier."
+                  }
                 },
                 {
                   "type": "TIP",
-                  "content": "The \"box\" represents the IQR, containing the middle 50% of your data."
+                  "content": "The box plot is the visual companion to the five-number summary. Comparing box plots side by side across groups is an extremely efficient way to spot differences in center, spread, and skewness. Skewness is visible: if the median line is closer to Q1, the distribution is right-skewed; if closer to Q3, it is left-skewed."
                 }
               ]
             }
@@ -1250,11 +1520,21 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "Simple Random Sampling (SRS) ensures every subset of size n has an equal probability of being selected."
+                  "content": "Simple Random Sampling (SRS) is the foundational sampling method in statistics. In SRS, every possible subset of size n has an equal probability of being selected from the population of size N. This guarantees absence of systematic bias, making the sample a valid, representative snapshot of the population. There are two variants: (1) With replacement — each drawn item is returned before the next draw (like Binomial trials). (2) Without replacement — each drawn item is NOT returned (like Hypergeometric). For large N relative to n, the results are virtually identical."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "P(\\text{any specific sample of size } n) = \\frac{1}{\\binom{N}{n}}",
+                  "metadata": {
+                    "N": "Total population size.",
+                    "n": "Desired sample size.",
+                    "\\binom{N}{n}": "Total number of possible samples of size n from N (this is also C(N,n)).",
+                    "\\frac{1}{\\binom{N}{n}}": "Each specific sample is equally likely — this is the defining property of SRS."
+                  }
                 },
                 {
                   "type": "TIP",
-                  "content": "SRS is the gold standard, avoiding sampling bias so that the sample properly represents the population."
+                  "content": "SRS is the gold standard, avoiding sampling bias so that the sample properly represents the population. In practice, a common proxy is systematic sampling (e.g., pick every k-th item from a list). Other alternatives like stratified or cluster sampling trade some randomness for practical gains in precision or cost."
                 }
               ]
             },
@@ -1373,11 +1653,21 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "The Method of Moments estimates population parameters by setting sample moments (like sample mean and variance) equal to theoretical moments and solving the equations."
+                  "content": "The Method of Moments (MoM) is one of the oldest and most intuitive parameter estimation techniques. The idea is elegant: the k-th theoretical moment of a distribution is a function of its parameters. You equate these theoretical moments to the corresponding k-th sample moments (computed from your data), then solve the resulting system of equations for the unknown parameters. For a distribution with p parameters, you need p moment equations."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\mu'_k = E[X^k] = \\frac{1}{n} \\sum_{i=1}^n x_i^k",
+                  "metadata": {
+                    "\\mu'_k": "The k-th (raw) moment of the distribution.",
+                    "E[X^k]": "Theoretical k-th moment — a function of the unknown parameters.",
+                    "\\frac{1}{n} \\sum x_i^k": "Sample k-th moment — computed from your observed data.",
+                    "\\text{Method}": "Set E[X^k] = (1/n)Σx_i^k for k = 1, 2, ..., p and solve for the p parameters."
+                  }
                 },
                 {
                   "type": "TIP",
-                  "content": "It is usually simpler than MLE but sometimes produces estimates that are less accurate or outside valid parameter ranges."
+                  "content": "For the Normal(μ, σ²) distribution: 1st moment gives μ = x̅, 2nd moment gives σ² = (1/n)Σ(x_i - x̅)². MoM is usually simpler than MLE, but sometimes produces estimates outside valid parameter ranges (e.g., negative estimates for a scale parameter)."
                 }
               ]
             },
@@ -1500,11 +1790,21 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "The Null Hypothesis (H0) assumes the status quo or \"no effect\". The Alternative Hypothesis (H1 or Ha) is what you are trying to prove."
+                  "content": "Hypothesis testing frames a statistical question as a duel between two competing claims. The Null Hypothesis (H₀) is the default, conservative claim — it represents 'no effect', 'no difference', or 'status quo'. The Alternative Hypothesis (H₁ or Hₐ) is the scientific claim you are trying to gather evidence for. The test provides evidence to REJECT H₀ in favor of H₁, but never 'proves' H₁ directly. Tests can be: two-tailed (H₁: μ ≠ μ₀), right-tailed (H₁: μ > μ₀), or left-tailed (H₁: μ < μ₀)."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "H_0: \\mu = \\mu_0 \\quad \\text{vs} \\quad H_1: \\mu \\ne \\mu_0",
+                  "metadata": {
+                    "H_0": "Null Hypothesis: the parameter equals a specific hypothesized value μ₀.",
+                    "H_1": "Alternative Hypothesis: the parameter DIFFERS from μ₀ (two-tailed form).",
+                    "\\mu_0": "The specific value being tested (e.g., 'the mean is 50').",
+                    "\\text{One-tailed variants}": "H₁: μ > μ₀ (right-tailed) or H₁: μ < μ₀ (left-tailed) — use when you have a directional hypothesis."
+                  }
                 },
                 {
                   "type": "TIP",
-                  "content": "We never \"accept\" the null hypothesis; we only \"fail to reject\" it. Absence of evidence is not evidence of absence!"
+                  "content": "We never 'accept' the null hypothesis; we only 'fail to reject' it. The burden of proof lies with H₁ — just like in a courtroom, H₀ is presumed 'innocent' until the data provides sufficiently strong evidence against it. Absence of evidence is NOT evidence of absence!"
                 }
               ]
             },
@@ -1546,11 +1846,21 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "The p-value is the probability of observing data at least as extreme as your sample, assuming the null hypothesis is completely true."
+                  "content": "The p-value is the probability of observing a test statistic at least as extreme as the one calculated from your sample data, ASSUMING the null hypothesis H₀ is completely true. A small p-value means: 'if H₀ were true, this result would be very unlikely.' We set a threshold α (the significance level, typically 0.05). If p < α, the result is statistically significant and we reject H₀."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "p\\text{-value} = P(|T| \\ge |t_{obs}| \\mid H_0 \\text{ true})",
+                  "metadata": {
+                    "P(|T| \\ge |t_{obs}|)": "Probability of seeing a test statistic as extreme or more extreme than observed (two-tailed).",
+                    "t_{obs}": "The test statistic calculated from your sample data.",
+                    "H_0 \\text{ true}": "This probability is computed under the null hypothesis distribution.",
+                    "\\text{Decision rule}": "If p-value < α, reject H₀. If p-value ≥ α, fail to reject H₀."
+                  }
                 },
                 {
                   "type": "TIP",
-                  "content": "If p < alpha (e.g., p < 0.05), the data is too rare to happen by chance under H0, so we reject H0. \"If P is low, H0 must go!\""
+                  "content": "'If P is low, H₀ must go!' A p-value does NOT tell you the probability that H₀ is true. It only tells you how surprising your data is under H₀. A p-value of 0.03 means there is a 3% chance of seeing data this extreme if H₀ were true — not a 97% chance that H₁ is correct."
                 }
               ]
             },
@@ -1666,11 +1976,22 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "Tests the difference in means for two related groups (e.g., measuring the same patients before and after treatment)."
+                  "content": "The Paired T-Test (also called the Dependent Samples T-Test) is used when each observation in one group is naturally linked to a specific observation in the other group. Classic examples: measuring the same patients before and after treatment, comparing left eye vs right eye, or testing twins. By working with the pair differences dᵢ = xᵢ₁ - xᵢ₂, you eliminate between-subject variability, giving the test far more statistical power than a two-sample test would."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "d_i = x_{i1} - x_{i2} \\quad \\Rightarrow \\quad t = \\frac{\\bar{d} - 0}{s_d / \\sqrt{n}}",
+                  "metadata": {
+                    "d_i": "The difference between the paired observations for subject i.",
+                    "\\bar{d}": "The sample mean of all the pair differences.",
+                    "s_d": "The sample standard deviation of the differences.",
+                    "n": "The number of PAIRS (not the total number of individual observations).",
+                    "t": "The t-statistic, compared to a t-distribution with n-1 degrees of freedom."
+                  }
                 },
                 {
                   "type": "TIP",
-                  "content": "Instead of two independent groups, you subtract the pairs to get a single column of differences, then run a ONE-sample t-test on those differences against zero!"
+                  "content": "Key insight: instead of two independent groups, you subtract each pair to produce a SINGLE column of differences dᵢ, then run a ONE-sample t-test on those differences against H₀: μ_d = 0. The H₁ is that the mean difference is non-zero, meaning the treatment had an effect."
                 }
               ]
             },
@@ -1738,11 +2059,30 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "Tests whether two categorical variables are independent of each other (using a contingency table)."
+                  "content": "The Chi-Square Test of Independence tests whether two categorical variables are statistically independent of each other, using observed frequencies in a contingency table. H₀ is that the variables are independent (no association). H₁ is that they are associated. If they were truly independent, the expected count in any cell should be the row total times the column total, divided by the grand total."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "E_{ij} = \\frac{(\\text{Row}_i \\text{ Total}) \\times (\\text{Col}_j \\text{ Total})}{n}",
+                  "metadata": {
+                    "E_{ij}": "Expected frequency in row i and column j (under the null hypothesis of independence).",
+                    "\\text{Row}_i \\text{ Total}": "Total count in row i across all columns.",
+                    "\\text{Col}_j \\text{ Total}": "Total count in column j across all rows.",
+                    "n": "Grand total (total number of observations)."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\chi^2 = \\sum_{i,j} \\frac{(O_{ij} - E_{ij})^2}{E_{ij}}, \\quad df = (r-1)(c-1)",
+                  "metadata": {
+                    "O_{ij}": "Observed frequency in cell (i, j).",
+                    "E_{ij}": "Expected frequency in cell (i, j) under independence.",
+                    "df = (r-1)(c-1)": "Degrees of freedom: (number of rows - 1) × (number of columns - 1)."
+                  }
                 },
                 {
                   "type": "TIP",
-                  "content": "Expected frequency = (Row Total * Column Total) / Grand Total. Degrees of freedom = (Rows - 1) * (Columns - 1)."
+                  "content": "Real-world example: Is smoking (Yes/No) independent of lung disease (Yes/No)? Build a 2×2 contingency table with observed counts and compute the expected counts. If the chi-square statistic is large (p < α), the variables are associated. Note: all expected counts must be ≥ 5 for the approximation to be valid."
                 }
               ]
             },
@@ -1754,11 +2094,20 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "Tests whether different populations have the same distribution of a single categorical variable."
+                  "content": "The Chi-Square Test of Homogeneity tests whether several different populations have the same distribution of a single categorical variable. Unlike the Test of Independence (which samples from one population and classifies by two variables), here you DELIBERATELY draw separate random samples from multiple populations and compare their distributions. H₀: All populations have the same proportions for each category."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\chi^2 = \\sum_{i,j} \\frac{(O_{ij} - E_{ij})^2}{E_{ij}}, \\quad E_{ij} = \\frac{(\\text{Row}_i \\text{ Total}) \\times (\\text{Col}_j \\text{ Total})}{n}",
+                  "metadata": {
+                    "O_{ij}": "Observed count for population j in category i.",
+                    "E_{ij}": "Expected count if all populations had IDENTICAL distributions.",
+                    "df = (r-1)(c-1)": "Degrees of freedom: (categories - 1) × (populations - 1)."
+                  }
                 },
                 {
                   "type": "TIP",
-                  "content": "The math is exactly identical to the Chi-Square Test for Independence, only the experimental design is different."
+                  "content": "The math is EXACTLY identical to the Test of Independence — the same formula, same chi-square statistic, same degrees of freedom, same table lookup. The ONLY difference is the research design: Independence tests one combined sample; Homogeneity tests separate pre-defined samples from distinct populations."
                 }
               ]
             }
@@ -1923,11 +2272,20 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "The F-distribution is right-skewed and is used exclusively for ANOVA and testing equality of variances."
+                  "content": "The F-distribution arises as the ratio of two independent chi-squared random variables, each divided by their respective degrees of freedom. It is always non-negative and right-skewed, and it is fully characterized by two degree-of-freedom parameters: df₁ (numerator) and df₂ (denominator). In ANOVA, the F-statistic is the ratio of between-group variance to within-group variance."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "F = \\frac{\\chi^2_1 / df_1}{\\chi^2_2 / df_2} \\sim F(df_1, df_2)",
+                  "metadata": {
+                    "\\chi^2_1 / df_1": "First chi-squared variable divided by its degrees of freedom (the numerator mean square).",
+                    "\\chi^2_2 / df_2": "Second chi-squared variable divided by its degrees of freedom (the denominator mean square).",
+                    "F(df_1, df_2)": "F-distribution with numerator df₁ and denominator df₂ degrees of freedom."
+                  }
                 },
                 {
                   "type": "TIP",
-                  "content": "An F-statistic near 1.0 means the groups are virtually identical. A large F-statistic means there is a significant difference."
+                  "content": "An F-statistic near 1.0 means the between-group variability is about the same as the within-group noise — no real signal. A large F-statistic (p < α) means between-group differences are significantly larger than random noise. Note: the F-distribution is ALWAYS right-skewed and only takes positive values."
                 }
               ]
             },
@@ -1939,11 +2297,21 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "If an ANOVA is significant, you know AT LEAST one group is different, but you don't know WHICH one. Post-Hoc tests (like Tukey's HSD) figure out exactly which pairs differ."
+                  "content": "After a significant ANOVA, you know at least one group differs, but not WHICH pair(s). Post-hoc tests perform all pairwise mean comparisons while controlling the family-wise error rate (FWER) — the probability of making at least one Type I error across all tests. Tukey's Honestly Significant Difference (HSD) is the most widely used: it finds the minimum difference between two group means required to be considered statistically significant."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\text{HSD} = q_{\\alpha, k, N-k} \\cdot \\sqrt{\\frac{MSW}{n_g}}",
+                  "metadata": {
+                    "q_{\\alpha, k, N-k}": "The Studentized Range critical value from a special table (depends on α, number of groups k, and error df = N-k).",
+                    "MSW": "Mean Square Within groups (the pooled estimate of within-group variance from the ANOVA table).",
+                    "n_g": "Number of observations per group (assumes equal group sizes; harmonic mean used otherwise).",
+                    "\\text{Decision}": "If |x̅_i - x̅_j| > HSD, groups i and j are significantly different."
+                  }
                 },
                 {
                   "type": "TIP",
-                  "content": "We don't just run multiple t-tests instead of ANOVA because running multiple tests inflates the Type I error rate (False Positives)."
+                  "content": "Never run multiple individual t-tests instead of post-hoc tests. If you test k pairs at α=0.05 each, your overall Type I error rate inflates to up to 1 - (0.95)^k. With 10 comparisons, that's a 40% chance of a false positive! Tukey's HSD prevents this by using the studentized range distribution."
                 }
               ]
             },
@@ -1955,11 +2323,20 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "Two-Way ANOVA evaluates the effect of TWO categorical independent variables on a continuous dependent variable."
+                  "content": "Two-Way ANOVA evaluates the simultaneous effects of TWO categorical independent variables (factors) on a continuous dependent variable. It produces three separate F-tests: (1) Main effect of Factor A, (2) Main effect of Factor B, and (3) The A×B Interaction effect. The interaction is the most scientifically rich result: it tells you whether the effect of Factor A CHANGES depending on the level of Factor B (and vice versa)."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "F_{\\text{interaction}} = \\frac{MS_{A \\times B}}{MS_{\\text{error}}}",
+                  "metadata": {
+                    "MS_{A \\times B}": "Mean Square for the interaction: the variability attributable to the COMBINED effect of factors A and B beyond their individual main effects.",
+                    "MS_{\\text{error}}": "Mean Square Error (within-group residual variance — same as MSW from one-way ANOVA).",
+                    "F_{\\text{interaction}}": "A large value means the effect of A depends significantly on the level of B."
+                  }
                 },
                 {
                   "type": "TIP",
-                  "content": "The most powerful feature of Two-Way ANOVA is testing for \"Interactions\" (e.g., does a drug work differently for men vs women?)."
+                  "content": "The interaction effect is the crown jewel of Two-Way ANOVA. Example: 'Does a drug work differently for men vs women?' Main effects say 'does the drug work overall?' and 'do men and women differ overall?', but the INTERACTION answers the specific research question. If a significant interaction exists, you must interpret main effects with caution."
                 }
               ]
             }
@@ -2118,11 +2495,29 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "The Receiver Operating Characteristic curve plots the True Positive Rate against the False Positive Rate at various thresholds."
+                  "content": "The Receiver Operating Characteristic (ROC) curve is a graphical tool for evaluating binary classifiers. It plots the True Positive Rate (TPR = Sensitivity = Recall) against the False Positive Rate (FPR = 1 − Specificity) at every possible classification threshold (from 0 to 1). A perfect classifier has a point at (0, 1) — 100% sensitivity, 0% false positives. A random classifier lies on the diagonal line from (0,0) to (1,1)."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "TPR = \\frac{TP}{TP + FN} \\qquad FPR = \\frac{FP}{FP + TN}",
+                  "metadata": {
+                    "TPR": "True Positive Rate (Sensitivity): of all actual positives, what fraction did we correctly identify?",
+                    "FPR": "False Positive Rate: of all actual negatives, what fraction did we incorrectly flag as positive?",
+                    "\\text{Trade-off}": "Lowering the classification threshold increases BOTH TPR and FPR simultaneously."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "AUC = \\int_0^1 TPR(FPR) \\, d(FPR)",
+                  "metadata": {
+                    "AUC": "Area Under the ROC Curve. Ranges from 0.5 (random) to 1.0 (perfect).",
+                    "\\int_0^1": "The area is computed by integrating the ROC curve over the entire FPR range from 0 to 1.",
+                    "\\text{Interpretation}": "AUC = probability that a randomly chosen positive example is ranked higher than a randomly chosen negative one by the model."
+                  }
                 },
                 {
                   "type": "TIP",
-                  "content": "The Area Under the Curve (AUC) represents the probability that the model will rank a random positive example higher than a random negative one. An AUC of 1.0 is perfect; 0.5 is random guessing."
+                  "content": "AUC is a threshold-independent metric — it summarizes classifier performance across all possible thresholds in one number. AUC = 1.0 is perfect. AUC = 0.5 is useless (no better than flipping a coin). AUC < 0.5 means the model is systematically wrong (flip its outputs and it becomes good!)."
                 }
               ]
             },
@@ -2134,11 +2529,21 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "The fundamental tradeoff in ML: Bias is error from overly simplistic models (Underfitting). Variance is error from overly complex models that memorize noise (Overfitting)."
+                  "content": "The expected prediction error of any machine learning model can be mathematically decomposed into three components: Bias (error from incorrect assumptions in the model), Variance (error from sensitivity to fluctuations in the training set), and irreducible Noise (inherent randomness in the data that no model can eliminate). This is the fundamental tradeoff: as model complexity increases, bias decreases but variance increases. The goal is to find the sweet spot that minimizes TOTAL error."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "E[(y - \\hat{f}(x))^2] = \\text{Bias}^2[\\hat{f}(x)] + \\text{Var}[\\hat{f}(x)] + \\sigma^2_{\\epsilon}",
+                  "metadata": {
+                    "E[(y - \\hat{f}(x))^2]": "Expected Mean Squared Error of the model's prediction at point x.",
+                    "\\text{Bias}^2": "Bias squared: error from overly simplistic models that systematically miss the true relationship (Underfitting). = (E[\u0124(x)] - f(x))²",
+                    "\\text{Var}[\\hat{f}(x)]": "Variance: sensitivity to training data fluctuations. High-complexity models that memorize noise (Overfitting).",
+                    "\\sigma^2_{\\epsilon}": "Irreducible noise: inherent randomness in y that no model can ever eliminate."
+                  }
                 },
                 {
                   "type": "TIP",
-                  "content": "High Bias = Failing the training set. High Variance = Acing the training set, but failing the test set."
+                  "content": "High Bias = Underfitting: failing even the training set. High Variance = Overfitting: acing the training set but failing the test set. Techniques to reduce variance: regularization (L1/L2), more training data, simpler model. Techniques to reduce bias: more complex model, better features. Cross-validation helps you find the optimal complexity."
                 }
               ]
             },
@@ -2150,11 +2555,21 @@
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "K-Fold Cross-Validation splits the dataset into K chunks. The model trains on K-1 chunks and tests on the remaining chunk, rotating until all data has been used for testing."
+                  "content": "K-Fold Cross-Validation is the gold standard for estimating how well a model generalizes to unseen data. The dataset is divided into K equally-sized folds. In each of K iterations, one fold is held out as the validation set and the model trains on the remaining K-1 folds. The K validation errors are averaged to produce the final CV estimate. This gives a robust generalization estimate because EVERY data point has been used for validation exactly once."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "CV_{(K)} = \\frac{1}{K} \\sum_{k=1}^{K} \\text{Error}_k",
+                  "metadata": {
+                    "CV_{(K)}": "K-Fold Cross-Validation error estimate.",
+                    "K": "Number of folds (typically K=5 or K=10 in practice).",
+                    "\\text{Error}_k": "The validation error on fold k (e.g., MSE for regression, misclassification rate for classification).",
+                    "\\frac{1}{K} \\sum": "Simple average of the K validation errors."
+                  }
                 },
                 {
                   "type": "TIP",
-                  "content": "This gives a much more robust estimate of true model performance than a single train/test split."
+                  "content": "K=10 is the most common choice and offers a good bias-variance tradeoff for the CV estimate itself. The extreme case K=n is Leave-One-Out CV (LOOCV) — maximally unbiased but computationally expensive. K-Fold CV is used not just to evaluate models, but also to SELECT hyperparameters (e.g., the regularization strength λ) without touching the test set."
                 }
               ]
             }
@@ -2169,55 +2584,351 @@
       "chapters": [
         {
           "slug": "derivatives-basics",
-          "name": "10.1 Derivative Rules",
+          "name": "10.1 Reglas Algebraicas Fundamentales",
           "type": "CHAPTER",
           "concepts": [
             {
-              "slug": "derivative-intuition",
-              "name": "The Derivative (Rate of Change)",
+              "slug": "derivada-constante",
+              "name": "Derivada de una constante",
               "type": "CONCEPT",
-              "articleTitle": "Derivatives Overview",
+              "articleTitle": "Derivada de una constante",
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "The derivative represents the instantaneous rate of change of a function. Geometrically, it is the slope of the tangent line at any given point."
+                  "content": "La derivada de cualquier número solo es cero."
                 },
                 {
                   "type": "FORMULA",
-                  "content": "f'(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}",
+                  "content": "\\frac{d}{dx}[c] = 0",
                   "metadata": {
-                    "f'(x)": "The derivative of f with respect to x",
-                    "\\lim_{h \\to 0}": "As the step size h approaches zero",
-                    "\\frac{\\dots}{h}": "Rise over run"
+                    "\\frac{d}{dx}": "Operador derivada",
+                    "c": "Una constante cualquiera"
                   }
+                }
+              ]
+            },
+            {
+              "slug": "regla-identidad",
+              "name": "Regla de la identidad",
+              "type": "CONCEPT",
+              "articleTitle": "Variable simple",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "La derivada de la variable respecto a sí misma es 1."
                 },
                 {
-                  "type": "TIP",
-                  "content": "In ML, the derivative tells us exactly which direction to adjust our parameters to decrease the error!"
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[x] = 1",
+                  "metadata": {
+                    "\\frac{d}{dx}": "Operador derivada",
+                    "x": "Variable independiente"
+                  }
                 }
               ]
             },
             {
               "slug": "power-rule",
-              "name": "Power Rule",
+              "name": "Regla de la potencia",
               "type": "CONCEPT",
-              "articleTitle": "The Power Rule",
+              "articleTitle": "Regla de la potencia",
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "The most common shortcut for taking derivatives of polynomials."
+                  "content": "Bajas el exponente a multiplicar y le restas 1 al exponente original."
                 },
                 {
                   "type": "FORMULA",
-                  "content": "\\frac{d}{dx} (x^n) = n x^{n-1}",
+                  "content": "\\frac{d}{dx}[x^n] = nx^{n-1}",
                   "metadata": {
-                    "\\frac{d}{dx}": "The derivative operator",
-                    "n x^{n-1}": "Bring the exponent down, and subtract 1 from the exponent"
+                    "n": "El exponente original",
+                    "n-1": "El nuevo exponente"
                   }
                 },
                 {
                   "type": "TIP",
-                  "content": "For f(x) = x^2, the derivative is 2x. This is exactly why the derivative of Mean Squared Error ends up being linear!"
+                  "content": "Para f(x) = x^2, la derivada es 2x."
+                }
+              ]
+            },
+            {
+              "slug": "multiplo-constante",
+              "name": "Múltiplo constante",
+              "type": "CONCEPT",
+              "articleTitle": "Regla del múltiplo constante",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Si un número multiplica a una función, el número se queda quieto y solo derivas la función."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[c \\cdot f(x)] = c \\cdot f'(x)",
+                  "metadata": {
+                    "c": "Constante multiplicativa",
+                    "f'(x)": "Derivada de la función"
+                  }
+                }
+              ]
+            },
+            {
+              "slug": "suma-resta",
+              "name": "Regla de suma y resta",
+              "type": "CONCEPT",
+              "articleTitle": "Suma y resta",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "La derivada de una suma es la suma de las derivadas."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[f(x) \\pm g(x)] = f'(x) \\pm g'(x)",
+                  "metadata": {
+                    "\\pm": "Más o menos",
+                    "f'(x)": "Derivada de f",
+                    "g'(x)": "Derivada de g"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "derivatives-ops",
+          "name": "10.2 Reglas de Operaciones",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "regla-producto",
+              "name": "Regla del Producto",
+              "type": "CONCEPT",
+              "articleTitle": "Regla del Producto",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "La derivada del primero por el segundo sin derivar, más el primero sin derivar por la derivada del segundo."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[f(x) \\cdot g(x)] = f'(x)g(x) + f(x)g'(x)",
+                  "metadata": {
+                    "f'(x)g(x)": "Derivada del primero por segundo normal",
+                    "f(x)g'(x)": "Primero normal por derivada del segundo"
+                  }
+                }
+              ]
+            },
+            {
+              "slug": "regla-cociente",
+              "name": "Regla del Cociente",
+              "type": "CONCEPT",
+              "articleTitle": "Regla del Cociente",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "El de abajo por la derivada del de arriba, menos el de arriba por la derivada del de abajo, todo sobre el de abajo al cuadrado."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}\\left[\\frac{f(x)}{g(x)}\\right] = \\frac{f'(x)g(x) - f(x)g'(x)}{[g(x)]^2}",
+                  "metadata": {
+                    "f'(x)g(x) - f(x)g'(x)": "Numerador derivado estilo producto con resta",
+                    "[g(x)]^2": "Denominador al cuadrado"
+                  }
+                }
+              ]
+            },
+            {
+              "slug": "chain-rule",
+              "name": "Regla de la Cadena",
+              "type": "CONCEPT",
+              "articleTitle": "Regla de la Cadena",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Sirve para derivar funciones dentro de funciones. Derivada de la función externa (evaluada en la interna) por la derivada de la función interna."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[f(g(x))] = f'(g(x)) \\cdot g'(x)",
+                  "metadata": {
+                    "f'(g(x))": "Derivada externa",
+                    "g'(x)": "Derivada interna"
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "La regla de la cadena es vital para el Backpropagation en Redes Neuronales."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "derivatives-exp",
+          "name": "10.3 Funciones Exponenciales y Logarítmicas",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "exp-natural",
+              "name": "Exponencial natural",
+              "type": "CONCEPT",
+              "articleTitle": "Exponencial natural",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "La invencible: Su derivada es ella misma."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[e^x] = e^x",
+                  "metadata": {
+                    "e^x": "Función exponencial base e"
+                  }
+                }
+              ]
+            },
+            {
+              "slug": "exp-base-a",
+              "name": "Exponencial base a",
+              "type": "CONCEPT",
+              "articleTitle": "Exponencial base cualquiera",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Para base cualquiera a:"
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[a^x] = a^x \\ln(a)",
+                  "metadata": {
+                    "a^x": "Función",
+                    "\\ln(a)": "Logaritmo natural de la base"
+                  }
+                }
+              ]
+            },
+            {
+              "slug": "log-natural",
+              "name": "Logaritmo natural",
+              "type": "CONCEPT",
+              "articleTitle": "Logaritmo natural",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "La derivada del logaritmo natural de x es 1/x."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\ln(x)] = \\frac{1}{x}",
+                  "metadata": {
+                    "\\frac{1}{x}": "Inverso multiplicativo"
+                  }
+                }
+              ]
+            },
+            {
+              "slug": "log-base-a",
+              "name": "Logaritmo base a",
+              "type": "CONCEPT",
+              "articleTitle": "Logaritmo base cualquiera",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Para logaritmo de base cualquiera a:"
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\log_a(x)] = \\frac{1}{x \\ln(a)}",
+                  "metadata": {
+                    "x \\ln(a)": "El factor de conversión de base"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "derivatives-trig",
+          "name": "10.4 Funciones Trigonométricas",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "seno-coseno",
+              "name": "Seno y Coseno",
+              "type": "CONCEPT",
+              "articleTitle": "Seno y Coseno",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Las más básicas y cíclicas."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\sin(x)] = \\cos(x)",
+                  "metadata": {
+                    "\\cos(x)": "Derivada positiva"
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\cos(x)] = -\\sin(x)",
+                  "metadata": {
+                    "-\\sin(x)": "Ojo con el signo negativo"
+                  }
+                }
+              ]
+            },
+            {
+              "slug": "tan-cot",
+              "name": "Tangente y Cotangente",
+              "type": "CONCEPT",
+              "articleTitle": "Tangente y Cotangente",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Derivadas con funciones secantes y cosecantes al cuadrado."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\tan(x)] = \\sec^2(x)",
+                  "metadata": {
+                    "\\sec^2(x)": "Secante al cuadrado"
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\cot(x)] = -\\csc^2(x)",
+                  "metadata": {
+                    "-\\csc^2(x)": "Signo negativo y cosecante al cuadrado"
+                  }
+                }
+              ]
+            },
+            {
+              "slug": "sec-csc",
+              "name": "Secante y Cosecante",
+              "type": "CONCEPT",
+              "articleTitle": "Secante y Cosecante",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Funciones recíprocas."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\sec(x)] = \\sec(x)\\tan(x)",
+                  "metadata": {
+                    "\\sec(x)\\tan(x)": "Producto de secante y tangente"
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\frac{d}{dx}[\\csc(x)] = -\\csc(x)\\cot(x)",
+                  "metadata": {
+                    "-\\csc(x)\\cot(x)": "Negativo y producto de cosecante y cotangente"
+                  }
                 }
               ]
             }
@@ -2225,78 +2936,54 @@
         },
         {
           "slug": "advanced-calculus",
-          "name": "10.2 Multivariate & Chain Rule",
+          "name": "10.5 Gradientes y Parciales",
           "type": "CHAPTER",
           "concepts": [
             {
-              "slug": "chain-rule",
-              "name": "The Chain Rule",
-              "type": "CONCEPT",
-              "articleTitle": "The Chain Rule",
-              "blocks": [
-                {
-                  "type": "TEXT",
-                  "content": "Used to take the derivative of composite functions (functions inside of functions)."
-                },
-                {
-                  "type": "FORMULA",
-                  "content": "\\frac{d}{dx} f(g(x)) = f'(g(x)) \\cdot g'(x)",
-                  "metadata": {
-                    "f'(g(x))": "Derivative of the outside function, leaving inside alone",
-                    "g'(x)": "Multiplied by the derivative of the inside function"
-                  }
-                },
-                {
-                  "type": "TIP",
-                  "content": "The Chain Rule is the absolute engine of Neural Networks. \"Backpropagation\" is literally just applying the Chain Rule over and over to find how much each weight contributed to the error."
-                }
-              ]
-            },
-            {
               "slug": "partial-derivatives",
-              "name": "Partial Derivatives",
+              "name": "Derivadas Parciales",
               "type": "CONCEPT",
-              "articleTitle": "Partial Derivatives",
+              "articleTitle": "Derivadas Parciales",
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "When a function has multiple variables, a partial derivative measures the rate of change with respect to ONE variable, while pretending all other variables are constant."
+                  "content": "Cuando una función tiene múltiples variables, una derivada parcial mide la tasa de cambio respecto a UNA variable, mientras asume que las demás son constantes."
                 },
                 {
                   "type": "FORMULA",
                   "content": "\\frac{\\partial f}{\\partial x_1}",
                   "metadata": {
-                    "\\partial": "The partial derivative symbol (del)",
-                    "x_1": "The specific variable we are inspecting"
+                    "\\partial": "El símbolo de derivada parcial (del)",
+                    "x_1": "La variable específica"
                   }
                 },
                 {
                   "type": "TIP",
-                  "content": "In ML, your cost function depends on thousands of weights. You take a partial derivative for EACH individual weight."
+                  "content": "En ML, tu función de costo depende de miles de pesos. Tomas una derivada parcial para CADA peso."
                 }
               ]
             },
             {
               "slug": "gradients",
-              "name": "The Gradient Vector",
+              "name": "El Gradiente",
               "type": "CONCEPT",
-              "articleTitle": "The Gradient",
+              "articleTitle": "El Vector Gradiente",
               "blocks": [
                 {
                   "type": "TEXT",
-                  "content": "The Gradient is simply a vector packing all the partial derivatives together. It points in the direction of the STEEPEST ASCENT of the function."
+                  "content": "El Gradiente es simplemente un vector que agrupa todas las derivadas parciales. Apunta en la dirección del ASCENSO MÁS EMPINADO de la función."
                 },
                 {
                   "type": "FORMULA",
                   "content": "\\nabla f = \\left[ \\frac{\\partial f}{\\partial x_1}, \\dots, \\frac{\\partial f}{\\partial x_n} \\right]^T",
                   "metadata": {
-                    "\\nabla f": "Nabla (The Gradient Vector)",
-                    "\\frac{\\partial f}{\\partial x_i}": "The partial derivative for dimension i"
+                    "\\nabla f": "Nabla (El Vector Gradiente)",
+                    "\\frac{\\partial f}{\\partial x_i}": "Derivada parcial para la dimensión i"
                   }
                 },
                 {
                   "type": "TIP",
-                  "content": "Gradient Descent works by calculating the gradient, and then taking a step in the NEGATIVE direction to reach the minimum error!"
+                  "content": "El Descenso de Gradiente funciona calculando el gradiente y luego dando un paso en la dirección NEGATIVA para alcanzar el error mínimo."
                 }
               ]
             }

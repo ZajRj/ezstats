@@ -83,9 +83,9 @@ export default function Utilities() {
           <Text style={styles.sectionTitle}>Simulations</Text>
           <View style={styles.cardsContainer}>
             <ActionCard 
-              title="Car Wash Simulation" 
-              icon="car" 
-              onPress={() => router.push('/utilities/carwash')} 
+              title="Process Simulator" 
+              icon="cog" 
+              onPress={() => router.push('/utilities/process_simulator')} 
             />
           </View>
         </View>

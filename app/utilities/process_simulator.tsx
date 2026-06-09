@@ -6,32 +6,39 @@ import { colors } from '../../src/theme/colors';
 import Input from '../../src/components/ui/Input';
 import { Ionicons } from '@expo/vector-icons';
 import { BarChart } from 'react-native-chart-kit';
-import { Stage, DistributionType, runCarWashSimulation, calculateMetrics } from '../../src/utils/calculations/simulation';
+import { Stage, DistributionType, runProcessSimulation, calculateMetrics } from '../../src/utils/calculations/simulation';
 import { generateContinuousFrequencyTable } from '../../src/utils/calculations/frequency';
 import FrequencyTable, { FreqDataRow } from '../../src/components/ui/FrequencyTable';
 import Histogram from '../../src/components/ui/Histogram';
 
 const screenWidth = Dimensions.get("window").width;
 
-export default function CarWashSimulation() {
-  const [kAutos, setKAutos] = useState('10');
+export default function ProcessSimulation() {
+  const [kItems, setKItems] = useState('10');
   const [nHoras, setNHoras] = useState('8');
   
   const [stages, setStages] = useState<Stage[]>([
-    { id: '1', name: 'Limpieza', type: 'Normal', params: { mean: 10, stdDev: 2 } },
-    { id: '2', name: 'Lavado', type: 'Exponential', params: { mean: 12 } },
-    { id: '3', name: 'Secado', type: 'Poisson', params: { lambda: 10 } }
+    { id: '1', name: 'Stage 1', type: 'Normal', params: { mean: 10, stdDev: 2 } },
+    { id: '2', name: 'Stage 2', type: 'Exponential', params: { mean: 12 } },
+    { id: '3', name: 'Stage 3', type: 'Uniform', params: { min: 5, max: 15 } }
   ]);
 
   const [results, setResults] = useState<any[]>([]);
   const [metrics, setMetrics] = useState<any>(null);
   const [freqData, setFreqData] = useState<FreqDataRow[] | null>(null);
 
+  const clearResults = () => {
+    setResults([]);
+    setMetrics(null);
+    setFreqData(null);
+  };
+
   const addStage = () => {
+    clearResults();
     const newId = Date.now().toString();
     setStages([...stages, {
       id: newId,
-      name: `Etapa ${stages.length + 1}`,
+      name: `Stage ${stages.length + 1}`,
       type: 'Normal',
       params: { mean: 10, stdDev: 2 }
     }]);
@@ -39,10 +46,12 @@ export default function CarWashSimulation() {
 
   const removeStage = (id: string) => {
     if (stages.length <= 1) return;
+    clearResults();
     setStages(stages.filter(s => s.id !== id));
   };
 
   const updateStage = (id: string, updates: Partial<Stage>) => {
+    clearResults();
     setStages(stages.map(s => {
       if (s.id === id) {
         // Handle type change defaults
@@ -50,6 +59,9 @@ export default function CarWashSimulation() {
           if (updates.type === 'Normal') updates.params = { mean: 10, stdDev: 2 };
           if (updates.type === 'Exponential') updates.params = { mean: 12 };
           if (updates.type === 'Poisson') updates.params = { lambda: 10 };
+          if (updates.type === 'Uniform') updates.params = { min: 5, max: 15 };
+          if (updates.type === 'Constant') updates.params = { value: 10 };
+          if (updates.type === 'Log-Normal') updates.params = { mu: 2, sigma: 0.5 };
         }
         return { ...s, ...updates };
       }
@@ -58,6 +70,7 @@ export default function CarWashSimulation() {
   };
 
   const updateStageParam = (id: string, param: string, value: string) => {
+    clearResults();
     const num = parseFloat(value);
     setStages(stages.map(s => {
       if (s.id === id) {
@@ -68,18 +81,18 @@ export default function CarWashSimulation() {
   };
 
   const runSimulation = () => {
-    const k = parseInt(kAutos);
+    const k = parseInt(kItems);
     const n = parseFloat(nHoras);
     if (isNaN(k) || k < 1 || k > 500) {
-      Alert.alert('Error', 'K debe estar entre 1 y 500');
+      Alert.alert('Error', 'K must be between 1 and 500');
       return;
     }
     if (isNaN(n) || n <= 0) {
-      Alert.alert('Error', 'N horas debe ser mayor a 0');
+      Alert.alert('Error', 'N hours must be greater than 0');
       return;
     }
 
-    const simResults = runCarWashSimulation(k, stages);
+    const simResults = runProcessSimulation(k, stages);
     setResults(simResults);
     
     const mets = calculateMetrics(simResults, n);
@@ -97,7 +110,7 @@ export default function CarWashSimulation() {
   useEffect(() => {
     runSimulation();
     import('../../src/db/database').then(({ recordActivity }) => {
-      recordActivity('Car Wash Simulation', 'TOOL', '/utilities/carwash');
+      recordActivity('Process Simulator', 'TOOL', '/utilities/process_simulator');
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -106,10 +119,10 @@ export default function CarWashSimulation() {
     if (results.length === 0) return;
     
     const stageNames = stages.map(s => s.name);
-    const header = ['Auto', ...stageNames, 'Tiempo Total (min)'].join(',');
+    const header = ['Item', ...stageNames, 'Total Time (min)'].join(',');
     
     const rows = results.map(r => {
-      const times = stages.map(s => r.stageTimes[s.id].toFixed(2));
+      const times = stages.map(s => (r.stageTimes[s.id] ?? 0).toFixed(2));
       return [r.id, ...times, r.totalProcessingTime.toFixed(2), r.exitTime.toFixed(2)].join(',');
     });
     
@@ -120,19 +133,18 @@ export default function CarWashSimulation() {
       const link = document.createElement('a');
       const url = URL.createObjectURL(blob);
       link.setAttribute('href', url);
-      link.setAttribute('download', 'simulacion_autolavado.csv');
+      link.setAttribute('download', 'process_simulation.csv');
       link.style.visibility = 'hidden';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     } else {
-      Alert.alert('Exportar CSV', 'La exportación nativa requiere expo-file-system. Copia este contenido:\n\n' + csvStr.substring(0, 500) + '...');
+      Alert.alert('Export CSV', 'Native export requires expo-file-system. Copy this:\n\n' + csvStr.substring(0, 500) + '...');
     }
   };
 
   const chartData = useMemo(() => {
     if (results.length === 0) return null;
-    // For bar chart, limit to 50 cars max so it's readable
     const displayResults = results.slice(0, 50);
     return {
       labels: displayResults.map(r => r.id.toString()),
@@ -150,65 +162,68 @@ export default function CarWashSimulation() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
     >
-      <Stack.Screen options={{ title: 'Simulación Autolavado' }} />
+      <Stack.Screen options={{ title: 'Process Simulator' }} />
 
       <ScrollView contentContainerStyle={styles.scroll}>
         
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Parámetros Generales</Text>
+          <Text style={styles.cardTitle}>Global Parameters</Text>
           <View style={styles.row}>
             <View style={{ flex: 1 }}>
-              <Input label="Número de Autos (K)" value={kAutos} onChangeText={setKAutos} keyboardType="numeric" />
+              <Input label="Number of Items (K)" value={kItems} onChangeText={(v) => { setKItems(v); clearResults(); }} keyboardType="numeric" />
             </View>
             <View style={{ flex: 1 }}>
-              <Input label="Horas de Operación (N)" value={nHoras} onChangeText={setNHoras} keyboardType="numeric" />
+              <Input label="Available Hours (N)" value={nHoras} onChangeText={(v) => { setNHoras(v); clearResults(); }} keyboardType="numeric" />
             </View>
           </View>
         </View>
 
         <View style={styles.card}>
           <View style={styles.stageHeader}>
-            <Text style={styles.cardTitle}>Etapas del Proceso</Text>
+            <Text style={styles.cardTitle}>Process Stages</Text>
             <TouchableOpacity style={styles.addBtn} onPress={addStage}>
               <Ionicons name="add" size={16} color="#FFF" />
-              <Text style={styles.addBtnText}>Agregar Etapa</Text>
+              <Text style={styles.addBtnText}>Add Stage</Text>
             </TouchableOpacity>
           </View>
 
           {stages.map((stage, index) => (
             <View key={stage.id} style={styles.stageCard}>
               <View style={styles.stageTitleRow}>
-                <Text style={styles.stageIndex}>Etapa {index + 1}</Text>
+                <Text style={styles.stageIndex}>Stage {index + 1}</Text>
                 <TouchableOpacity 
                   style={[styles.removeBtn, stages.length <= 1 && { opacity: 0.5 }]} 
                   onPress={() => removeStage(stage.id)}
                   disabled={stages.length <= 1}
                 >
                   <Ionicons name="close" size={16} color={colors.error} />
-                  <Text style={styles.removeBtnText}>Quitar</Text>
+                  <Text style={styles.removeBtnText}>Remove</Text>
                 </TouchableOpacity>
               </View>
 
               <View style={styles.row}>
                 <View style={{ flex: 1 }}>
-                  <Input label="Nombre" value={stage.name} onChangeText={(v) => updateStage(stage.id, { name: v })} />
+                  <Input label="Name" value={stage.name} onChangeText={(v) => updateStage(stage.id, { name: v })} />
                 </View>
+              </View>
+              <View style={styles.row}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.label}>Distribución</Text>
-                  {/* Simplistic custom picker using TouchableOpacities for web compat without external libs */}
-                  <View style={styles.pickerRow}>
-                    {['Normal', 'Exponential', 'Poisson'].map(type => (
-                      <TouchableOpacity 
-                        key={type} 
-                        style={[styles.pickerOpt, stage.type === type && styles.pickerOptActive]}
-                        onPress={() => updateStage(stage.id, { type: type as DistributionType })}
-                      >
-                        <Text style={[styles.pickerOptText, stage.type === type && styles.pickerOptTextActive]}>
-                          {type.substring(0,4)}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
+                  <Text style={styles.label}>Distribution</Text>
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 16 }}>
+                    <View style={styles.pickerRow}>
+                      {['Normal', 'Exponential', 'Poisson', 'Uniform', 'Constant', 'Log-Normal'].map(type => (
+                        <TouchableOpacity 
+                          key={type} 
+                          style={[styles.pickerOpt, stage.type === type && styles.pickerOptActive]}
+                          onPress={() => updateStage(stage.id, { type: type as DistributionType })}
+                        >
+                          <Text style={[styles.pickerOptText, stage.type === type && styles.pickerOptTextActive]}>
+                            {type === 'Exponential' ? 'Exp' : type === 'Log-Normal' ? 'LogNorm' : type.substring(0,6)}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  </ScrollView>
                 </View>
               </View>
 
@@ -216,22 +231,47 @@ export default function CarWashSimulation() {
                 {stage.type === 'Normal' && (
                   <>
                     <View style={{ flex: 1 }}>
-                      <Input label="Media (μ)" value={String(stage.params.mean || '')} onChangeText={(v) => updateStageParam(stage.id, 'mean', v)} />
+                      <Input label="Mean (μ)" value={String(stage.params.mean || '')} onChangeText={(v) => updateStageParam(stage.id, 'mean', v)} />
                     </View>
                     <View style={{ flex: 1 }}>
-                      <Input label="Desviación (σ)" value={String(stage.params.stdDev || '')} onChangeText={(v) => updateStageParam(stage.id, 'stdDev', v)} />
+                      <Input label="Std Dev (σ)" value={String(stage.params.stdDev || '')} onChangeText={(v) => updateStageParam(stage.id, 'stdDev', v)} />
                     </View>
                   </>
                 )}
                 {stage.type === 'Exponential' && (
                   <View style={{ flex: 1 }}>
-                    <Input label="Media (1/λ)" value={String(stage.params.mean || '')} onChangeText={(v) => updateStageParam(stage.id, 'mean', v)} />
+                    <Input label="Mean (1/λ)" value={String(stage.params.mean || '')} onChangeText={(v) => updateStageParam(stage.id, 'mean', v)} />
                   </View>
                 )}
                 {stage.type === 'Poisson' && (
                   <View style={{ flex: 1 }}>
                     <Input label="Lambda (λ)" value={String(stage.params.lambda || '')} onChangeText={(v) => updateStageParam(stage.id, 'lambda', v)} />
                   </View>
+                )}
+                {stage.type === 'Uniform' && (
+                  <>
+                    <View style={{ flex: 1 }}>
+                      <Input label="Min" value={String(stage.params.min || '')} onChangeText={(v) => updateStageParam(stage.id, 'min', v)} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Input label="Max" value={String(stage.params.max || '')} onChangeText={(v) => updateStageParam(stage.id, 'max', v)} />
+                    </View>
+                  </>
+                )}
+                {stage.type === 'Constant' && (
+                  <View style={{ flex: 1 }}>
+                    <Input label="Value" value={String(stage.params.value || '')} onChangeText={(v) => updateStageParam(stage.id, 'value', v)} />
+                  </View>
+                )}
+                {stage.type === 'Log-Normal' && (
+                  <>
+                    <View style={{ flex: 1 }}>
+                      <Input label="Mu (μ)" value={String(stage.params.mu || '')} onChangeText={(v) => updateStageParam(stage.id, 'mu', v)} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Input label="Sigma (σ)" value={String(stage.params.sigma || '')} onChangeText={(v) => updateStageParam(stage.id, 'sigma', v)} />
+                    </View>
+                  </>
                 )}
               </View>
             </View>
@@ -241,38 +281,38 @@ export default function CarWashSimulation() {
         <View style={styles.actionRow}>
           <TouchableOpacity style={styles.simBtn} onPress={runSimulation}>
             <Ionicons name="play" size={20} color="#FFF" />
-            <Text style={styles.simBtnText}>Simular</Text>
+            <Text style={styles.simBtnText}>Simulate</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.exportBtn} onPress={exportCSV}>
+          <TouchableOpacity style={[styles.exportBtn, results.length === 0 && { opacity: 0.5 }]} onPress={exportCSV} disabled={results.length === 0}>
             <Ionicons name="download" size={20} color={colors.primary} />
-            <Text style={styles.exportBtnText}>Exportar CSV</Text>
+            <Text style={styles.exportBtnText}>Export CSV</Text>
           </TouchableOpacity>
         </View>
 
         {metrics && (
           <View style={styles.resultsContainer}>
-            <Text style={styles.sectionTitle}>Métricas (Tiempo Total)</Text>
+            <Text style={styles.sectionTitle}>Metrics (Total Time)</Text>
             
             <View style={styles.indicatorCard}>
-              <Text style={styles.indicatorLabel}>Autos atendidos en {nHoras} horas</Text>
-              <Text style={styles.indicatorValue}>{metrics.attendedInTime} / {kAutos}</Text>
+              <Text style={styles.indicatorLabel}>Items processed in {nHoras} hours</Text>
+              <Text style={styles.indicatorValue}>{metrics.attendedInTime} / {kItems}</Text>
             </View>
 
             <View style={styles.grid}>
               <View style={styles.gridItem}>
-                <Text style={styles.gridLabel}>Promedio</Text>
+                <Text style={styles.gridLabel}>Average</Text>
                 <Text style={styles.gridValue}>{metrics.mean.toFixed(2)}m</Text>
               </View>
               <View style={styles.gridItem}>
-                <Text style={styles.gridLabel}>Desv. Estándar</Text>
+                <Text style={styles.gridLabel}>Std Dev</Text>
                 <Text style={styles.gridValue}>{metrics.stdDev.toFixed(2)}m</Text>
               </View>
               <View style={styles.gridItem}>
-                <Text style={styles.gridLabel}>Mínimo</Text>
+                <Text style={styles.gridLabel}>Minimum</Text>
                 <Text style={styles.gridValue}>{metrics.min.toFixed(2)}m</Text>
               </View>
               <View style={styles.gridItem}>
-                <Text style={styles.gridLabel}>Máximo</Text>
+                <Text style={styles.gridLabel}>Maximum</Text>
                 <Text style={styles.gridValue}>{metrics.max.toFixed(2)}m</Text>
               </View>
             </View>
@@ -281,7 +321,7 @@ export default function CarWashSimulation() {
 
         {results.length > 0 && chartData && (
           <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Tiempo Total por Auto {results.length > 50 ? '(Primeros 50)' : ''}</Text>
+            <Text style={styles.sectionTitle}>Total Time per Item {results.length > 50 ? '(First 50)' : ''}</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <BarChart
                 data={chartData}
@@ -306,7 +346,7 @@ export default function CarWashSimulation() {
 
         {freqData && (
           <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Distribución de Frecuencias</Text>
+            <Text style={styles.sectionTitle}>Frequency Distribution</Text>
             <Histogram data={freqData} />
             <View style={{marginTop: 16}}>
               <FrequencyTable data={freqData} />
@@ -316,29 +356,29 @@ export default function CarWashSimulation() {
 
         {results.length > 0 && (
           <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Tabla de Resultados</Text>
+            <Text style={styles.sectionTitle}>Results Table</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={true}>
               <View>
                 <View style={styles.tableHeader}>
-                  <Text style={[styles.tableCell, styles.tableHeaderCell, { width: 60 }]}>Auto</Text>
+                  <Text style={[styles.tableCell, styles.tableHeaderCell, { width: 60 }]}>Item</Text>
                   {stages.map(s => (
                     <Text key={s.id} style={[styles.tableCell, styles.tableHeaderCell]}>{s.name}</Text>
                   ))}
-                  <Text style={[styles.tableCell, styles.tableHeaderCell, { fontWeight: 'bold' }]}>Procesamiento</Text>
-                  <Text style={[styles.tableCell, styles.tableHeaderCell, { fontWeight: 'bold', width: 80 }]}>Salida Sist.</Text>
+                  <Text style={[styles.tableCell, styles.tableHeaderCell, { fontWeight: 'bold' }]}>Total Processing</Text>
+                  <Text style={[styles.tableCell, styles.tableHeaderCell, { fontWeight: 'bold', width: 80 }]}>System Exit</Text>
                 </View>
                 {results.slice(0, 100).map((r, i) => (
                   <View key={i} style={styles.tableRow}>
                     <Text style={[styles.tableCell, { width: 60 }]}>{r.id}</Text>
                     {stages.map(s => (
-                      <Text key={s.id} style={styles.tableCell}>{r.stageTimes[s.id].toFixed(2)}</Text>
+                      <Text key={s.id} style={styles.tableCell}>{(r.stageTimes[s.id] ?? 0).toFixed(2)}</Text>
                     ))}
                     <Text style={[styles.tableCell, { fontWeight: 'bold', color: colors.primary }]}>{r.totalProcessingTime.toFixed(2)}</Text>
                     <Text style={[styles.tableCell, { fontWeight: 'bold', width: 80 }]}>{r.exitTime.toFixed(2)}</Text>
                   </View>
                 ))}
                 {results.length > 100 && (
-                  <Text style={styles.limitText}>Mostrando los primeros 100 resultados. Exporta CSV para ver todos.</Text>
+                  <Text style={styles.limitText}>Showing first 100 results. Export CSV to view all.</Text>
                 )}
               </View>
             </ScrollView>
@@ -447,12 +487,13 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: colors.border,
-    marginBottom: 16,
   },
   pickerOpt: {
-    flex: 1,
+    paddingHorizontal: 12,
     paddingVertical: 10,
     alignItems: 'center',
+    borderRightWidth: 1,
+    borderRightColor: colors.border,
   },
   pickerOptActive: {
     backgroundColor: colors.primaryLight,
