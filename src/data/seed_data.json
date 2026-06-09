@@ -1,0 +1,1555 @@
+{
+  "topics": [
+    {
+      "slug": "probability-foundations",
+      "name": "1. PROBABILITY (FOUNDATIONS)",
+      "type": "MAIN_TOPIC",
+      "chapters": [
+        {
+          "slug": "basic-probability",
+          "name": "1.1 Basic Probability Concepts",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "set-theory",
+              "name": "Set Theory & Sample Spaces",
+              "type": "CONCEPT",
+              "articleTitle": "Sample Spaces",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Set Theory is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "axioms-probability",
+              "name": "Axioms of Probability",
+              "type": "CONCEPT",
+              "articleTitle": "Probability Axioms",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Axioms of Probability is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "venn-diagrams",
+              "name": "Venn Diagrams & Intersections",
+              "type": "CONCEPT",
+              "articleTitle": "Venn Diagrams",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Venn Diagrams is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "mutually-exclusive",
+              "name": "Mutually Exclusive vs Independent",
+              "type": "CONCEPT",
+              "articleTitle": "Exclusive vs Independent",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Mutually Exclusive vs Independent is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "conditional-probability",
+          "name": "1.2 Conditional Probability",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "multiplication-rule",
+              "name": "The Multiplication Rule",
+              "type": "CONCEPT",
+              "articleTitle": "Multiplication Rule",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Multiplication Rule is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "law-total-probability",
+              "name": "Law of Total Probability",
+              "type": "CONCEPT",
+              "articleTitle": "Total Probability",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Total Probability is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "bayes",
+              "name": "Bayes' Theorem",
+              "type": "CONCEPT",
+              "articleTitle": "Conditional Probability",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Bayes theorem describes the probability of an event based on prior knowledge of conditions that might be related to the event."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "P(A|B) = \\frac{P(B|A) \\cdot P(A)}{P(B)}",
+                  "metadata": {
+                    "P(A|B)": "The posterior probability: probability of A given that B is true.",
+                    "P(B|A)": "The likelihood: probability of observing B given that A is true.",
+                    "P(A)": "The prior probability of A.",
+                    "P(B)": "The marginal probability (total probability) of observing B."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "It allows us to update our beliefs (probabilities) as new evidence arrives."
+                }
+              ]
+            },
+            {
+              "slug": "tree-diagrams",
+              "name": "Tree Diagrams",
+              "type": "CONCEPT",
+              "articleTitle": "Tree Diagrams",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Tree Diagrams is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "combinatorics-chapter",
+          "name": "1.3 Combinatorics",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "counting-principle",
+              "name": "Fundamental Counting Principle",
+              "type": "CONCEPT",
+              "articleTitle": "Counting Principle",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Counting Principle is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "combinatorics",
+              "name": "Permutations & Combinations",
+              "type": "CONCEPT",
+              "articleTitle": "Permutations & Combinations",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Combinatorics is the study of counting. Permutations count arrangements where order matters, while combinations count selections where order does not matter."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "P(n, r) = \\frac{n!}{(n-r)!}",
+                  "metadata": {
+                    "P(n, r)": "The number of permutations (order matters).",
+                    "n!": "Factorial of the total number of items.",
+                    "(n-r)!": "Factorial of the unchosen items."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "C(n, r) = \\binom{n}{r} = \\frac{n!}{r!(n-r)!}",
+                  "metadata": {
+                    "C(n, r)": "The number of combinations (order does not matter).",
+                    "n!": "Factorial of the total number of items.",
+                    "r!": "Factorial of the chosen number of items.",
+                    "(n-r)!": "Factorial of the unchosen items."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Think of permutations like a password (order matters), and combinations like a fruit salad (order doesn't matter)!"
+                }
+              ]
+            },
+            {
+              "slug": "distinguishable-perms",
+              "name": "Distinguishable Permutations",
+              "type": "CONCEPT",
+              "articleTitle": "Anagrams",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Distinguishable Permutations is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "discrete-distributions",
+      "name": "2. DISCRETE DISTRIBUTIONS",
+      "type": "MAIN_TOPIC",
+      "chapters": [
+        {
+          "slug": "random-variables-discrete",
+          "name": "2.1 Random Variables (Discrete)",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "random-variable",
+              "name": "Random Variable (X)",
+              "type": "CONCEPT",
+              "articleTitle": "Random Variables",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "A random variable is a mathematical function that maps the outcomes of a random process to numerical values."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "X: \\Omega \\to \\mathbb{R}",
+                  "metadata": {
+                    "X": "The Random Variable itself",
+                    "\\Omega": "The sample space (all possible outcomes)",
+                    "\\mathbb{R}": "The set of real numbers"
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "We usually use uppercase letters (like X) for the random variable, and lowercase (x) for a specific value it can take!"
+                }
+              ]
+            },
+            {
+              "slug": "pmf-cdf",
+              "name": "PMF & CDF",
+              "type": "CONCEPT",
+              "articleTitle": "PMF and CDF",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for PMF & CDF is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "expected-value-props",
+              "name": "Expected Value",
+              "type": "CONCEPT",
+              "articleTitle": "Expected Value",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "The Expected Value (or Mean) of a random variable is extremely well-behaved mathematically. It perfectly follows the rules of linearity."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "E[aX + b] = aE[X] + b",
+                  "metadata": {
+                    "E[]": "The Expectation operator",
+                    "X": "The random variable",
+                    "a, b": "Constant numerical values"
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "E[X + Y] = E[X] + E[Y]",
+                  "metadata": {
+                    "E[X + Y]": "The expectation of the sum of two random variables",
+                    "E[X], E[Y]": "The individual expectations"
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Linearity of expectation holds true EVEN IF X and Y are NOT independent!"
+                }
+              ]
+            },
+            {
+              "slug": "variance-props",
+              "name": "Variance",
+              "type": "CONCEPT",
+              "articleTitle": "Variance",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Unlike the Expected Value, Variance is NOT linear. Adding a constant shifts the graph but doesn't change the spread, and multiplying by a constant scales the variance quadratically."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "Var(aX + b) = a^2Var(X)",
+                  "metadata": {
+                    "Var()": "The Variance operator",
+                    "a^2": "The constant squared, because variance measures squared deviations",
+                    "b": "The constant shift, which drops out because spread isn't affected by shifting"
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "Var(X \\pm Y) = Var(X) + Var(Y) \\pm 2Cov(X,Y)",
+                  "metadata": {
+                    "Cov(X,Y)": "The covariance between X and Y. If they are independent, this is zero!"
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "If X and Y are independent, Var(X - Y) is still Var(X) + Var(Y). Variances ALWAYS add up when things are independent, they never subtract!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "core-discrete-models",
+          "name": "2.2 Core Discrete Models",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "bernoulli",
+              "name": "Bernoulli Trials",
+              "type": "CONCEPT",
+              "articleTitle": "Bernoulli Trials",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Bernoulli Trials is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "binomial-dist",
+              "name": "Binomial Distribution",
+              "type": "CONCEPT",
+              "articleTitle": "Binomial Distribution",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "The Binomial distribution represents the number of successes in a sequence of n independent experiments."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "P(X = k) = \\binom{n}{k} p^k (1-p)^{n-k}",
+                  "metadata": {
+                    "\\binom{n}{k}": "Combinations: Ways to choose k successes from n trials.",
+                    "p^k": "Probability of obtaining exactly k successes.",
+                    "(1-p)^{n-k}": "Probability of obtaining exactly n-k failures."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Remember that trials must be independent and the probability of success must be constant!"
+                }
+              ]
+            },
+            {
+              "slug": "geometric-dist",
+              "name": "Geometric Distribution",
+              "type": "CONCEPT",
+              "articleTitle": "Geometric Distribution",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "The Geometric distribution represents the number of trials needed to get the first success in repeated independent Bernoulli trials."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "P(X = k) = (1-p)^{k-1} {p}",
+                  "metadata": {
+                    "{p}": "The probability of success on a single trial.",
+                    "(1-p)^{k-1}": "The probability of encountering exactly k-1 failures before the first success."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "It is the only discrete memoryless random distribution!"
+                }
+              ]
+            },
+            {
+              "slug": "poisson-dist",
+              "name": "Poisson Distribution",
+              "type": "CONCEPT",
+              "articleTitle": "Poisson Distribution",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "The Poisson distribution expresses the probability of a given number of events occurring in a fixed interval of time or space."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "P(X = k) = \\frac{\\lambda^k e^{-\\lambda}}{k!}",
+                  "metadata": {
+                    "\\lambda^k": "The average rate of success (λ) raised to the power of the target occurrences (k).",
+                    "e^{-\\lambda}": "Euler's number (e ≈ 2.718) raised to the negative average rate.",
+                    "k!": "The factorial of the target number of occurrences."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Use Poisson when events happen independently at a constant average rate!"
+                }
+              ]
+            },
+            {
+              "slug": "hypergeometric",
+              "name": "Hypergeometric Distribution",
+              "type": "CONCEPT",
+              "articleTitle": "Hypergeometric Distribution",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Hypergeometric Distribution is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "negative-binomial",
+              "name": "Negative Binomial Distribution",
+              "type": "CONCEPT",
+              "articleTitle": "Negative Binomial",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Negative Binomial is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "continuous-distributions",
+      "name": "3. CONTINUOUS DISTRIBUTIONS",
+      "type": "MAIN_TOPIC",
+      "chapters": [
+        {
+          "slug": "random-variables-continuous",
+          "name": "3.1 Random Variables (Continuous)",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "pdf-cdf-cont",
+              "name": "PDF and CDF",
+              "type": "CONCEPT",
+              "articleTitle": "Continuous PDF & CDF",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Continuous PDFs is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "integrals-prob",
+              "name": "Probabilities with Integrals",
+              "type": "CONCEPT",
+              "articleTitle": "Integrals for Probabilities",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Integrals is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "exp-var-cont",
+              "name": "Expected Value & Variance",
+              "type": "CONCEPT",
+              "articleTitle": "Expectation (Continuous)",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Continuous Expected Value is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "core-continuous-models",
+          "name": "3.2 Core Continuous Models",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "uniform-dist",
+              "name": "Continuous Uniform",
+              "type": "CONCEPT",
+              "articleTitle": "Uniform Distribution",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "The Uniform distribution describes an experiment where there is an arbitrary outcome that lies between certain bounds. All intervals of the same length have equal probability."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "f(x) = \\frac{1}{{b} - {a}}",
+                  "metadata": {
+                    "{b}": "The maximum possible value in the distribution's range.",
+                    "{a}": "The minimum possible value in the distribution's range."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Think of it as a completely fair random number generator between two limits."
+                }
+              ]
+            },
+            {
+              "slug": "normal-dist",
+              "name": "Normal Distribution (Bell Curve)",
+              "type": "CONCEPT",
+              "articleTitle": "Normal Distribution",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "The Normal distribution is a continuous probability distribution that is symmetrical around its mean, showing that data near the mean are more frequent."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "f(x) = \\frac{1}{\\sigma \\sqrt{2\\pi}} e^{-\\frac{1}{2}\\left(\\frac{x-\\mu}{\\sigma}\\right)^2}",
+                  "metadata": {
+                    "\\frac{1}{\\sigma \\sqrt{2\\pi}}": "The normalization constant ensuring the total area under the curve is 1.",
+                    "e^{-\\frac{1}{2}\\left(\\frac{x-\\mu}{\\sigma}\\right)^2}": "The exponential component that creates the symmetric bell curve shape.",
+                    "\\mu": "The mean (expected value) around which the distribution is centered.",
+                    "\\sigma": "The standard deviation, controlling the spread or width of the curve."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "In a normal distribution, roughly 68% of the data falls within one standard deviation of the mean."
+                }
+              ]
+            },
+            {
+              "slug": "standard-normal",
+              "name": "Standard Normal (Z)",
+              "type": "CONCEPT",
+              "articleTitle": "Standard Normal",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Standard Normal is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "exponential-dist",
+              "name": "Exponential Distribution",
+              "type": "CONCEPT",
+              "articleTitle": "Exponential Distribution",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "The Exponential distribution describes the time between events in a Poisson point process (e.g., waiting times)."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "f(x) = {\\lambda} e^{-\\lambda x}",
+                  "metadata": {
+                    "{\\lambda}": "The rate parameter (events per unit of time/space).",
+                    "e^{-\\lambda x}": "The exponential decay representing the probability of no event occurring until time x."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "It is the continuous analogue of the geometric distribution, and it is also memoryless."
+                }
+              ]
+            },
+            {
+              "slug": "gamma-dist",
+              "name": "Gamma Distribution",
+              "type": "CONCEPT",
+              "articleTitle": "Gamma Distribution",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Gamma Distribution is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "beta-dist",
+              "name": "Beta Distribution",
+              "type": "CONCEPT",
+              "articleTitle": "Beta Distribution",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Beta Distribution is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "joint-multivariate",
+      "name": "4. JOINT DISTRIBUTIONS & MULTIVARIATE",
+      "type": "MAIN_TOPIC",
+      "chapters": [
+        {
+          "slug": "multiple-rvs",
+          "name": "4.1 Multiple Random Variables",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "joint-pmf-pdf",
+              "name": "Joint PMFs and PDFs",
+              "type": "CONCEPT",
+              "articleTitle": "Joint Distributions",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Joint Distributions is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "marginal-dist",
+              "name": "Marginal Distributions",
+              "type": "CONCEPT",
+              "articleTitle": "Marginal Distributions",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Marginal Distributions is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "conditional-dist",
+              "name": "Conditional Distributions",
+              "type": "CONCEPT",
+              "articleTitle": "Conditional Distributions",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Conditional Distributions is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "relationships-variables",
+          "name": "4.2 Relationships Between Variables",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "covariance",
+              "name": "Covariance",
+              "type": "CONCEPT",
+              "articleTitle": "Covariance",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Covariance measures the directional relationship between two random variables. A positive covariance means they tend to move together; negative means they move inversely."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "Cov(X,Y) = E[(X - E[X])(Y - E[Y])]",
+                  "metadata": {
+                    "Cov(X,Y)": "Covariance of X and Y",
+                    "E[X]": "Expected value (mean) of X",
+                    "E[Y]": "Expected value (mean) of Y"
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Covariance gives direction, but not strength. For strength, you need to normalize it into Correlation!"
+                }
+              ]
+            },
+            {
+              "slug": "correlation",
+              "name": "Pearson Correlation",
+              "type": "CONCEPT",
+              "articleTitle": "Correlation Coefficient",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "The Pearson correlation coefficient is the covariance of the two variables divided by the product of their standard deviations. It always falls between -1 and 1."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\rho_{X,Y} = \\frac{Cov(X,Y)}{\\sigma_X \\sigma_Y}",
+                  "metadata": {
+                    "\\rho_{X,Y}": "Pearson Correlation Coefficient",
+                    "Cov(X,Y)": "Covariance between X and Y",
+                    "\\sigma_X": "Standard deviation of X",
+                    "\\sigma_Y": "Standard deviation of Y"
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Correlation does not imply causation! It only measures linear relationships."
+                }
+              ]
+            },
+            {
+              "slug": "independence-rvs",
+              "name": "Independence of RVs",
+              "type": "CONCEPT",
+              "articleTitle": "Independent Random Variables",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Independence of RVs is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "linear-combos",
+              "name": "Linear Combinations",
+              "type": "CONCEPT",
+              "articleTitle": "Linear Combinations of RVs",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Linear Combinations is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "descriptive-statistics",
+      "name": "5. DESCRIPTIVE STATISTICS",
+      "type": "MAIN_TOPIC",
+      "chapters": [
+        {
+          "slug": "central-tendency",
+          "name": "5.1 Measures of Central Tendency",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "mean",
+              "name": "Population vs Sample Mean",
+              "type": "CONCEPT",
+              "articleTitle": "Mean",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "The mean represents the mathematical average of a set of numbers."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\mu = \\frac{\\sum_{i=1}^{N} x_i}{N}",
+                  "metadata": {
+                    "\\mu": "The population mean.",
+                    "\\sum_{i=1}^{N} x_i": "The sum of all values in the population.",
+                    "N": "The total number of items in the population."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\bar{x} = \\frac{\\sum_{i=1}^{n} x_i}{n}",
+                  "metadata": {
+                    "\\bar{x}": "The sample mean.",
+                    "\\sum_{i=1}^{n} x_i": "The sum of all values in the sample.",
+                    "n": "The total number of items in the sample."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "The population mean divides by N, while the sample mean divides by n."
+                }
+              ]
+            },
+            {
+              "slug": "median-mode",
+              "name": "Median and Mode",
+              "type": "CONCEPT",
+              "articleTitle": "Median & Mode",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "The median is the middle value when a dataset is ordered, making it robust against outliers. The mode is the most frequently occurring value."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "Median = \\left( \\frac{n + 1}{2} \\right)^{th} \\text{term}",
+                  "metadata": {
+                    "Median": "The middle value",
+                    "n": "Total number of items in the ordered dataset"
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Use the median instead of the mean when your data is highly skewed (like income brackets)!"
+                }
+              ]
+            },
+            {
+              "slug": "weighted-mean",
+              "name": "Weighted Mean",
+              "type": "CONCEPT",
+              "articleTitle": "Weighted Mean",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Weighted Mean is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "dispersion",
+          "name": "5.2 Measures of Dispersion",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "range-iqr",
+              "name": "Range and IQR",
+              "type": "CONCEPT",
+              "articleTitle": "Range & IQR",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Range and IQR is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "variance",
+              "name": "Variance (Pop. vs Sample)",
+              "type": "CONCEPT",
+              "articleTitle": "Variance",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Variance measures how far a set of numbers is spread out from their average value. Standard deviation is its square root."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\sigma^2 = \\frac{\\sum_{i=1}^{N} (x_i - \\mu)^2}{N}",
+                  "metadata": {
+                    "\\sigma^2": "The population variance.",
+                    "(x_i - \\mu)^2": "The squared difference between each value and the population mean.",
+                    "N": "The total number of items in the population."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "s^2 = \\frac{\\sum_{i=1}^{n} (x_i - \\bar{x})^2}{n - 1}",
+                  "metadata": {
+                    "s^2": "The sample variance.",
+                    "(x_i - \\bar{x})^2": "The squared difference between each value and the sample mean.",
+                    "n - 1": "Bessel's correction (degrees of freedom) for unbiased estimation."
+                  }
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "\\sigma = \\sqrt{\\sigma^2}",
+                  "metadata": {
+                    "\\sigma": "The standard deviation, which is the square root of the variance.",
+                    "\\sigma^2": "The variance of the dataset."
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Sample variance uses (n-1) to correct for bias when estimating the population variance!"
+                }
+              ]
+            },
+            {
+              "slug": "std-deviation",
+              "name": "Standard Deviation",
+              "type": "CONCEPT",
+              "articleTitle": "Standard Deviation",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Standard Deviation is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "coeff-variation",
+              "name": "Coefficient of Variation",
+              "type": "CONCEPT",
+              "articleTitle": "Coefficient of Variation",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Coefficient of Variation is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "shape-position",
+          "name": "5.3 Shape and Position",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "percentiles",
+              "name": "Percentiles & Quartiles",
+              "type": "CONCEPT",
+              "articleTitle": "Percentiles",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Percentiles is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "z-scores",
+              "name": "Z-Scores",
+              "type": "CONCEPT",
+              "articleTitle": "Standardized Values",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Z-Scores is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "skewness",
+              "name": "Skewness",
+              "type": "CONCEPT",
+              "articleTitle": "Skewness",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Skewness is a measure of the asymmetry of the probability distribution. A negative skew means the tail is on the left; a positive skew means the tail is on the right."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "Skewness = \\frac{\\sum_{i=1}^{n} (x_i - \\bar{x})^3}{(n-1)s^3}",
+                  "metadata": {
+                    "\\sum_{i=1}^{n} (x_i - \\bar{x})^3": "Sum of cubed differences from the mean (third moment)",
+                    "s^3": "Cube of the sample standard deviation",
+                    "n-1": "Degrees of freedom"
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "If mean > median, the data is usually positively skewed (skewed right)."
+                }
+              ]
+            },
+            {
+              "slug": "kurtosis",
+              "name": "Kurtosis",
+              "type": "CONCEPT",
+              "articleTitle": "Kurtosis",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Kurtosis is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "box-plots",
+              "name": "Box-and-Whisker Plots",
+              "type": "CONCEPT",
+              "articleTitle": "Box Plots",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Box Plots is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "sampling-estimation",
+      "name": "6. SAMPLING & ESTIMATION",
+      "type": "MAIN_TOPIC",
+      "chapters": [
+        {
+          "slug": "sampling-theory",
+          "name": "6.1 Sampling Theory",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "srs",
+              "name": "Simple Random Sampling",
+              "type": "CONCEPT",
+              "articleTitle": "Simple Random Sampling",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Simple Random Sampling is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "lln",
+              "name": "Law of Large Numbers",
+              "type": "CONCEPT",
+              "articleTitle": "Law of Large Numbers",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Law of Large Numbers is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "clt",
+              "name": "Central Limit Theorem",
+              "type": "CONCEPT",
+              "articleTitle": "Central Limit Theorem",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Central Limit Theorem is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "standard-error",
+              "name": "Standard Error of the Mean",
+              "type": "CONCEPT",
+              "articleTitle": "Standard Error",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Standard Error is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "estimation",
+          "name": "6.2 Point and Interval Estimation",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "mle",
+              "name": "Maximum Likelihood Estimation",
+              "type": "CONCEPT",
+              "articleTitle": "MLE",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for MLE is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "moments",
+              "name": "Method of Moments",
+              "type": "CONCEPT",
+              "articleTitle": "Method of Moments",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Method of Moments is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "ci-z",
+              "name": "Confidence Intervals (Z)",
+              "type": "CONCEPT",
+              "articleTitle": "Z-Intervals",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Z-Intervals is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "ci-t",
+              "name": "Confidence Intervals (T)",
+              "type": "CONCEPT",
+              "articleTitle": "T-Intervals",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for T-Intervals is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "ci-props",
+              "name": "Confidence Intervals for Proportions",
+              "type": "CONCEPT",
+              "articleTitle": "Proportion CI",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Proportion CI is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "ci-var",
+              "name": "Confidence Intervals for Variance",
+              "type": "CONCEPT",
+              "articleTitle": "Variance CI",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Variance CI is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "hypothesis-testing",
+      "name": "7. HYPOTHESIS TESTING",
+      "type": "MAIN_TOPIC",
+      "chapters": [
+        {
+          "slug": "testing-fundamentals",
+          "name": "7.1 Testing Fundamentals",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "null-alt-hyp",
+              "name": "Null vs Alternative",
+              "type": "CONCEPT",
+              "articleTitle": "Hypotheses",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Hypotheses is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "type-errors",
+              "name": "Type I and Type II Errors",
+              "type": "CONCEPT",
+              "articleTitle": "Errors in Testing",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Type I and II Errors is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "p-values",
+              "name": "P-Values and Significance",
+              "type": "CONCEPT",
+              "articleTitle": "P-Values",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for P-Values is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "test-power",
+              "name": "Power of a Statistical Test",
+              "type": "CONCEPT",
+              "articleTitle": "Statistical Power",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Statistical Power is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "sample-tests",
+          "name": "7.2 One and Two-Sample Tests",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "z-test-1",
+              "name": "One-Sample Z-Test",
+              "type": "CONCEPT",
+              "articleTitle": "One-Sample Z-Test",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Z-Test is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "t-test-1",
+              "name": "One-Sample T-Test",
+              "type": "CONCEPT",
+              "articleTitle": "One-Sample T-Test",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for T-Test is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "t-test-2",
+              "name": "Two-Sample T-Test",
+              "type": "CONCEPT",
+              "articleTitle": "Two-Sample T-Test",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Two-Sample T-Test is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "t-test-paired",
+              "name": "Paired T-Test",
+              "type": "CONCEPT",
+              "articleTitle": "Paired T-Test",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Paired T-Test is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "z-test-prop",
+              "name": "Z-Test for Proportions",
+              "type": "CONCEPT",
+              "articleTitle": "Proportion Z-Test",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Proportion Z-Test is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "categorical-tests",
+          "name": "7.3 Categorical Tests",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "chi-gof",
+              "name": "Chi-Square Goodness of Fit",
+              "type": "CONCEPT",
+              "articleTitle": "Goodness of Fit",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Chi-Square Goodness of Fit is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "chi-indep",
+              "name": "Chi-Square Independence",
+              "type": "CONCEPT",
+              "articleTitle": "Independence Test",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Chi-Square Independence is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "chi-homo",
+              "name": "Chi-Square Homogeneity",
+              "type": "CONCEPT",
+              "articleTitle": "Homogeneity Test",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Chi-Square Homogeneity is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "regression-anova",
+      "name": "8. REGRESSION & ANOVA",
+      "type": "MAIN_TOPIC",
+      "chapters": [
+        {
+          "slug": "linear-regression",
+          "name": "8.1 Linear Regression",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "ols",
+              "name": "Ordinary Least Squares",
+              "type": "CONCEPT",
+              "articleTitle": "OLS",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for OLS is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "line-best-fit",
+              "name": "Line of Best Fit",
+              "type": "CONCEPT",
+              "articleTitle": "Best Fit Line",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Line of Best Fit is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "residuals",
+              "name": "Residuals & Sum of Squares",
+              "type": "CONCEPT",
+              "articleTitle": "Residuals",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Residuals is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "r-squared",
+              "name": "R-squared",
+              "type": "CONCEPT",
+              "articleTitle": "Coefficient of Determination",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for R-squared is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "anova",
+          "name": "8.2 Analysis of Variance",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "one-way-anova",
+              "name": "One-Way ANOVA",
+              "type": "CONCEPT",
+              "articleTitle": "One-Way ANOVA",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for One-Way ANOVA is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "f-dist",
+              "name": "F-Distribution",
+              "type": "CONCEPT",
+              "articleTitle": "F-Distribution",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for F-Distribution is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "post-hoc",
+              "name": "Post-Hoc Testing (Tukey)",
+              "type": "CONCEPT",
+              "articleTitle": "Post-Hoc Tests",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Post-Hoc Tests is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "two-way-anova",
+              "name": "Two-Way ANOVA",
+              "type": "CONCEPT",
+              "articleTitle": "Two-Way ANOVA",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Two-Way ANOVA is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "ml-foundations",
+      "name": "9. STATISTICAL FOUNDATIONS FOR MACHINE LEARNING",
+      "type": "MAIN_TOPIC",
+      "chapters": [
+        {
+          "slug": "predictive-modeling",
+          "name": "9.1 Predictive Modeling Basics",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "multiple-regression",
+              "name": "Multiple Linear Regression",
+              "type": "CONCEPT",
+              "articleTitle": "Multiple Regression",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "An extension of simple linear regression used to predict an outcome variable based on multiple distinct predictor variables."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "Y = \\beta_0 + \\beta_1 X_1 + \\beta_2 X_2 + \\dots + \\beta_n X_n + \\epsilon",
+                  "metadata": {
+                    "Y": "Predicted dependent variable",
+                    "\\beta_0": "Y-intercept",
+                    "\\beta_i": "Coefficients (weights) for each predictor",
+                    "\\epsilon": "Error term (residuals)"
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "Watch out for multicollinearity—if your predictor variables are highly correlated with each other, it ruins your model's stability."
+                }
+              ]
+            },
+            {
+              "slug": "logistic-regression",
+              "name": "Logistic Regression",
+              "type": "CONCEPT",
+              "articleTitle": "Logistic Regression",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Despite its name, logistic regression is a classification algorithm. It uses the sigmoid function to map predicted values to probabilities between 0 and 1, usually to predict a binary outcome (Yes/No, True/False)."
+                },
+                {
+                  "type": "FORMULA",
+                  "content": "P(Y=1) = \\frac{1}{1 + e^{-(\\beta_0 + \\beta_1 X)}}",
+                  "metadata": {
+                    "P(Y=1)": "Probability that the outcome is 1 (Success)",
+                    "e^{-(\\beta_0 + \\beta_1 X)}": "The exponential of the negative linear regression equation"
+                  }
+                },
+                {
+                  "type": "TIP",
+                  "content": "This is essentially the foundational math behind the neurons in a neural network!"
+                }
+              ]
+            },
+            {
+              "slug": "sigmoid-function",
+              "name": "The Sigmoid Function",
+              "type": "CONCEPT",
+              "articleTitle": "Sigmoid Function",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Sigmoid Function is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "cost-functions",
+              "name": "Cost Functions",
+              "type": "CONCEPT",
+              "articleTitle": "MSE & Cross-Entropy",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Cost Functions is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "model-evaluation",
+          "name": "9.2 Model Evaluation",
+          "type": "CHAPTER",
+          "concepts": [
+            {
+              "slug": "confusion-matrix",
+              "name": "Confusion Matrix",
+              "type": "CONCEPT",
+              "articleTitle": "Accuracy, Precision, Recall",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Confusion Matrix is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "roc-auc",
+              "name": "ROC & AUC",
+              "type": "CONCEPT",
+              "articleTitle": "ROC Curves",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for ROC and AUC is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "bias-variance",
+              "name": "Bias-Variance Tradeoff",
+              "type": "CONCEPT",
+              "articleTitle": "Bias vs Variance",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Bias-Variance Tradeoff is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            },
+            {
+              "slug": "cross-validation",
+              "name": "Cross-Validation",
+              "type": "CONCEPT",
+              "articleTitle": "K-Fold CV",
+              "blocks": [
+                {
+                  "type": "TEXT",
+                  "content": "Educational content for Cross-Validation is coming soon. Stay tuned for future app updates!"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
