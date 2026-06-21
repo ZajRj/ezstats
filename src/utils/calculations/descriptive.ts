@@ -14,9 +14,10 @@ export interface DescriptiveStats {
   variance: number;
   stdev: number;
   rawData: number[];
+  isPopulation: boolean;
 }
 
-export function calculateDescriptiveStats(dataStr: string): DescriptiveStats | null {
+export function calculateDescriptiveStats(dataStr: string, isPopulation: boolean = false): DescriptiveStats | null {
   if (!dataStr.trim()) return null;
 
   const arr = dataStr.replace(/[^0-9.\-,\s]/g, '')
@@ -44,10 +45,10 @@ export function calculateDescriptiveStats(dataStr: string): DescriptiveStats | n
   const q3 = quartiles[2] !== undefined ? quartiles[2] : median;
   const iqr = q3 - q1;
   
-  const variance = n > 1 ? jStat.variance(arr, true) : 0;
-  const stdev = n > 1 ? jStat.stdev(arr, true) : 0;
+  const variance = n > 1 ? jStat.variance(arr, !isPopulation) : 0;
+  const stdev = n > 1 ? jStat.stdev(arr, !isPopulation) : 0;
   
   return {
-    n, mean, median, mode, min, max, range, q1, q3, iqr, variance, stdev, rawData: arr
+    n, mean, median, mode, min, max, range, q1, q3, iqr, variance, stdev, rawData: arr, isPopulation
   };
 }

@@ -109,5 +109,35 @@
       "n!": "Factorial of the total number of items.",
       "(n-r)!": "Factorial of the unchosen items."
     }
+  },
+  "chisquare": {
+    "latex": "f(x; k) = \\frac{1}{2^{k/2} \\Gamma(k/2)} x^{k/2 - 1} e^{-x/2}",
+    "tokens": {
+      "\\frac{1}{2^{k/2} \\Gamma(k/2)}": "The normalization constant involving the Gamma function.",
+      "x^{k/2 - 1}": "The shape element of the distribution depending on degrees of freedom (k).",
+      "e^{-x/2}": "The exponential decay factor."
+    }
+  },
+  "weibull": {
+    "latex": "f(x; \\lambda, k) = \\frac{k}{\\lambda} \\left(\\frac{x}{\\lambda}\\right)^{k-1} e^{-(x/\\lambda)^k}",
+    "tokens": {
+      "\\frac{k}{\\lambda}": "The scale and shape multiplier.",
+      "\\left(\\frac{x}{\\lambda}\\right)^{k-1}": "The shape factor.",
+      "e^{-(x/\\lambda)^k}": "The exponential decay representing survival probability."
+    }
+  },
+  "student_t": {
+    "latex": "f(t) = \\frac{\\Gamma(\\frac{\\nu+1}{2})}{\\sqrt{\\nu\\pi}\\,\\Gamma(\\frac{\\nu}{2})} \\left(1+\\frac{t^2}{\\nu}\\right)^{-\\frac{\\nu+1}{2}}",
+    "tokens": {
+      "\\nu": "Degrees of freedom.",
+      "\\Gamma": "The Gamma function."
+    }
+  },
+  "f_dist": {
+    "latex": "f(x) = \\frac{\\sqrt{\\frac{(d_1 x)^{d_1} d_2^{d_2}}{(d_1 x + d_2)^{d_1 + d_2}}}}{x B(\\frac{d_1}{2}, \\frac{d_2}{2})}",
+    "tokens": {
+      "d_1, d_2": "Degrees of freedom for the numerator and denominator.",
+      "B": "The Beta function."
+    }
   }
 }

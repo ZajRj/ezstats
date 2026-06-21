@@ -16,6 +16,7 @@ import { generateContinuousFrequencyTable } from '../../src/utils/calculations/f
 import Svg, { Path, Line, Text as SvgText } from 'react-native-svg';
 import { useHistoryStore } from '../../src/store/historyStore';
 import { Ionicons } from '@expo/vector-icons';
+import { Table, TableHead, TableRow, TableCell } from '../../src/components/ui/Table';
 
 const MODES = ['P(X ≤ x)', 'P(X ≥ x)'];
 
@@ -164,22 +165,20 @@ export default function ExponentialDistribution() {
           {simData && (
             <View style={{ marginTop: 16 }}>
               <Text style={{ fontWeight: 'bold', marginBottom: 8, color: colors.textSecondary }}>SIMULATION TABLE {parseInt(sampleSizeStr, 10) > 50 ? '(First 50)' : ''}</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={true} style={{ backgroundColor: '#111827', borderRadius: 8, padding: 8 }}>
-                <View>
-                  <View style={{ flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#374151', paddingBottom: 8, marginBottom: 8 }}>
-                    <Text style={{ width: 40, color: '#9CA3AF', fontSize: 12, fontWeight: 'bold', textAlign: 'center' }}>I</Text>
-                    <Text style={{ width: 100, color: '#9CA3AF', fontSize: 12, fontWeight: 'bold', textAlign: 'center' }}>R_i U(0,1)</Text>
-                    <Text style={{ width: 150, color: '#9CA3AF', fontSize: 12, fontWeight: 'bold', textAlign: 'center' }}>X_i = -(1/λ) * ln(1 - R_i)</Text>
-                  </View>
-                  {simData.map((row) => (
-                    <View key={row.i} style={{ flexDirection: 'row', paddingVertical: 4 }}>
-                      <Text style={{ width: 40, color: '#60A5FA', fontSize: 12, textAlign: 'center' }}>{row.i}</Text>
-                      <Text style={{ width: 100, color: '#FBBF24', fontSize: 12, textAlign: 'center' }}>{row.u.toFixed(4)}</Text>
-                      <Text style={{ width: 150, color: '#34D399', fontSize: 12, textAlign: 'center', fontWeight: 'bold' }}>{row.x.toFixed(4)}</Text>
-                    </View>
-                  ))}
-                </View>
-              </ScrollView>
+              <Table>
+                <TableHead>
+                  <TableCell isHeader width={60}>I</TableCell>
+                  <TableCell isHeader width={100}>R_i U(0,1)</TableCell>
+                  <TableCell isHeader width={180}>X_i = -(1/λ) * ln(1 - R_i)</TableCell>
+                </TableHead>
+                {simData.map((row) => (
+                  <TableRow key={row.i}>
+                    <TableCell width={60}>{row.i}</TableCell>
+                    <TableCell width={100}>{row.u.toFixed(4)}</TableCell>
+                    <TableCell width={180}>{row.x.toFixed(4)}</TableCell>
+                  </TableRow>
+                ))}
+              </Table>
             </View>
           )}
 

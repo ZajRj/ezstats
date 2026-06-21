@@ -57,6 +57,16 @@ export default function Utilities() {
               onPress={() => router.push('/utilities/exponential')} 
             />
             <ActionCard 
+              title="Student's t-Distribution" 
+              icon="school" 
+              onPress={() => router.push('/utilities/student_t')} 
+            />
+            <ActionCard 
+              title="F-Distribution" 
+              icon="analytics" 
+              onPress={() => router.push('/utilities/f_distribution')} 
+            />
+            <ActionCard 
               title="Uniform Distribution" 
               icon="swap-horizontal" 
               onPress={() => router.push('/utilities/uniform')} 
@@ -78,10 +88,41 @@ export default function Utilities() {
             />
           </View>
         </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Statistical Tables</Text>
+          <View style={styles.cardsContainer}>
+            <ActionCard 
+              title="Z-Table (Normal)" 
+              icon="grid" 
+              onPress={() => router.push('/utilities/ztable')} 
+            />
+            <ActionCard 
+              title="T-Table (Student's t)" 
+              icon="grid" 
+              onPress={() => router.push('/utilities/ttable')} 
+            />
+            <ActionCard 
+              title="Chi-Square Table" 
+              icon="grid" 
+              onPress={() => router.push('/utilities/chitable')} 
+            />
+            <ActionCard 
+              title="F-Table" 
+              icon="grid" 
+              onPress={() => router.push('/utilities/ftable')} 
+            />
+          </View>
+        </View>
         
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Simulations</Text>
           <View style={styles.cardsContainer}>
+            <ActionCard 
+              title="Sampling Distributions (CLT)" 
+              icon="layers" 
+              onPress={() => router.push('/utilities/sampling_distribution')} 
+            />
             <ActionCard 
               title="Process Simulator" 
               icon="cog" 

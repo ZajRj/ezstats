@@ -8,13 +8,17 @@ import { calculateDescriptiveStats } from '../../src/utils/calculations/descript
 import FrequencyTable from '../../src/components/ui/FrequencyTable';
 import Histogram from '../../src/components/ui/Histogram';
 import { generateContinuousFrequencyTable, generateDiscreteFrequencyTable } from '../../src/utils/calculations/frequency';
+import { Ionicons } from '@expo/vector-icons';
+import BottomSheetModal from '../../src/components/ui/BottomSheetModal';
 
 export default function DescriptiveStatistics() {
   const [dataStr, setDataStr] = useState('');
+  const [isPopulation, setIsPopulation] = useState(false);
+  const [infoVisible, setInfoVisible] = useState(false);
 
   const stats = useMemo(() => {
-    return calculateDescriptiveStats(dataStr);
-  }, [dataStr]);
+    return calculateDescriptiveStats(dataStr, isPopulation);
+  }, [dataStr, isPopulation]);
 
   return (
     <KeyboardAvoidingView 
@@ -22,9 +26,31 @@ export default function DescriptiveStatistics() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
     >
-      <Stack.Screen options={{ title: 'Descriptive Statistics' }} />
+      <Stack.Screen options={{ 
+        title: 'Descriptive Statistics',
+        headerRight: () => (
+          <TouchableOpacity onPress={() => setInfoVisible(true)} style={{ marginRight: 16 }}>
+            <Ionicons name="information-circle-outline" size={24} color={colors.primary} />
+          </TouchableOpacity>
+        )
+      }} />
 
       <ScrollView contentContainerStyle={styles.scroll}>
+        
+        <View style={styles.toggleContainer}>
+          <TouchableOpacity 
+            style={[styles.toggleBtn, !isPopulation && styles.toggleBtnActive]} 
+            onPress={() => setIsPopulation(false)}
+          >
+            <Text style={[styles.toggleBtnText, !isPopulation && styles.toggleBtnTextActive]}>Sample</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.toggleBtn, isPopulation && styles.toggleBtnActive]} 
+            onPress={() => setIsPopulation(true)}
+          >
+            <Text style={[styles.toggleBtnText, isPopulation && styles.toggleBtnTextActive]}>Population</Text>
+          </TouchableOpacity>
+        </View>
         
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Raw Dataset</Text>
@@ -64,11 +90,11 @@ export default function DescriptiveStatistics() {
 
             <View style={styles.grid}>
               <View style={styles.gridItem}>
-                <Text style={styles.gridLabel}>Sample Var (s²)</Text>
+                <Text style={styles.gridLabel}>{isPopulation ? 'Pop. Var (σ²)' : 'Sample Var (s²)'}</Text>
                 <Text style={styles.gridValue}>{stats.variance.toFixed(4)}</Text>
               </View>
               <View style={styles.gridItem}>
-                <Text style={styles.gridLabel}>Sample Std Dev (s)</Text>
+                <Text style={styles.gridLabel}>{isPopulation ? 'Pop. Std Dev (σ)' : 'Sample Std Dev (s)'}</Text>
                 <Text style={styles.gridValue}>{stats.stdev.toFixed(4)}</Text>
               </View>
               <View style={styles.gridItem}>
@@ -106,6 +132,18 @@ export default function DescriptiveStatistics() {
         )}
 
       </ScrollView>
+
+      <BottomSheetModal visible={infoVisible} onClose={() => setInfoVisible(false)} title="Population vs Sample">
+        <Text style={styles.modalHeading}>Parameter vs Statistic</Text>
+        <Text style={styles.modalText}>
+          A <Text style={{fontWeight: 'bold'}}>Parameter</Text> is a numerical value describing an entire population (e.g., Population Mean μ, Population Variance σ²).{'\n\n'}
+          A <Text style={{fontWeight: 'bold'}}>Statistic</Text> is a numerical value describing a sample drawn from the population (e.g., Sample Mean x̄, Sample Variance s²).
+        </Text>
+        <Text style={styles.modalHeading}>Variance Formula Difference</Text>
+        <Text style={styles.modalText}>
+          Sample Variance divides by (n - 1) to provide an unbiased estimator of the population variance, whereas Population Variance divides strictly by N.
+        </Text>
+      </BottomSheetModal>
     </KeyboardAvoidingView>
   );
 }
@@ -114,6 +152,46 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  toggleContainer: {
+    flexDirection: 'row',
+    backgroundColor: colors.card,
+    borderRadius: 8,
+    padding: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 1,
+  },
+  toggleBtn: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderRadius: 6,
+  },
+  toggleBtnActive: {
+    backgroundColor: colors.primaryLight,
+  },
+  toggleBtnText: {
+    color: colors.textSecondary,
+    fontWeight: '600',
+    fontSize: 14,
+  },
+  toggleBtnTextActive: {
+    color: colors.primary,
+  },
+  modalHeading: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: colors.text,
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  modalText: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    lineHeight: 20,
   },
   scroll: {
     padding: 16,

@@ -1,7 +1,8 @@
 import Text from './Text';
 import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { Table, TableHead, TableRow, TableCell } from './Table';
 
 export interface FreqDataRow {
   interval: string;
@@ -21,67 +22,36 @@ export default function FrequencyTable({ data }: FrequencyTableProps) {
   if (!data || data.length === 0) return null;
 
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={true} style={styles.container}>
-      <View>
-        <View style={styles.headerRow}>
-          <Text style={[styles.headerCell, { width: 120 }]}>CLASE / INTERVALO</Text>
-          <Text style={[styles.headerCell, { width: 140, textAlign: 'center' }]}>MARCA DE CLASE (Xᵢ)</Text>
-          <Text style={[styles.headerCell, { width: 140, textAlign: 'center' }]}>FRECUENCIA ABS. (fᵢ)</Text>
-          <Text style={[styles.headerCell, { width: 160, textAlign: 'center' }]}>FRECUENCIA ACUM. (Fᵢ)</Text>
-          <Text style={[styles.headerCell, { width: 150, textAlign: 'center' }]}>FRECUENCIA REL. (hᵢ)</Text>
-          <Text style={[styles.headerCell, { width: 180, textAlign: 'center' }]}>FRECUENCIA REL. ACUM. (Hᵢ)</Text>
-          <Text style={[styles.headerCell, { width: 140, textAlign: 'center' }]}>fᵢ * Xᵢ</Text>
-        </View>
-        
+    <View style={styles.container}>
+      <Table>
+        <TableHead>
+          <TableCell isHeader width={120}>CLASE / INTERVALO</TableCell>
+          <TableCell isHeader width={140}>MARCA DE CLASE (Xᵢ)</TableCell>
+          <TableCell isHeader width={140}>FRECUENCIA ABS. (fᵢ)</TableCell>
+          <TableCell isHeader width={160}>FRECUENCIA ACUM. (Fᵢ)</TableCell>
+          <TableCell isHeader width={150}>FRECUENCIA REL. (hᵢ)</TableCell>
+          <TableCell isHeader width={180}>FRECUENCIA REL. ACUM. (Hᵢ)</TableCell>
+          <TableCell isHeader width={140}>fᵢ * Xᵢ</TableCell>
+        </TableHead>
         {data.map((row, idx) => (
-          <View key={`${row.interval}-${idx}`} style={[styles.row, idx % 2 === 1 && styles.rowAlt]}>
-            <Text style={[styles.cell, { width: 120, fontWeight: '600' }]}>{row.interval}</Text>
-            <Text style={[styles.cell, { width: 140, textAlign: 'center' }]}>{row.midpoint}</Text>
-            <Text style={[styles.cell, { width: 140, textAlign: 'center' }]}>{row.absFreq}</Text>
-            <Text style={[styles.cell, { width: 160, textAlign: 'center' }]}>{row.cumAbsFreq}</Text>
-            <Text style={[styles.cell, { width: 150, textAlign: 'center' }]}>{row.relFreq.toFixed(4)}</Text>
-            <Text style={[styles.cell, { width: 180, textAlign: 'center' }]}>{row.cumRelFreq.toFixed(4)}</Text>
-            <Text style={[styles.cell, { width: 140, textAlign: 'center' }]}>{row.f_x.toFixed(4)}</Text>
-          </View>
+          <TableRow key={`${row.interval}-${idx}`}>
+            <TableCell width={120}>{row.interval}</TableCell>
+            <TableCell width={140}>{row.midpoint}</TableCell>
+            <TableCell width={140}>{row.absFreq}</TableCell>
+            <TableCell width={160}>{row.cumAbsFreq}</TableCell>
+            <TableCell width={150}>{row.relFreq.toFixed(4)}</TableCell>
+            <TableCell width={180}>{row.cumRelFreq.toFixed(4)}</TableCell>
+            <TableCell width={140}>{row.f_x.toFixed(4)}</TableCell>
+          </TableRow>
         ))}
-      </View>
-    </ScrollView>
+      </Table>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 8,
     marginTop: 16,
-    backgroundColor: '#FFFFFF',
-  },
-  headerRow: {
-    flexDirection: 'row',
-    backgroundColor: '#F3F4F6',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  headerCell: {
-    fontSize: 11,
-    fontWeight: 'bold',
-    color: colors.textSecondary,
-  },
-  row: {
-    flexDirection: 'row',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
-  },
-  rowAlt: {
-    backgroundColor: '#FAFAFA',
-  },
-  cell: {
-    fontSize: 13,
-    color: colors.text,
+    maxHeight: 400,
   },
 });
