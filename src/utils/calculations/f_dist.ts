@@ -107,5 +107,5 @@ export function generateFChartPaths(df1: number, df2: number, x: number, modeIdx
       ` L ${last.x} ${height} Z`;
   }
 
-  return { curvePath: pathString, shadedPath: shadedPathStr };
+  return { curvePath: pathString, shadedPath: shadedPathStr, minZ, maxZ };
 }

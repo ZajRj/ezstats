@@ -86,5 +86,5 @@ export function generateStudentTChartPaths(dof: number, x: number, modeIdx: numb
       ` L ${last.x} ${height} Z`;
   }
 
-  return { curvePath: pathString, shadedPath: shadedPathStr };
+  return { curvePath: pathString, shadedPath: shadedPathStr, minZ, maxZ };
 }

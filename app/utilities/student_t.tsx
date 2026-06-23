@@ -1,58 +1,84 @@
 import Text from '../../src/components/ui/Text';
-import React, { useState, useMemo, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { View, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import { Stack } from 'expo-router';
 import { colors } from '../../src/theme/colors';
-import { Ionicons } from '@expo/vector-icons';
+import Input from '../../src/components/ui/Input';
+import SegmentedControl from '../../src/components/ui/SegmentedControl';
+import StatBox from '../../src/components/ui/StatBox';
 import BottomSheetModal from '../../src/components/ui/BottomSheetModal';
 import FrequencyTable, { FreqDataRow } from '../../src/components/ui/FrequencyTable';
 import Histogram from '../../src/components/ui/Histogram';
 import InteractiveFormula from '../../src/components/ui/InteractiveFormula';
 import formulas from '../../src/data/formulas.json';
-import { calculateStudentTProb, generateStudentTSamples, getStudentTStats, generateStudentTChartPaths } from '../../src/utils/calculations/student_t';
+import { calculateStudentTProb, generateStudentTSamples, getStudentTStats, generateStudentTChartPaths, StudentTSimulationRow } from '../../src/utils/calculations/student_t';
 import { generateContinuousFrequencyTable } from '../../src/utils/calculations/frequency';
 import Svg, { Path, Line, Text as SvgText } from 'react-native-svg';
-import StatBox from '../../src/components/ui/StatBox';
+import { useHistoryStore } from '../../src/store/historyStore';
+import { Ionicons } from '@expo/vector-icons';
 import { Table, TableHead, TableRow, TableCell } from '../../src/components/ui/Table';
+
+const MODES = ['P(T ≤ t)', 'P(T ≥ t)'];
 
 export default function StudentTDistribution() {
   const [dofStr, setDofStr] = useState('10');
   const [xStr, setXStr] = useState('1.5');
-  const [sampleSizeStr, setSampleSizeStr] = useState('100');
-  const [mode, setMode] = useState<'leq' | 'geq'>('leq');
+  const [modeIdx, setModeIdx] = useState(0);
   const [infoVisible, setInfoVisible] = useState(false);
+
+  React.useEffect(() => {
+    import('../../src/db/database').then(({ recordActivity }) => {
+      recordActivity('Student T Calculator', 'TOOL', '/utilities/student_t');
+    });
+  }, []);
+
+  const [sampleSizeStr, setSampleSizeStr] = useState('100');
+  const [freqData, setFreqData] = useState<FreqDataRow[] | null>(null);
+  const [simData, setSimData] = useState<StudentTSimulationRow[] | null>(null);
+
+  const addHistoryItem = useHistoryStore(state => state.addHistoryItem);
 
   const dof = parseFloat(dofStr);
   const x = parseFloat(xStr);
-  const sampleSize = parseInt(sampleSizeStr, 10);
 
   const isValid = !isNaN(dof) && dof > 0 && !isNaN(x);
 
   const prob = useMemo(() => {
     if (!isValid) return null;
-    return calculateStudentTProb(x, dof, mode === 'leq' ? 0 : 1);
-  }, [dof, x, mode, isValid]);
+    return calculateStudentTProb(x, dof, modeIdx);
+  }, [dof, x, modeIdx, isValid]);
 
-  const stats = useMemo(() => {
-    if (isNaN(dof) || dof <= 0) return null;
-    return getStudentTStats(dof);
-  }, [dof]);
+  const handleSave = () => {
+    if (!isValid || prob === null) return;
+    addHistoryItem({
+      type: "Student's t",
+      parameters: { 'v': dof, 't': x },
+      mode: MODES[modeIdx],
+      result: prob,
+    });
+    Alert.alert('Saved!', 'Calculation added to History.');
+  };
 
-  const { curvePath, shadedPath } = useMemo(() => {
-    return generateStudentTChartPaths(dof, x, mode === 'leq' ? 0 : 1, isValid);
-  }, [dof, x, mode, isValid]);
+  const { curvePath, shadedPath, minZ, maxZ } = useMemo(() => {
+    return generateStudentTChartPaths(dof, x, modeIdx, isValid);
+  }, [dof, x, modeIdx, isValid]);
 
-  const { simData, freqData } = useMemo(() => {
-    if (isNaN(dof) || dof <= 0 || isNaN(sampleSize) || sampleSize <= 0) return { simData: null, freqData: [] };
-    const { samples, tableData } = generateStudentTSamples(dof, Math.min(sampleSize, 10000));
-    return {
-      simData: tableData,
-      freqData: generateContinuousFrequencyTable(samples)
-    };
-  }, [dof, sampleSize]);
+  const runSimulation = () => {
+    if (isNaN(dof) || dof <= 0) return;
+    const N = parseInt(sampleSizeStr, 10);
+    if (isNaN(N) || N <= 0) return;
+
+    const { samples, tableData } = generateStudentTSamples(dof, Math.min(N, 10000));
+    setSimData(tableData);
+    setFreqData(generateContinuousFrequencyTable(samples));
+  };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}>
+    <KeyboardAvoidingView 
+      style={styles.container} 
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined} 
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+    >
       <Stack.Screen options={{ 
         title: "Student's t",
         headerRight: () => (
@@ -64,58 +90,74 @@ export default function StudentTDistribution() {
 
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Parameters</Text>
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Degrees of Freedom (ν)</Text>
-            <TextInput style={styles.input} value={dofStr} onChangeText={setDofStr} keyboardType="numeric" placeholder="e.g. 10" />
-          </View>
+          <Input 
+            label="Degrees of Freedom (v)" 
+            value={dofStr} 
+            onChangeText={setDofStr} 
+            error={!isNaN(dof) && dof <= 0 ? "Degrees of freedom must be > 0" : undefined}
+          />
+          <Input label="Value (t)" value={xStr} onChangeText={setXStr} />
+
+          <SegmentedControl 
+            options={MODES} 
+            selectedIndex={modeIdx} 
+            onChange={setModeIdx} 
+          />
         </View>
 
-        {stats && (
-          <View style={styles.statsGrid}>
-            {stats.map((s, i) => <StatBox key={i} label={s.label} value={s.value} />)}
-          </View>
+        {isValid && (
+          <StatBox stats={getStudentTStats(dof)} />
         )}
 
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Probability Calculator</Text>
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Value (t)</Text>
-            <TextInput style={styles.input} value={xStr} onChangeText={setXStr} keyboardType="numeric" placeholder="e.g. 1.5" />
-          </View>
-
-          <View style={styles.toggleContainer}>
-            <TouchableOpacity style={[styles.toggleBtn, mode === 'leq' && styles.toggleBtnActive]} onPress={() => setMode('leq')}>
-              <Text style={[styles.toggleBtnText, mode === 'leq' && styles.toggleBtnTextActive]}>P(T ≤ t)</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.toggleBtn, mode === 'geq' && styles.toggleBtnActive]} onPress={() => setMode('geq')}>
-              <Text style={[styles.toggleBtnText, mode === 'geq' && styles.toggleBtnTextActive]}>P(T ≥ t)</Text>
-            </TouchableOpacity>
-          </View>
-
-          {prob !== null && (
-            <View style={styles.resultContainer}>
+        <View style={styles.resultContainer}>
+          {isValid && prob !== null ? (
+            <>
               <Text style={styles.resultLabel}>Probability</Text>
               <Text style={styles.resultValue}>{(prob * 100).toFixed(4)}%</Text>
-              <Text style={styles.resultSub}>{prob.toFixed(6)}</Text>
+              <Text style={styles.resultRaw}>{prob.toFixed(6)}</Text>
+            </>
+          ) : (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyStateText}>Enter valid parameters</Text>
             </View>
           )}
 
           <View style={styles.chartContainer}>
-            <Svg width="100%" height="150" viewBox="0 0 300 150">
-              <Line x1="0" y1="150" x2="300" y2="150" stroke={colors.border} strokeWidth="2" />
-              <Line x1="150" y1="0" x2="150" y2="150" stroke={colors.border} strokeWidth="1" strokeDasharray="4 4" />
-              {isValid && <Path d={shadedPath} fill={colors.primary} fillOpacity={0.2} />}
-              <Path d={curvePath} fill="none" stroke={colors.primary} strokeWidth="2" />
+            <Svg width="300" height="170" viewBox="0 0 300 170">
+              <Path d={shadedPath} fill={isValid ? colors.primaryLight : 'transparent'} opacity={0.6} />
+              <Path d={curvePath} stroke={isValid ? colors.primary : '#D1D5DB'} strokeWidth="2" fill="none" />
+              <Line x1="0" y1="149" x2="300" y2="149" stroke={colors.border} strokeWidth="2" />
+              
+              <Line x1="0" y1="145" x2="0" y2="154" stroke={colors.textSecondary} strokeWidth="1" />
+              <SvgText x="0" y="166" fontSize="10" fill={colors.textSecondary} textAnchor="start">{minZ}</SvgText>
+              
+              <Line x1="150" y1="145" x2="150" y2="154" stroke={colors.textSecondary} strokeWidth="1" />
+              <SvgText x="150" y="166" fontSize="10" fill={colors.textSecondary} textAnchor="middle">0</SvgText>
+
+              <Line x1="300" y1="145" x2="300" y2="154" stroke={colors.textSecondary} strokeWidth="1" />
+              <SvgText x="300" y="166" fontSize="10" fill={colors.textSecondary} textAnchor="end">{maxZ}</SvgText>
             </Svg>
           </View>
+
+          {isValid && (
+            <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
+              <Ionicons name="bookmark-outline" size={18} color={colors.primary} />
+              <Text style={styles.saveBtnText}>Save to History</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Simulation</Text>
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Sample Size (N)</Text>
-            <TextInput style={styles.input} value={sampleSizeStr} onChangeText={setSampleSizeStr} keyboardType="number-pad" placeholder="e.g. 100" />
+        <View style={styles.simContainer}>
+          <Text style={styles.simTitle}>Simulation & Sampling</Text>
+          <Text style={styles.simDesc}>Generate N random numbers matching this distribution to build a frequency table.</Text>
+          <View style={styles.simRow}>
+            <View style={{ flex: 1 }}>
+              <Input label="Sample Size (N)" value={sampleSizeStr} onChangeText={setSampleSizeStr} />
+            </View>
+            <TouchableOpacity style={styles.simBtn} onPress={runSimulation}>
+              <Ionicons name="play" size={16} color="#FFF" />
+              <Text style={styles.simBtnText}>Run</Text>
+            </TouchableOpacity>
           </View>
 
           {simData && (
@@ -138,11 +180,11 @@ export default function StudentTDistribution() {
             </View>
           )}
 
-          {freqData.length > 0 && (
+          {freqData && freqData.length > 0 && (
             <View style={{ marginTop: 24 }}>
               <Text style={{ fontWeight: 'bold', marginBottom: 8, color: colors.textSecondary }}>FREQUENCY DISTRIBUTION</Text>
               <Histogram data={freqData} />
-              <FrequencyTable data={freqData} />
+              <FrequencyTable data={freqData} isDiscrete={false} />
             </View>
           )}
         </View>
@@ -163,22 +205,107 @@ export default function StudentTDistribution() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   scroll: { padding: 16, paddingBottom: 100, gap: 16 },
-  card: { backgroundColor: colors.card, borderRadius: 16, padding: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 2 },
-  cardTitle: { fontSize: 16, fontWeight: 'bold', color: colors.text, marginBottom: 16 },
-  inputGroup: { marginBottom: 16 },
-  inputLabel: { fontSize: 12, fontWeight: 'bold', color: colors.textSecondary, marginBottom: 8, textTransform: 'uppercase' },
-  input: { backgroundColor: '#F9FAFB', borderWidth: 1, borderColor: colors.border, borderRadius: 12, padding: 16, fontSize: 16, color: colors.text },
-  statsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
-  toggleContainer: { flexDirection: 'row', backgroundColor: '#F9FAFB', borderRadius: 12, padding: 4, marginBottom: 24, borderWidth: 1, borderColor: colors.border },
-  toggleBtn: { flex: 1, paddingVertical: 12, alignItems: 'center', borderRadius: 8 },
-  toggleBtnActive: { backgroundColor: colors.card, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 2 },
-  toggleBtnText: { color: colors.textSecondary, fontWeight: '600' },
-  toggleBtnTextActive: { color: colors.primary },
-  resultContainer: { alignItems: 'center', padding: 24, backgroundColor: colors.primaryLight, borderRadius: 16, marginBottom: 24 },
-  resultLabel: { fontSize: 14, color: colors.primary, fontWeight: '600', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 },
-  resultValue: { fontSize: 48, fontWeight: 'bold', color: colors.primary, marginBottom: 4 },
-  resultSub: { fontSize: 16, color: colors.primary, opacity: 0.8 },
-  chartContainer: { alignItems: 'center', marginTop: 16 },
+  card: { backgroundColor: colors.card, borderRadius: 16, padding: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 2, marginBottom: 20 },
+  resultContainer: {
+    backgroundColor: colors.card,
+    borderRadius: 16,
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  resultLabel: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginBottom: 4,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  },
+  resultValue: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    color: colors.primary,
+  },
+  resultRaw: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginTop: 4,
+  },
+  emptyState: {
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyStateText: {
+    color: colors.textSecondary,
+    fontStyle: 'italic',
+  },
+  chartContainer: {
+    marginTop: 20,
+    marginBottom: 10,
+    alignItems: 'center',
+  },
+  saveBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    backgroundColor: colors.primaryLight,
+    borderRadius: 8,
+  },
+  saveBtnText: {
+    color: colors.primary,
+    fontWeight: '600',
+  },
   modalHeading: { fontSize: 16, fontWeight: 'bold', color: colors.text, marginTop: 16, marginBottom: 8 },
   modalText: { fontSize: 14, color: colors.textSecondary, lineHeight: 20 },
+  simContainer: {
+    marginTop: 24,
+    backgroundColor: colors.card,
+    borderRadius: 16,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+    marginBottom: 20,
+  },
+  simTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: colors.text,
+    marginBottom: 8,
+  },
+  simDesc: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginBottom: 16,
+    lineHeight: 20,
+  },
+  simRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    gap: 12,
+  },
+  simBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: colors.primary,
+    paddingHorizontal: 16,
+    height: 48,
+    borderRadius: 8,
+    justifyContent: 'center',
+    marginBottom: 16,
+  },
+  simBtnText: {
+    color: '#FFF',
+    fontWeight: 'bold',
+  },
 });
