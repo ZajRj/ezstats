@@ -60,16 +60,6 @@ export default function FDistribution() {
     });
     Alert.alert('Saved!', 'Calculation added to History.');
   };
-  const df2 = parseFloat(df2Str);
-  const x = parseFloat(xStr);
-  const sampleSize = parseInt(sampleSizeStr, 10);
-
-  const isValid = !isNaN(df1) && df1 > 0 && !isNaN(df2) && df2 > 0 && !isNaN(x) && x >= 0;
-
-  const prob = useMemo(() => {
-    if (!isValid) return null;
-    return calculateFProb(x, df1, df2, mode === 'leq' ? 0 : 1);
-  }, [df1, df2, x, mode, isValid]);
 
   const { curvePath, shadedPath, minZ, maxZ } = useMemo(() => {
     return generateFChartPaths(df1, df2, x, modeIdx, isValid);
