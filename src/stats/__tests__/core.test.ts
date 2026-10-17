@@ -1,4 +1,5 @@
 // Reference values computed with SciPy 1.15.3 (scipy.special / scipy.stats).
+import { describe, test, expect } from '@jest/globals';
 import { lnGamma, gammaP, gammaQ, erfc, erf, betaInc } from '../core/special';
 import { normal, chiSquare, studentT, fDist, studentizedRange, kolmogorov } from '../core/distributions';
 import {
