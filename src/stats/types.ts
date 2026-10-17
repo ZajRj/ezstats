@@ -48,6 +48,8 @@ export interface TestResult {
   warnings: string[];
   steps: Step[];
   chart?: ChartSpec;
+  /** Tests run automatically afterwards, e.g. Tukey HSD after a significant ANOVA. */
+  followUp?: TestResult[];
 }
 
 export interface TestOptions {
