@@ -1,0 +1,86 @@
+# `src/stats` — statistical tests module
+
+Pure TypeScript, no runtime dependencies. The math in `core/`, `tables/` and `tests/` never imports React, so it is tested directly with Jest (`npm test`). The UI in `app/stats/` and `src/components/stats/` uses `registry.ts`, which describes each test's inputs, examples and info sheet.
+
+Every test returns the same `TestResult` (see `types.ts`). Its `steps` are the worked solution, in order: hypotheses, data, intermediate quantities, statistic, critical value or p-value, decision, conclusion. Conclusions are generated from the templates in `text.ts`, and they never say "se acepta H₀".
+
+## Calculation modes
+
+| Mode | Behaviour |
+|---|---|
+| `tabla` (default) | Matches hand calculation. z is rounded to 2 decimals before Φ(z); Φ and frequencies are shown with 4 decimals; critical values come from printed tables, or from the exact quantile rounded to the table's precision (χ² and t: 3 decimals, F and q: 2). |
+| `exacto` | Full precision; the decision uses the p-value. |
+
+`registry.runWithModeCheck` also runs the other mode, and adds a "Resultado límite" warning when the two decisions differ.
+
+## Numerical core
+
+| Function | Method | Source |
+|---|---|---|
+| `erf`, `erfc` | Rational Chebyshev approximations (relative error < 1e-15) | W. J. Cody (1969), Netlib SPECFUN CALERF |
+| `lnGamma` | Lanczos, g = 7, n = 9 | Lanczos (1964) |
+| `gammaP`, `gammaQ` | Series for x < a + 1, Lentz continued fraction otherwise | Numerical Recipes, 3rd ed., §6.2 |
+| `betaInc` | Lentz continued fraction with symmetry | Numerical Recipes, 3rd ed., §6.4 |
+| `normal.quantile` | AS241 PPND16 plus one Newton step | Wichura (1988) |
+| `chiSquare`, `studentT`, `fDist` quantiles | Bracketed bisection on the CDF (upper tail on the survival function) | — |
+| `studentizedRange` | Gauss-Legendre integration; quantile by the Illinois method | Copenhaver & Holland (1988); R `ptukey.c` |
+| `kolmogorov` | Exact P(Dₙ < d) | Marsaglia, Tsang & Wang (2003) |
+
+## Tests
+
+### Normality (H₀: los datos siguen una distribución normal)
+
+| Test | Statistic | Critical value / p-value | Source |
+|---|---|---|---|
+| Lilliefors | D = máx(Fᵢ/n − Φ(zᵢ), Φ(zᵢ) − Fᵢ₋₁/n), repeated values grouped, n = total observations | Lilliefors (1967) table; linear interpolation for 21–24 and 26–29; c/√n for n > 30. Approximate p-value from Dallal & Wilkinson (1986), and above 0.1 from the polynomial used by R `nortest::lillie.test` | Lilliefors, *JASA* 62 (1967) |
+| Kolmogorov-Smirnov | Same D, with known μ and σ | n ≤ 35: exact Kolmogorov quantile rounded to 3 decimals. n > 35: 1.22, 1.36 or 1.63 over √n. p-value: exact | Massey (1951); MTW (2003) |
+| Shapiro-Wilk | W = b²/SS | Royston's normalizing transformation, 3 ≤ n ≤ 5000 | Royston (1995), AS R94 |
+| χ² goodness of fit | Σ(O − E)²/E, open outer intervals, adjacent intervals merged while E < 5, df = k − 3 | χ²(1 − α; df) | — |
+| Anderson-Darling | A², A*² = A²(1 + 0.75/n + 2.25/n²) | 0.631 / 0.752 / 1.035; piecewise p-value | D'Agostino & Stephens (1986), Table 4.7 |
+| Jarque-Bera | (n/6)[S² + (K − 3)²/4], population moments | χ²₂ | Jarque & Bera (1987) |
+
+### Variance
+
+| Test | Statistic | Notes |
+|---|---|---|
+| χ² for one variance | (n − 1)s²/σ₀² | Two-sided or one tail; CI for σ² |
+| F for two variances | s₁²/s₂² | Two-sided in `tabla` mode: larger variance on top, compared with F(1 − α/2) |
+| Bartlett | [(N − k) ln sₚ² − Σ(nⱼ − 1) ln sⱼ²]/C | χ² with k − 1 df |
+| Levene / Brown-Forsythe | ANOVA F on \|xᵢⱼ − x̄ⱼ\| or \|xᵢⱼ − x̃ⱼ\| | Transformed data table and ANOVA table in the steps |
+| Hartley | s²máx/s²mín | Equal n, 2 ≤ k ≤ 12, α ∈ {0.05, 0.01} |
+
+### Randomness (data order is never changed)
+
+| Test | Statistic | Notes |
+|---|---|---|
+| Runs above/below the median | Z = (R − μ_R)/σ_R | Values equal to the median are excluded. For n₁, n₂ ≤ 20 in `tabla` mode the critical values come from the exact distribution of R (Swed & Eisenhart 1943) |
+| Runs up and down | μ = (2n − 1)/3, σ² = (16n − 29)/90 | Ties between consecutive values are ignored (Wallis & Moore 1941) |
+| Ljung-Box | Q = n(n + 2) Σ ρ̂ₖ²/(n − k) | Default h = min(10, n/5) |
+
+### ANOVA
+
+| Test | Notes |
+|---|---|
+| One-way ANOVA | SC_entre, SC_dentro and the SC_total check, the classic table and η². Runs Tukey automatically when H₀ is rejected and k > 2 |
+| Tukey HSD | Tukey-Kramer SE √[(CM/2)(1/nᵢ + 1/nⱼ)]; p from the studentized range |
+| Kruskal-Wallis | H with average ranks and the tie correction C = 1 − Σ(t³ − t)/(N³ − N) |
+| Análisis completo | Runs above/below the median for each group, then Shapiro-Wilk (or Lilliefors) for each group, then Bartlett if every group is normal, Levene otherwise. Finishes with ANOVA + Tukey, or Kruskal-Wallis with the reason |
+
+## Tables
+
+- `tables/lilliefors.ts`: transcribed from Lilliefors (1967).
+- `tables/hartley.ts`: the layout of Pearson & Hartley, *Biometrika Tables* Vol. I, Table 31. The values were regenerated by integrating the exact Fmax distribution and rounded to the printed precision. One checked cell differs from the printed table: α = 0.01, k = 3, ν = 2 is exactly 447.5 (printed as 448).
+- `tables/runs.ts`: the exact distribution of R, which is what Swed & Eisenhart tabulate. Checked against their published values for n₁ = n₂ = 7, 10 and 20.
+
+## Verification
+
+The fixtures in `__tests__/` come from the module spec and were checked against SciPy 1.15.3 and statsmodels 0.15.0 (Ljung-Box). Lilliefors on Dataset C reproduces the hand-solved 7-row table exactly. `scipy.stats.bartlett` returns a wrong value for integer arrays (1.5604 instead of 0.36820), so the reference uses float input.
+
+## Known limitations
+
+- Shapiro-Wilk uses Royston's approximation for the aᵢ coefficients, not the original Shapiro-Wilk (1965) table. Results can differ from the printed table in the 3rd–4th decimal for n ≤ 50, and the decision uses the p-value in both modes.
+- The Lilliefors p-value is approximate. With a tabulated α the decision always uses the table.
+- K-S critical values for n ≤ 35 come from the exact distribution; some printed tables round their values slightly differently.
+- Hartley has no p-value. For ν between tabulated rows the next lower row is used (conservative), and ν > 60 uses the ν = 60 row.
+- The χ² goodness-of-fit test only fits a normal distribution with estimated μ and σ.
+- Copying the procedure opens the system share sheet. It does not write to the clipboard directly, because that would need `expo-clipboard`.
