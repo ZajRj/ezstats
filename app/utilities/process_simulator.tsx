@@ -2,6 +2,7 @@ import Text from '../../src/components/ui/Text';
 import React, { useState, useMemo, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, Alert, Dimensions } from 'react-native';
 import { Stack } from 'expo-router';
+import { useHeaderHeight } from 'expo-router/react-navigation';
 import { colors } from '../../src/theme/colors';
 import Input from '../../src/components/ui/Input';
 import { Ionicons } from '@expo/vector-icons';
@@ -15,6 +16,7 @@ import BottomSheetModal from '../../src/components/ui/BottomSheetModal';
 const screenWidth = Dimensions.get("window").width;
 
 export default function ProcessSimulation() {
+  const headerHeight = useHeaderHeight();
   const [kItems, setKItems] = useState('10');
   const [nHoras, setNHoras] = useState('8');
   const [usePoissonArrivals, setUsePoissonArrivals] = useState(false);
@@ -171,7 +173,7 @@ export default function ProcessSimulation() {
     <KeyboardAvoidingView 
       style={styles.container} 
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+      keyboardVerticalOffset={headerHeight}
     >
       <Stack.Screen options={{ 
         title: 'Process Simulator',
@@ -182,7 +184,7 @@ export default function ProcessSimulation() {
         )
       }} />
 
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
         
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Global Parameters</Text>
@@ -236,7 +238,7 @@ export default function ProcessSimulation() {
                   onPress={() => removeStage(stage.id)}
                   disabled={stages.length <= 1}
                 >
-                  <Ionicons name="close" size={16} color={colors.error} />
+                  <Ionicons name="close" size={16} color={colors.danger} />
                   <Text style={styles.removeBtnText}>Remove</Text>
                 </TouchableOpacity>
               </View>
@@ -555,7 +557,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   removeBtnText: {
-    color: colors.error,
+    color: colors.danger,
     fontSize: 12,
   },
   label: {

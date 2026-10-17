@@ -7,6 +7,19 @@ import { useHistoryStore } from '../../src/store/historyStore';
 import { Ionicons } from '@expo/vector-icons';
 import Background from '../../src/components/ui/Background';
 
+const TYPE_ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
+  Normal: 'stats-chart',
+  Binomial: 'pie-chart',
+  Poisson: 'pulse',
+  Exponential: 'trending-down',
+  "Student's t": 'school',
+  F: 'analytics',
+  Uniform: 'swap-horizontal',
+  Geometric: 'git-commit',
+  'Chi-Square': 'git-network',
+  Weibull: 'water',
+};
+
 export default function HistoryScreen() {
   const insets = useSafeAreaInsets();
   const { items, clearHistory } = useHistoryStore();
@@ -34,7 +47,7 @@ export default function HistoryScreen() {
       <View style={[styles.header, { paddingTop: insets.top + 20 }]}>
         <Text style={styles.headerTitle}>History</Text>
         {items.length > 0 && (
-          <TouchableOpacity onPress={handleClear} style={styles.clearBtn}>
+          <TouchableOpacity onPress={handleClear} style={styles.clearBtn} hitSlop={8} accessibilityRole="button">
             <Text style={styles.clearBtnText}>Clear All</Text>
           </TouchableOpacity>
         )}
@@ -46,7 +59,7 @@ export default function HistoryScreen() {
       >
         {items.length === 0 ? (
           <View style={styles.emptyState}>
-            <Ionicons name="bookmark-outline" size={48} color={colors.border} />
+            <Ionicons name="bookmark-outline" size={48} color={colors.tabInactive} />
             <Text style={styles.emptyText}>No saved calculations yet.</Text>
             <Text style={styles.emptySubtext}>Save a calculation from the Utilities tab to see it here.</Text>
           </View>
@@ -56,7 +69,7 @@ export default function HistoryScreen() {
               <View style={styles.cardHeader}>
                 <View style={styles.cardHeaderLeft}>
                   <Ionicons 
-                    name={item.type === 'Normal' ? 'stats-chart' : item.type === 'Binomial' ? 'pie-chart' : 'pulse'} 
+                    name={TYPE_ICONS[item.type] ?? 'calculator'} 
                     size={20} 
                     color={colors.primary} 
                   />
@@ -93,7 +106,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-end',
+    alignItems: 'center',
     paddingHorizontal: 20,
     paddingBottom: 20,
     backgroundColor: colors.card,
@@ -106,20 +119,21 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   clearBtn: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    backgroundColor: '#FEE2E2',
-    borderRadius: 6,
+    minHeight: 36,
+    justifyContent: 'center',
+    paddingHorizontal: 14,
+    backgroundColor: colors.dangerLight,
+    borderRadius: 18,
   },
   clearBtnText: {
-    color: '#EF4444',
+    color: colors.danger,
     fontWeight: '600',
-    fontSize: 12,
+    fontSize: 14,
   },
   scrollContent: {
     paddingHorizontal: 20,
     paddingTop: 20,
-    paddingBottom: 100,
+    paddingBottom: 32,
   },
   emptyState: {
     alignItems: 'center',

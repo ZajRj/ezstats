@@ -1,93 +1,112 @@
-import Text from '../../src/components/ui/Text';
 import React, { useMemo, useState } from 'react';
-import { View, StyleSheet, TextInput } from 'react-native';
-import { Stack } from 'expo-router';
-import { colors } from '../../src/theme/colors';
 import { jStat } from 'jstat';
-import { Table, TableHead, TableRow, TableCell } from '../../src/components/ui/Table';
+import DataGrid, { GridCell } from '../../src/components/ui/DataGrid';
 import SegmentedControl from '../../src/components/ui/SegmentedControl';
+import {
+  TableScreen,
+  LookupField,
+  LookupRow,
+  ResultChip,
+  parseNum,
+  SIGNED_KEYBOARD,
+} from '../../src/components/ui/TableKit';
+
+const DFS = Array.from({ length: 50 }, (_, i) => i + 1);
+const ALPHAS = [0.25, 0.10, 0.05, 0.025, 0.01, 0.005, 0.001];
+const TAILS = ['Right tail', 'Left tail'];
+const TAIL_FORMULAS = ['P(T ≥ t) = α', 'P(T ≤ t) = α'];
+const LOOKUP_MODES = ['α → critical t', 't → p-value'];
 
 export default function TTable() {
-  const [lookupDf, setLookupDf] = useState('');
-  const [lookupAlpha, setLookupAlpha] = useState('');
-  const [modeIdx, setModeIdx] = useState(0);
+  const [tailIdx, setTailIdx] = useState(0);
+  const [lookupMode, setLookupMode] = useState(0);
+  const [dfInput, setDfInput] = useState('');
+  const [alphaInput, setAlphaInput] = useState('');
+  const [tInput, setTInput] = useState('');
+  const [tapped, setTapped] = useState<GridCell | null>(null);
 
-  const MODES = ['Right-Tail P(T ≥ t) = α', 'Left-Tail P(T ≤ t) = α'];
+  const critical = (alpha: number, df: number) =>
+    jStat.studentt.inv(tailIdx === 0 ? 1 - alpha : alpha, df);
 
-  const dfs = Array.from({ length: 50 }, (_, i) => i + 1);
-  const alphas = [0.25, 0.10, 0.05, 0.025, 0.01, 0.005, 0.001];
+  const cells = useMemo(
+    () => DFS.map((df) => ALPHAS.map((a) => critical(a, df).toFixed(3))),
+    [tailIdx],
+  );
 
-  const tableData = useMemo(() => {
-    return dfs.map(df => {
-      return alphas.map(alpha => {
-        const p = modeIdx === 0 ? 1 - alpha : alpha;
-        return jStat.studentt.inv(p, df).toFixed(3);
-      });
-    });
-  }, [dfs, alphas, modeIdx]);
+  const df = parseInt(dfInput, 10);
+  const dfValid = !isNaN(df) && df > 0;
+  const alpha = parseNum(alphaInput);
+  const alphaValid = !isNaN(alpha) && alpha > 0 && alpha < 1;
+  const t = parseNum(tInput);
 
-  const lookupT = useMemo(() => {
-    const df = parseInt(lookupDf, 10);
-    const alpha = parseFloat(lookupAlpha);
-    if (isNaN(df) || isNaN(alpha) || df <= 0 || alpha <= 0 || alpha >= 1) return null;
-    const p = modeIdx === 0 ? 1 - alpha : alpha;
-    return jStat.studentt.inv(p, df).toFixed(3);
-  }, [lookupDf, lookupAlpha, modeIdx]);
+  const criticalT = lookupMode === 0 && dfValid && alphaValid ? critical(alpha, df) : null;
+  const pValue = lookupMode === 1 && dfValid && !isNaN(t)
+    ? (tailIdx === 0 ? 1 - jStat.studentt.cdf(t, df) : jStat.studentt.cdf(t, df))
+    : null;
+
+  const row = dfValid && df <= DFS.length ? df - 1 : -1;
+  let lookupCell: GridCell | null = null;
+  if (row >= 0 && lookupMode === 0 && alphaValid) {
+    lookupCell = { row, col: ALPHAS.findIndex((a) => Math.abs(a - alpha) < 1e-9) };
+  } else if (row >= 0 && lookupMode === 1 && !isNaN(t)) {
+    // Point at the column whose critical value is closest to the entered t.
+    const values = cells[row].map(Number);
+    const col = values.reduce((best, v, i) => (Math.abs(v - t) < Math.abs(values[best] - t) ? i : best), 0);
+    lookupCell = { row, col };
+  } else if (row >= 0) {
+    lookupCell = { row, col: -1 };
+  }
+
+  const highlight = tapped ?? lookupCell;
+  const readout = highlight && highlight.col >= 0
+    ? `df ${DFS[highlight.row]}   ·   α = ${ALPHAS[highlight.col]}   ·   t = ${cells[highlight.row][highlight.col]}`
+    : highlight ? `df ${DFS[highlight.row]}` : null;
+
+  const clearTap = <T,>(fn: (v: T) => void) => (v: T) => { fn(v); setTapped(null); };
 
   return (
-    <View style={styles.container}>
-      <Stack.Screen options={{ title: "T-Table" }} />
-      <View style={styles.header}>
-        <Text style={styles.title}>Student's t-Table</Text>
-        <Text style={styles.subtitle}>Critical values for selected probabilities</Text>
-        
-        <View style={{ marginTop: 16 }}>
-          <SegmentedControl options={MODES} selectedIndex={modeIdx} onChange={setModeIdx} />
-        </View>
-
-        <View style={styles.lookupContainer}>
-          <Text style={styles.lookupTitle}>Quick Lookup</Text>
-          <View style={styles.lookupRow}>
-            <TextInput style={styles.input} placeholder="df" value={lookupDf} onChangeText={setLookupDf} keyboardType="numeric" />
-            <TextInput style={styles.input} placeholder="α (e.g. 0.05)" value={lookupAlpha} onChangeText={setLookupAlpha} keyboardType="numeric" />
-            <View style={styles.lookupResult}>
-              <Text style={styles.lookupResultLabel}>Critical Value</Text>
-              <Text style={styles.lookupResultValue}>{lookupT !== null ? lookupT : '--'}</Text>
-            </View>
-          </View>
-        </View>
-      </View>
-
-      <Table>
-        <TableHead>
-          <TableCell isHeader width={70}>df \ α</TableCell>
-          {alphas.map((alpha, i) => (
-            <TableCell key={i} isHeader width={70}>{alpha.toString()}</TableCell>
-          ))}
-        </TableHead>
-        {dfs.map((df, rIdx) => (
-          <TableRow key={rIdx}>
-            <TableCell isHeader width={70}>{df}</TableCell>
-            {tableData[rIdx].map((val, cIdx) => (
-              <TableCell key={cIdx} width={70}>{val}</TableCell>
-            ))}
-          </TableRow>
-        ))}
-      </Table>
-    </View>
+    <TableScreen
+      title="t-Table"
+      caption={`Critical values t where ${TAIL_FORMULAS[tailIdx]}. Rows are degrees of freedom, columns are α.`}
+      readout={readout}
+      controls={
+        <>
+          <SegmentedControl compact options={TAILS} selectedIndex={tailIdx} onChange={setTailIdx} />
+          <SegmentedControl compact options={LOOKUP_MODES} selectedIndex={lookupMode} onChange={clearTap(setLookupMode)} />
+          <LookupRow>
+            <LookupField label="df" placeholder="e.g. 12" value={dfInput} onChangeText={clearTap(setDfInput)} keyboardType="number-pad" />
+            {lookupMode === 0 ? (
+              <LookupField label="α" placeholder="e.g. 0.05" value={alphaInput} onChangeText={clearTap(setAlphaInput)} />
+            ) : (
+              <LookupField label="t statistic" placeholder="e.g. 2.18" value={tInput} onChangeText={clearTap(setTInput)} keyboardType={SIGNED_KEYBOARD} />
+            )}
+            {lookupMode === 0 ? (
+              <ResultChip
+                label="Critical t"
+                value={criticalT !== null ? criticalT.toFixed(3) : null}
+                note={alphaInput && !alphaValid ? 'Enter 0 < α < 1' : dfValid && row < 0 ? 'df beyond table' : null}
+              />
+            ) : (
+              <ResultChip
+                label={tailIdx === 0 ? 'P(T ≥ t)' : 'P(T ≤ t)'}
+                value={pValue !== null ? pValue.toFixed(4) : null}
+                note={dfValid && row < 0 ? 'df beyond table' : null}
+              />
+            )}
+          </LookupRow>
+        </>
+      }
+    >
+      <DataGrid
+        cornerLabel="df \ α"
+        columnLabels={ALPHAS.map(String)}
+        rowLabels={DFS.map(String)}
+        cells={cells}
+        highlight={highlight}
+        onCellPress={setTapped}
+        cellWidth={72}
+        rowHeaderWidth={60}
+      />
+    </TableScreen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  header: { padding: 20, backgroundColor: colors.card, borderBottomWidth: 1, borderBottomColor: colors.border },
-  title: { fontSize: 20, fontWeight: 'bold', color: colors.text },
-  subtitle: { fontSize: 14, color: colors.textSecondary, marginTop: 4 },
-  lookupContainer: { marginTop: 20, backgroundColor: '#F9FAFB', padding: 16, borderRadius: 12, borderWidth: 1, borderColor: colors.border },
-  lookupTitle: { fontSize: 14, fontWeight: 'bold', color: colors.text, marginBottom: 12 },
-  lookupRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  input: { flex: 1, backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border, borderRadius: 8, padding: 12, fontSize: 14, color: colors.text },
-  lookupResult: { alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primaryLight, paddingHorizontal: 16, paddingVertical: 8, borderRadius: 8, minWidth: 100 },
-  lookupResultLabel: { fontSize: 11, fontWeight: 'bold', color: colors.primary, marginBottom: 2 },
-  lookupResultValue: { fontSize: 16, fontWeight: 'bold', color: colors.primary },
-});

@@ -47,7 +47,7 @@ export default function Settings() {
     >
       <Background />
       <ScrollView 
-        contentContainerStyle={[styles.container, { paddingTop: insets.top + 20, paddingBottom: 100 }]}
+        contentContainerStyle={[styles.container, { paddingTop: insets.top + 20, paddingBottom: 32 }]}
         keyboardShouldPersistTaps="handled"
       >
         <Text style={styles.headerTitle}>Settings</Text>

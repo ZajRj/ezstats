@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.element, // Assuming colors.element exists, else will just be transparent or undefined which is ok
+    backgroundColor: colors.surface,
   },
   placeholderText: {
     color: colors.textSecondary,

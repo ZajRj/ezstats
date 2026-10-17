@@ -44,6 +44,8 @@ export default function ActionCard({ title, icon, onPress }: ActionCardProps) {
     <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
       <TouchableOpacity 
         activeOpacity={0.9} 
+        accessibilityRole="button"
+        accessibilityLabel={title}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         onPress={handlePress}
@@ -58,7 +60,7 @@ export default function ActionCard({ title, icon, onPress }: ActionCardProps) {
             <View style={styles.iconContainer}>
               <Ionicons name={icon} size={22} color={colors.card} />
             </View>
-            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.title} numberOfLines={2}>{title}</Text>
           </View>
           <Ionicons name="arrow-forward" size={24} color={colors.card} />
         </LinearGradient>
@@ -82,8 +84,10 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   leftContent: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    marginRight: 12,
   },
   iconContainer: {
     width: 44,
@@ -102,5 +106,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: colors.card,
     letterSpacing: 0.3,
+    flexShrink: 1,
   },
 });

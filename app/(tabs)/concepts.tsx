@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 20,
     paddingTop: 24,
-    paddingBottom: 100, // accommodate bottom tab bar
+    paddingBottom: 32,
   },
   center: {
     flex: 1,

@@ -2,6 +2,7 @@ import Text from '../../src/components/ui/Text';
 import React, { useState, useMemo } from 'react';
 import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, TouchableOpacity, Alert } from 'react-native';
 import { Stack } from 'expo-router';
+import { useHeaderHeight } from 'expo-router/react-navigation';
 import { colors } from '../../src/theme/colors';
 import Input from '../../src/components/ui/Input';
 import SegmentedControl from '../../src/components/ui/SegmentedControl';
@@ -22,6 +23,7 @@ import { BarChart } from 'react-native-chart-kit';
 const MODES = ['P(X = x)', 'P(X ≤ x)', 'P(X ≥ x)'];
 
 export default function BinomialDistribution() {
+  const headerHeight = useHeaderHeight();
   const [trials, setTrials] = useState('10');
   const [probSuccess, setProbSuccess] = useState('0.5');
   const [xVal, setXVal] = useState('5');
@@ -127,7 +129,7 @@ export default function BinomialDistribution() {
     <KeyboardAvoidingView 
       style={styles.container} 
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+      keyboardVerticalOffset={headerHeight}
     >
       <Stack.Screen options={{ 
         headerRight: () => (
@@ -137,7 +139,7 @@ export default function BinomialDistribution() {
         )
       }} />
 
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
         
         <View style={styles.card}>
           <Input 

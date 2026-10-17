@@ -1,111 +1,126 @@
-import Text from '../../src/components/ui/Text';
 import React, { useMemo, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
-import { Stack } from 'expo-router';
-import { colors } from '../../src/theme/colors';
 import { jStat } from 'jstat';
-import { Table, TableHead, TableRow, TableCell } from '../../src/components/ui/Table';
+import DataGrid, { GridCell } from '../../src/components/ui/DataGrid';
 import SegmentedControl from '../../src/components/ui/SegmentedControl';
+import {
+  TableScreen,
+  LookupField,
+  LookupRow,
+  ResultChip,
+  parseNum,
+} from '../../src/components/ui/TableKit';
+
+const DF1S = Array.from({ length: 20 }, (_, i) => i + 1); // numerator df (columns)
+const DF2S = Array.from({ length: 30 }, (_, i) => i + 1); // denominator df (rows)
+const TABLE_ALPHAS = [0.10, 0.05, 0.025, 0.01];
+const TAILS = ['Right tail', 'Left tail'];
+const TAIL_FORMULAS = ['P(F ≥ f) = α', 'P(F ≤ f) = α'];
+const LOOKUP_MODES = ['α → critical F', 'F → p-value'];
 
 export default function FTable() {
-  const [alpha, setAlpha] = useState(0.05);
-  const [lookupDf1, setLookupDf1] = useState('');
-  const [lookupDf2, setLookupDf2] = useState('');
-  const [lookupAlpha, setLookupAlpha] = useState('');
-  const [modeIdx, setModeIdx] = useState(0);
+  const [tailIdx, setTailIdx] = useState(0);
+  const [alphaIdx, setAlphaIdx] = useState(1);
+  const [lookupMode, setLookupMode] = useState(0);
+  const [df1Input, setDf1Input] = useState('');
+  const [df2Input, setDf2Input] = useState('');
+  const [alphaInput, setAlphaInput] = useState('');
+  const [fInput, setFInput] = useState('');
+  const [tapped, setTapped] = useState<GridCell | null>(null);
 
-  const MODES = ['Right-Tail P(F ≥ f) = α', 'Left-Tail P(F ≤ f) = α'];
+  const tableAlpha = TABLE_ALPHAS[alphaIdx];
+  const critical = (alpha: number, d1: number, d2: number) =>
+    jStat.centralF.inv(tailIdx === 0 ? 1 - alpha : alpha, d1, d2);
 
-  const df1s = Array.from({ length: 20 }, (_, i) => i + 1); // numerator df
-  const df2s = Array.from({ length: 30 }, (_, i) => i + 1); // denominator df
+  const cells = useMemo(
+    () => DF2S.map((d2) => DF1S.map((d1) => critical(tableAlpha, d1, d2).toFixed(2))),
+    [tableAlpha, tailIdx],
+  );
 
-  const tableData = useMemo(() => {
-    return df2s.map(df2 => {
-      return df1s.map(df1 => {
-        const p = modeIdx === 0 ? 1 - alpha : alpha;
-        return jStat.centralF.inv(p, df1, df2).toFixed(2);
-      });
-    });
-  }, [alpha, modeIdx]);
+  const d1 = parseInt(df1Input, 10);
+  const d2 = parseInt(df2Input, 10);
+  const dfsValid = d1 > 0 && d2 > 0;
+  // An empty α field falls back to the α the table is showing.
+  const alpha = alphaInput ? parseNum(alphaInput) : tableAlpha;
+  const alphaValid = !isNaN(alpha) && alpha > 0 && alpha < 1;
+  const f = parseNum(fInput);
+  const fValid = !isNaN(f) && f >= 0;
 
-  const lookupF = useMemo(() => {
-    const df1 = parseInt(lookupDf1, 10);
-    const df2 = parseInt(lookupDf2, 10);
-    const a = parseFloat(lookupAlpha);
-    if (isNaN(df1) || isNaN(df2) || isNaN(a) || df1 <= 0 || df2 <= 0 || a <= 0 || a >= 1) return null;
-    const p = modeIdx === 0 ? 1 - a : a;
-    return jStat.centralF.inv(p, df1, df2).toFixed(3);
-  }, [lookupDf1, lookupDf2, lookupAlpha, modeIdx]);
+  const criticalF = lookupMode === 0 && dfsValid && alphaValid ? critical(alpha, d1, d2) : null;
+  const pValue = lookupMode === 1 && dfsValid && fValid
+    ? (tailIdx === 0 ? 1 - jStat.centralF.cdf(f, d1, d2) : jStat.centralF.cdf(f, d1, d2))
+    : null;
+
+  const onTable = dfsValid && d1 <= DF1S.length && d2 <= DF2S.length;
+  const showsSameAlpha = lookupMode === 1 || Math.abs(alpha - tableAlpha) < 1e-9;
+  const lookupCell = onTable && showsSameAlpha ? { row: d2 - 1, col: d1 - 1 } : null;
+  const highlight = tapped ?? lookupCell;
+
+  const readout = highlight
+    ? `d₁ ${DF1S[highlight.col]}   ·   d₂ ${DF2S[highlight.row]}   ·   α = ${tableAlpha}   ·   F = ${cells[highlight.row][highlight.col]}`
+    : null;
+
+  const onAlphaChange = (text: string) => {
+    setAlphaInput(text);
+    setTapped(null);
+    const a = parseNum(text);
+    const idx = TABLE_ALPHAS.findIndex((x) => Math.abs(x - a) < 1e-9);
+    if (idx >= 0) setAlphaIdx(idx);
+  };
+
+  const clearTap = <T,>(fn: (v: T) => void) => (v: T) => { fn(v); setTapped(null); };
+  const dfNote = dfsValid && !onTable ? 'df beyond table' : null;
 
   return (
-    <View style={styles.container}>
-      <Stack.Screen options={{ title: "F-Table" }} />
-      <View style={styles.header}>
-        <Text style={styles.title}>F-Distribution Table</Text>
-        <Text style={styles.subtitle}>Critical values for selected probabilities</Text>
-        
-        <View style={{ marginTop: 16 }}>
-          <SegmentedControl options={MODES} selectedIndex={modeIdx} onChange={setModeIdx} />
-        </View>
-
-        <View style={styles.toggleContainer}>
-          <TouchableOpacity style={[styles.toggleBtn, alpha === 0.05 && styles.toggleBtnActive]} onPress={() => setAlpha(0.05)}>
-            <Text style={[styles.toggleBtnText, alpha === 0.05 && styles.toggleBtnTextActive]}>α = 0.05</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.toggleBtn, alpha === 0.01 && styles.toggleBtnActive]} onPress={() => setAlpha(0.01)}>
-            <Text style={[styles.toggleBtnText, alpha === 0.01 && styles.toggleBtnTextActive]}>α = 0.01</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.lookupContainer}>
-          <Text style={styles.lookupTitle}>Quick Lookup</Text>
-          <View style={styles.lookupRow}>
-            <TextInput style={styles.input} placeholder="d₁" value={lookupDf1} onChangeText={setLookupDf1} keyboardType="numeric" />
-            <TextInput style={styles.input} placeholder="d₂" value={lookupDf2} onChangeText={setLookupDf2} keyboardType="numeric" />
-            <TextInput style={styles.input} placeholder="α" value={lookupAlpha} onChangeText={setLookupAlpha} keyboardType="numeric" />
-            <View style={styles.lookupResult}>
-              <Text style={styles.lookupResultLabel}>Critical Value</Text>
-              <Text style={styles.lookupResultValue}>{lookupF !== null ? lookupF : '--'}</Text>
-            </View>
-          </View>
-        </View>
-      </View>
-
-      <Table>
-        <TableHead>
-          <TableCell isHeader width={55}>d₂ \ d₁</TableCell>
-          {df1s.map((d1, i) => (
-            <TableCell key={i} isHeader width={55}>{d1}</TableCell>
-          ))}
-        </TableHead>
-        {df2s.map((d2, rIdx) => (
-          <TableRow key={rIdx}>
-            <TableCell isHeader width={55}>{d2}</TableCell>
-            {tableData[rIdx].map((val, cIdx) => (
-              <TableCell key={cIdx} width={55}>{val}</TableCell>
-            ))}
-          </TableRow>
-        ))}
-      </Table>
-    </View>
+    <TableScreen
+      title="F-Table"
+      caption={`Critical values f where ${TAIL_FORMULAS[tailIdx]}. Rows are d₂ (denominator), columns are d₁ (numerator).`}
+      readout={readout}
+      controls={
+        <>
+          <SegmentedControl compact options={TAILS} selectedIndex={tailIdx} onChange={setTailIdx} />
+          <SegmentedControl
+            compact
+            options={TABLE_ALPHAS.map((a) => `α ${a}`)}
+            selectedIndex={alphaIdx}
+            onChange={(i) => { setAlphaIdx(i); setAlphaInput(''); setTapped(null); }}
+          />
+          <SegmentedControl compact options={LOOKUP_MODES} selectedIndex={lookupMode} onChange={clearTap(setLookupMode)} />
+          <LookupRow>
+            {lookupMode === 1 && (
+              <LookupField label="F" placeholder="3.10" value={fInput} onChangeText={clearTap(setFInput)} />
+            )}
+            <LookupField label="d₁" placeholder="5" value={df1Input} onChangeText={clearTap(setDf1Input)} keyboardType="number-pad" />
+            <LookupField label="d₂" placeholder="12" value={df2Input} onChangeText={clearTap(setDf2Input)} keyboardType="number-pad" />
+            {lookupMode === 0 && (
+              <LookupField label="α" placeholder={String(tableAlpha)} value={alphaInput} onChangeText={onAlphaChange} />
+            )}
+            {lookupMode === 0 ? (
+              <ResultChip
+                label="Critical F"
+                value={criticalF !== null ? criticalF.toFixed(3) : null}
+                note={alphaInput && !alphaValid ? 'Enter 0 < α < 1' : dfNote}
+              />
+            ) : (
+              <ResultChip
+                label={tailIdx === 0 ? 'P(F ≥ f)' : 'P(F ≤ f)'}
+                value={pValue !== null ? pValue.toFixed(4) : null}
+                note={dfNote}
+              />
+            )}
+          </LookupRow>
+        </>
+      }
+    >
+      <DataGrid
+        cornerLabel="d₂ \ d₁"
+        columnLabels={DF1S.map(String)}
+        rowLabels={DF2S.map(String)}
+        cells={cells}
+        highlight={highlight}
+        onCellPress={setTapped}
+        cellWidth={60}
+        rowHeaderWidth={60}
+      />
+    </TableScreen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  header: { padding: 20, backgroundColor: colors.card, borderBottomWidth: 1, borderBottomColor: colors.border },
-  title: { fontSize: 20, fontWeight: 'bold', color: colors.text },
-  subtitle: { fontSize: 14, color: colors.textSecondary, marginTop: 4 },
-  toggleContainer: { flexDirection: 'row', marginTop: 16, backgroundColor: colors.background, borderRadius: 8, padding: 4 },
-  toggleBtn: { flex: 1, paddingVertical: 10, alignItems: 'center', borderRadius: 6 },
-  toggleBtnActive: { backgroundColor: colors.card, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.1, shadowRadius: 2, elevation: 2 },
-  toggleBtnText: { color: colors.textSecondary, fontWeight: '600', fontSize: 13 },
-  toggleBtnTextActive: { color: colors.primary },
-  lookupContainer: { marginTop: 20, backgroundColor: '#F9FAFB', padding: 16, borderRadius: 12, borderWidth: 1, borderColor: colors.border },
-  lookupTitle: { fontSize: 14, fontWeight: 'bold', color: colors.text, marginBottom: 12 },
-  lookupRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  input: { flex: 1, backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border, borderRadius: 8, padding: 12, fontSize: 14, color: colors.text },
-  lookupResult: { alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primaryLight, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 8, minWidth: 80 },
-  lookupResultLabel: { fontSize: 11, fontWeight: 'bold', color: colors.primary, marginBottom: 2 },
-  lookupResultValue: { fontSize: 16, fontWeight: 'bold', color: colors.primary },
-});

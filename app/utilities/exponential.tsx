@@ -2,6 +2,7 @@ import Text from '../../src/components/ui/Text';
 import React, { useState, useMemo } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import { Stack } from 'expo-router';
+import { useHeaderHeight } from 'expo-router/react-navigation';
 import { colors } from '../../src/theme/colors';
 import Input from '../../src/components/ui/Input';
 import SegmentedControl from '../../src/components/ui/SegmentedControl';
@@ -21,6 +22,7 @@ import { Table, TableHead, TableRow, TableCell } from '../../src/components/ui/T
 const MODES = ['P(X ≤ x)', 'P(X ≥ x)'];
 
 export default function ExponentialDistribution() {
+  const headerHeight = useHeaderHeight();
   const [lambdaStr, setLambdaStr] = useState('1');
   const [xVal, setXVal] = useState('1');
   const [modeIdx, setModeIdx] = useState(0);
@@ -78,7 +80,7 @@ export default function ExponentialDistribution() {
     <KeyboardAvoidingView 
       style={styles.container} 
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+      keyboardVerticalOffset={headerHeight}
     >
       <Stack.Screen options={{ 
         headerRight: () => (
@@ -88,7 +90,7 @@ export default function ExponentialDistribution() {
         )
       }} />
 
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
         
         <View style={styles.card}>
           <Input 

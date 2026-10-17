@@ -30,7 +30,7 @@ export default function TabLayout() {
           shadowRadius: 12,
         },
         tabBarLabelStyle: {
-          fontSize: 11,
+          fontSize: 12,
           fontWeight: '600',
           marginBottom: 4,
         },

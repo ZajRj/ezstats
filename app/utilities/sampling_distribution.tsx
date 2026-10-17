@@ -44,7 +44,7 @@ export default function SamplingDistribution() {
         )
       }} />
 
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Population Distribution</Text>
           <View style={styles.toggleContainer}>

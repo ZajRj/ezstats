@@ -2,6 +2,7 @@ import Text from '../../src/components/ui/Text';
 import React, { useState, useMemo } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, TextInput } from 'react-native';
 import { Stack } from 'expo-router';
+import { useHeaderHeight } from 'expo-router/react-navigation';
 import { colors } from '../../src/theme/colors';
 import BoxPlot from '../../src/components/ui/BoxPlot';
 import { calculateDescriptiveStats } from '../../src/utils/calculations/descriptive';
@@ -12,6 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 import BottomSheetModal from '../../src/components/ui/BottomSheetModal';
 
 export default function DescriptiveStatistics() {
+  const headerHeight = useHeaderHeight();
   const [dataStr, setDataStr] = useState('');
   const [isPopulation, setIsPopulation] = useState(false);
   const [infoVisible, setInfoVisible] = useState(false);
@@ -24,7 +26,7 @@ export default function DescriptiveStatistics() {
     <KeyboardAvoidingView 
       style={styles.container} 
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+      keyboardVerticalOffset={headerHeight}
     >
       <Stack.Screen options={{ 
         title: 'Descriptive Statistics',
@@ -35,7 +37,7 @@ export default function DescriptiveStatistics() {
         )
       }} />
 
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
         
         <View style={styles.toggleContainer}>
           <TouchableOpacity 

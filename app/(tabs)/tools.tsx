@@ -157,18 +157,19 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 20,
     paddingTop: 24,
-    paddingBottom: 100, // accommodate bottom tab bar
+    paddingBottom: 32,
   },
   section: {
     marginBottom: 32,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 13,
     fontWeight: '700',
-    color: colors.text,
+    color: colors.textSecondary,
     textTransform: 'uppercase',
-    letterSpacing: 1,
-    marginBottom: 16,
+    letterSpacing: 0.8,
+    marginBottom: 12,
+    marginLeft: 4,
   },
   cardsContainer: {
     gap: 0, // Gap is handled by ActionCard marginBottom, or we can remove marginBottom there and use gap here
