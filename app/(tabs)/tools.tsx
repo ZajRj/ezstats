@@ -34,6 +34,17 @@ export default function Utilities() {
         </View>
 
         <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Inferential Tests</Text>
+          <View style={styles.cardsContainer}>
+            <ActionCard
+              title="Pruebas estadísticas"
+              icon="checkmark-done"
+              onPress={() => router.push('/stats')}
+            />
+          </View>
+        </View>
+
+        <View style={styles.section}>
           <Text style={styles.sectionTitle}>Distributions</Text>
           <View style={styles.cardsContainer}>
             <ActionCard 
