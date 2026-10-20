@@ -2,17 +2,20 @@ import type { Step, TestOptions, TestResult } from '../../types';
 import { StatsInputError } from '../../types';
 import { kolmogorov } from '../../core/distributions';
 import { fix, fmt, fmtP, round } from '../../core/rounding';
+import { KS_ALPHAS, KS_LARGE_N, KS_TABLE } from '../../tables/ks';
 import { compareP, compareUpper, normalityConclusion, subject, capitalize } from '../../text';
 import { conclusionStep, dataStep, decisionStep, hypothesesStep, modeNote, requireAlpha, requireN } from '../common';
 import { compareEcdf, dStatisticSteps, ecdfChart, ecdfTableStep } from './ecdf';
 
-const LARGE_N_COEF: Record<string, number> = { '0.1': 1.22, '0.05': 1.36, '0.01': 1.63 };
-
 /** Critical value of D for known parameters. */
 export function ksCritical(n: number, alpha: number): { value: number; source: string } {
-  const coef = LARGE_N_COEF[String(alpha)];
+  const j = KS_ALPHAS.findIndex((a) => Math.abs(a - alpha) < 1e-9);
+  const coef = KS_LARGE_N[String(alpha)];
   if (n > 35 && coef) {
     return { value: round(coef / Math.sqrt(n), 4), source: `Fórmula asintótica ${coef}/√n (n > 35)` };
+  }
+  if (n <= 35 && j >= 0) {
+    return { value: KS_TABLE[n][j], source: 'Tabla de Kolmogorov-Smirnov (Massey 1951), valores exactos a 3 decimales' };
   }
   return {
     value: round(kolmogorov.critical(alpha, n), 3),

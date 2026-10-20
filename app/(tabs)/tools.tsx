@@ -123,6 +123,31 @@ export default function Utilities() {
               icon="grid" 
               onPress={() => router.push('/utilities/ftable')} 
             />
+            <ActionCard
+              title="Lilliefors Table"
+              icon="grid"
+              onPress={() => router.push('/utilities/lillieforstable')}
+            />
+            <ActionCard
+              title="Kolmogorov-Smirnov Table"
+              icon="grid"
+              onPress={() => router.push('/utilities/kstable')}
+            />
+            <ActionCard
+              title="Hartley Fmax Table"
+              icon="grid"
+              onPress={() => router.push('/utilities/hartleytable')}
+            />
+            <ActionCard
+              title="Runs Table (Swed-Eisenhart)"
+              icon="grid"
+              onPress={() => router.push('/utilities/runstable')}
+            />
+            <ActionCard
+              title="Tukey q Table"
+              icon="grid"
+              onPress={() => router.push('/utilities/tukeytable')}
+            />
           </View>
         </View>
         

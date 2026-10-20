@@ -13,7 +13,7 @@
  */
 export const HARTLEY_DFS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 30, 60] as const;
 
-const TABLE: Record<string, Record<number, number[]>> = {
+export const HARTLEY_TABLE: Record<string, Record<number, number[]>> = {
   '0.05': {
     2: [39.0, 87.5, 142, 202, 266, 333, 403, 475, 550, 626, 704],
     3: [15.4, 27.8, 39.5, 50.9, 62.0, 72.8, 83.5, 93.9, 104, 114, 124],
@@ -55,7 +55,7 @@ export type HartleyLookup = { value: number; dfUsed: number; exactDf: boolean };
  * lower tabulated row (conservative); ν > 60 uses the ν = 60 row.
  */
 export function hartleyCritical(k: number, df: number, alpha: number): HartleyLookup | null {
-  const table = TABLE[String(alpha)];
+  const table = HARTLEY_TABLE[String(alpha)];
   if (!table || k < 2 || k > 12 || df < 2) return null;
   let dfUsed: number = HARTLEY_DFS[0];
   for (const d of HARTLEY_DFS) if (d <= df) dfUsed = d;

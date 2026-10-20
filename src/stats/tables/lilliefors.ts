@@ -7,7 +7,7 @@ import { round } from '../core/rounding';
 
 export const LILLIEFORS_ALPHAS = [0.2, 0.15, 0.1, 0.05, 0.01] as const;
 
-const TABLE: Record<number, [number, number, number, number, number]> = {
+export const LILLIEFORS_TABLE: Record<number, [number, number, number, number, number]> = {
   4: [0.3, 0.319, 0.352, 0.381, 0.417],
   5: [0.285, 0.299, 0.315, 0.337, 0.405],
   6: [0.265, 0.277, 0.294, 0.319, 0.364],
@@ -30,7 +30,7 @@ const TABLE: Record<number, [number, number, number, number, number]> = {
 };
 
 /** Large-sample coefficients c such that D_crit = c / √n for n > 30. */
-const LARGE_N = [0.736, 0.768, 0.805, 0.886, 1.031];
+export const LILLIEFORS_LARGE_N = [0.736, 0.768, 0.805, 0.886, 1.031];
 
 export type LillieforsLookup =
   | { kind: 'table'; value: number; n: number }
@@ -45,16 +45,16 @@ export function lillieforsAlphaIndex(alpha: number): number {
 export function lillieforsCritical(n: number, alpha: number): LillieforsLookup | null {
   const j = lillieforsAlphaIndex(alpha);
   if (j < 0 || n < 4) return null;
-  if (TABLE[n]) return { kind: 'table', value: TABLE[n][j], n };
+  if (LILLIEFORS_TABLE[n]) return { kind: 'table', value: LILLIEFORS_TABLE[n][j], n };
   if (n > 30) {
-    const coefficient = LARGE_N[j];
+    const coefficient = LILLIEFORS_LARGE_N[j];
     return { kind: 'formula', value: round(coefficient / Math.sqrt(n), 4), coefficient };
   }
   // 21–24 interpolate between 20 and 25; 26–29 between 25 and 30.
   const n1 = n < 25 ? 20 : 25;
   const n2 = n < 25 ? 25 : 30;
-  const d1 = TABLE[n1][j];
-  const d2 = TABLE[n2][j];
+  const d1 = LILLIEFORS_TABLE[n1][j];
+  const d2 = LILLIEFORS_TABLE[n2][j];
   const value = round(d1 + ((n - n1) / (n2 - n1)) * (d2 - d1), 4);
   return { kind: 'interpolated', value, n1, n2, d1, d2 };
 }
