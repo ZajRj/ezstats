@@ -30,8 +30,9 @@ export function useGroups(initial: GroupDraft[]) {
   const update = useCallback((key: number, patch: Partial<GroupDraft>) => {
     setGroups((gs) => gs.map((g) => (g.key === key ? { ...g, ...patch } : g)));
   }, []);
-  const add = useCallback(() => {
-    setGroups((gs) => [...gs, draft(`Grupo ${gs.length + 1}`)]);
+  /** Adds a draft; `makeLabel` receives the current number of drafts. */
+  const add = useCallback((makeLabel: (count: number) => string = (c) => `Grupo ${c + 1}`) => {
+    setGroups((gs) => [...gs, draft(makeLabel(gs.length))]);
   }, []);
   const remove = useCallback((key: number) => setGroups((gs) => gs.filter((g) => g.key !== key)), []);
   return { groups, setGroups, update, add, remove };

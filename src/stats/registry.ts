@@ -21,9 +21,13 @@ import { ljungBox } from './tests/randomness/ljungBox';
 import { oneWayAnova } from './tests/anova/oneWay';
 import { tukeyHsd } from './tests/anova/tukeyHsd';
 import { kruskalWallis } from './tests/anova/kruskalWallis';
-import { ANOVA_GROUPS, DATASET_A, DATASET_B, DATASET_C, DATASET_D, RUNS_SEQUENCE } from './fixtures';
+import { linearRegression } from './regression/linear';
+import {
+  ANOVA_GROUPS, DATASET_A, DATASET_B, DATASET_C, DATASET_D, REG_MULTIPLE, REG_SIMPLE, RUNS_SEQUENCE,
+} from './fixtures';
 
-export type InputKind = 'single' | 'sequence' | 'two' | 'groups';
+/** 'regression': first draft is Y, the rest are regressors X₁…Xₖ of equal length. */
+export type InputKind = 'single' | 'sequence' | 'two' | 'groups' | 'regression';
 
 export type ParamDef =
   | { key: string; kind: 'number'; label: string; placeholder?: string; optional?: boolean; hint?: string }
@@ -410,6 +414,31 @@ export const TESTS: TestDef[] = [
     examples: ANOVA_EXAMPLE,
     run: (gr, _p, o) => kruskalWallis(gr, o),
   },
+  // ------------------------------------------------------------ Regresión
+  {
+    id: 'linearRegression',
+    name: 'Regresión lineal (simple y múltiple)',
+    family: 'regresion',
+    when: 'Modelar Y como combinación lineal de una o más regresoras, paso a paso con matrices.',
+    requirements: 'n > k + 1, mismo n en todas las variables',
+    input: 'regression',
+    params: [],
+    tails: false,
+    info: {
+      what: 'Estima β̂ = (XᵀX)⁻¹Xᵀy por mínimos cuadrados, con prueba F global, pruebas t parciales, R², R² ajustado y VIF.',
+      assumptions: 'Linealidad, errores independientes con media 0, varianza constante (σ²I), normalidad para la inferencia y rango completo de X.',
+      when: 'Predecir o explicar Y. Con una regresora también muestra el enfoque algebraico (Sxx, Sxy).',
+      formula: 'β̂ = (XᵀX)⁻¹Xᵀy,  F₀ = (SCR/k)/(SCE/(n − k − 1)),  t₀ = β̂ⱼ/√(σ̂²Cⱼⱼ)',
+    },
+    examples: [
+      { label: 'Simple: horas de estudio → nota', groups: [g('Nota', REG_SIMPLE.y), g('Horas', REG_SIMPLE.x)] },
+      {
+        label: 'Múltiple: cajas y distancia → tiempo',
+        groups: [g('Tiempo', REG_MULTIPLE.tiempo), g('Cajas', REG_MULTIPLE.cajas), g('Distancia', REG_MULTIPLE.distancia)],
+      },
+    ],
+    run: (gr, _p, o) => linearRegression(gr, o),
+  },
 ];
 
 export const FAMILIES: { id: Family; title: string; description: string }[] = [
@@ -417,6 +446,7 @@ export const FAMILIES: { id: Family; title: string; description: string }[] = [
   { id: 'varianza', title: 'Varianza', description: 'H₀: las varianzas son iguales (o σ² = σ₀²).' },
   { id: 'aleatoriedad', title: 'Aleatoriedad', description: 'H₀: la secuencia es aleatoria.' },
   { id: 'anova', title: 'ANOVA', description: 'H₀: las medias de los grupos son iguales.' },
+  { id: 'regresion', title: 'Regresión', description: 'H₀: las regresoras no explican Y (β₁ = … = βₖ = 0).' },
 ];
 
 export function getTest(id: string): TestDef | undefined {

@@ -22,6 +22,7 @@ function initialDrafts(input: InputKind): GroupDraft[] {
   if (input === 'single') return [draft('Muestra')];
   if (input === 'sequence') return [draft('Secuencia')];
   if (input === 'two') return [draft('Muestra 1'), draft('Muestra 2')];
+  if (input === 'regression') return [draft('Y'), draft('X₁')];
   return [draft('Grupo 1'), draft('Grupo 2'), draft('Grupo 3')];
 }
 
@@ -136,8 +137,11 @@ function TestScreen({ def }: { def: TestDef }) {
     setError(msg);
   };
 
-  const groupHint = def.input === 'sequence' ? 'Escribe los datos en el orden en que se observaron; no se reordenan.' : undefined;
-  const canRemove = def.input === 'groups' && groups.length > 2;
+  const isReg = def.input === 'regression';
+  const groupHint = def.input === 'sequence'
+    ? 'Escribe los datos en el orden en que se observaron; no se reordenan.'
+    : undefined;
+  const canRemove = (def.input === 'groups' || isReg) && groups.length > 2;
   const exampleLabel = useMemo(() => def.examples[exampleIdx % def.examples.length].label, [def, exampleIdx]);
 
   return (
@@ -180,12 +184,15 @@ function TestScreen({ def }: { def: TestDef }) {
             text={g.text}
             decimal={decimal}
             unit={unit || undefined}
-            hint={groupHint}
+            hint={isReg ? (g.key === groups[0].key ? 'Variable dependiente. Mismo orden de filas en todas las variables.' : 'Regresora; una fila por observación.') : groupHint}
             onChangeText={(t) => { update(g.key, { text: t }); invalidate(); }}
-            onChangeLabel={def.input === 'groups' || def.input === 'two' ? (l) => update(g.key, { label: l }) : undefined}
-            onRemove={canRemove ? () => { remove(g.key); invalidate(); } : undefined}
+            onChangeLabel={def.input === 'groups' || def.input === 'two' || isReg ? (l) => update(g.key, { label: l }) : undefined}
+            onRemove={canRemove && !(isReg && g.key === groups[0].key) ? () => { remove(g.key); invalidate(); } : undefined}
           />
         ))}
+        {isReg && (
+          <GhostButton label="Agregar regresora" icon="add-circle-outline" onPress={() => { add((c) => `X${'₀₁₂₃₄₅₆₇₈₉'[c] ?? c}`); invalidate(); }} />
+        )}
         {def.input === 'groups' && (
           <GhostButton label="Agregar grupo" icon="add-circle-outline" onPress={() => { add(); invalidate(); }} />
         )}

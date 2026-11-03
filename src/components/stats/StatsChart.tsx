@@ -187,6 +187,56 @@ export default function StatsChart({ spec }: { spec: ChartSpec }) {
     ];
   }
 
+  if (inner && spec.kind === 'scatterFit') {
+    title = `${spec.yLabel} vs ${spec.xLabel} con la recta ajustada`;
+    const xMin = Math.min(...spec.x);
+    const xMax = Math.max(...spec.x);
+    const fitAt = (v: number) => spec.b0 + spec.b1 * v;
+    const yVals = [...spec.y, fitAt(xMin), fitAt(xMax)];
+    const yMin = Math.min(...yVals);
+    const yMax = Math.max(...yVals);
+    const padX = (xMax - xMin) * 0.05 || 1;
+    const padY = (yMax - yMin) * 0.08 || 1;
+    const x = scale(xMin - padX, xMax + padX, PAD.l, w - PAD.r);
+    const y = scale(yMin - padY, yMax + padY, H - PAD.b, PAD.t);
+    body = (
+      <>
+        <Axes w={w} x={x} y={y} xMin={xMin} xMax={xMax} yMin={yMin} yMax={yMax} yFmt={(v) => fmt(v, 1)} />
+        <Line x1={x(xMin)} x2={x(xMax)} y1={y(fitAt(xMin))} y2={y(fitAt(xMax))} stroke={ACCENT} strokeWidth={2.5} />
+        {spec.x.map((xv, i) => (
+          <Circle key={i} cx={x(xv)} cy={y(spec.y[i])} r={5} fill={colors.primary} stroke={colors.card} strokeWidth={1.5} />
+        ))}
+      </>
+    );
+    legend = [
+      { color: colors.primary, label: 'observaciones' },
+      { color: ACCENT, label: `Ŷ = ${fmt(spec.b0)} ${spec.b1 < 0 ? '−' : '+'} ${fmt(Math.abs(spec.b1))}·X` },
+    ];
+  }
+
+  if (inner && spec.kind === 'residuals') {
+    title = 'Residuos vs. valores ajustados';
+    const fMin = Math.min(...spec.fitted);
+    const fMax = Math.max(...spec.fitted);
+    const lim = Math.max(...spec.residuals.map(Math.abs)) * 1.15 || 1;
+    const padX = (fMax - fMin) * 0.05 || 1;
+    const x = scale(fMin - padX, fMax + padX, PAD.l, w - PAD.r);
+    const y = scale(-lim, lim, H - PAD.b, PAD.t);
+    body = (
+      <>
+        <Axes w={w} x={x} y={y} xMin={fMin} xMax={fMax} yMin={-lim} yMax={lim} yFmt={(v) => fmt(v, 1)} />
+        <Line x1={PAD.l} x2={w - PAD.r} y1={y(0)} y2={y(0)} stroke={colors.textSecondary} strokeDasharray="6 4" strokeWidth={1.5} />
+        {spec.fitted.map((f, i) => (
+          <Circle key={i} cx={x(f)} cy={y(spec.residuals[i])} r={5} fill={colors.primary} stroke={colors.card} strokeWidth={1.5} />
+        ))}
+      </>
+    );
+    legend = [
+      { color: colors.primary, label: '(ŷᵢ, eᵢ)' },
+      { color: colors.textSecondary, label: 'e = 0: sin patrón ⇒ supuestos razonables', dashed: true },
+    ];
+  }
+
   return (
     <View style={styles.card} onLayout={(e) => setW(e.nativeEvent.layout.width - 24)}>
       {title ? <Text style={styles.title}>{title}</Text> : null}

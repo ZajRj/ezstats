@@ -66,6 +66,22 @@ Every test returns the same `TestResult` (see `types.ts`). Its `steps` are the w
 | Kruskal-Wallis | H with average ranks and the tie correction C = 1 − Σ(t³ − t)/(N³ − N) |
 | Análisis completo | Runs above/below the median for each group, then Shapiro-Wilk (or Lilliefors) for each group, then Bartlett if every group is normal, Levene otherwise. Finishes with ANOVA + Tukey, or Kruskal-Wallis with the reason |
 
+### Regression (`regression/linear.ts`)
+
+Ordinary least squares worked through the matrix route, with `core/matrix.ts` (Gauss-Jordan inverse with partial pivoting; a singular XᵀX is reported as exact multicollinearity).
+
+| Step | Formula |
+|---|---|
+| Model | y = Xβ + ε, p = k + 1 |
+| Normal equations | (XᵀX)β̂ = Xᵀy ⇒ β̂ = (XᵀX)⁻¹Xᵀy, with XᵀX and Xᵀy shown as the algebraic sums |
+| Simple regression cross-check | Sxx, Syy, Sxy; β̂₁ = Sxy/Sxx, β̂₀ = Ȳ − β̂₁X̄; r = Sxy/√(SxxSyy) |
+| Fit | ŷ = Hy, e = (I − H)y, hᵢᵢ (flagged when > 2p/n), tr(H) = p |
+| Sums of squares | SCT = yᵀy − nȲ², SCR = β̂ᵀXᵀy − nȲ², SCE = yᵀy − β̂ᵀXᵀy |
+| Inference | σ̂² = SCE/(n − p); global F₀ = CMR/CME ~ F(k, n − k − 1); t₀ = β̂ⱼ/√(σ̂²Cⱼⱼ) ~ t(n − k − 1) |
+| Fit quality | R², R²adj, VIFⱼ = 1/(1 − Rⱼ²) (moderate > 5, severe > 10) |
+
+Fixtures checked with NumPy `lstsq` and SciPy t/F distributions.
+
 ## Tables
 
 - `tables/lilliefors.ts`: transcribed from Lilliefors (1967).

@@ -1,6 +1,6 @@
 export type Decision = 'reject' | 'fail_to_reject';
 export type Mode = 'tabla' | 'exacto';
-export type Family = 'normalidad' | 'varianza' | 'aleatoriedad' | 'anova';
+export type Family = 'normalidad' | 'varianza' | 'aleatoriedad' | 'anova' | 'regresion';
 export type Tail = 'two' | 'left' | 'right';
 
 export type Step =
@@ -27,7 +27,9 @@ export type ChartSpec =
   | { kind: 'runs'; values: number[]; median: number; signs: (1 | -1 | 0)[] }
   | { kind: 'updown'; values: number[]; signs: (1 | -1 | 0)[] }
   | { kind: 'acf'; lags: number[]; rho: number[]; bound: number }
-  | { kind: 'means'; labels: string[]; means: number[]; sds: number[]; ns: number[]; grandMean: number };
+  | { kind: 'means'; labels: string[]; means: number[]; sds: number[]; ns: number[]; grandMean: number }
+  | { kind: 'scatterFit'; x: number[]; y: number[]; b0: number; b1: number; xLabel: string; yLabel: string }
+  | { kind: 'residuals'; fitted: number[]; residuals: number[] };
 
 export interface TestResult {
   testId: string;

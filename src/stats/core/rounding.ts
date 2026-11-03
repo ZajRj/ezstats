@@ -59,3 +59,13 @@ export function fmtP(p: number): string {
 export function fmtAlphaPct(alpha: number): string {
   return `${fmt(alpha * 100, 2)} %`;
 }
+
+/** 4 decimals, switching to scientific notation for very small or large magnitudes. */
+export function fmtSci(x: number, digits = 4): string {
+  if (x === 0 || !isFinite(x)) return fmt(x, digits);
+  const a = Math.abs(x);
+  if (a >= 1e-3 && a < 1e7) return fix(x, digits);
+  const [mant, exp] = x.toExponential(digits).split('e');
+  const e = String(Number(exp)).split('').map((c) => SUPERSCRIPT[c] ?? c).join('');
+  return `${mant}×10${e}`;
+}

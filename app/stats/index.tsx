@@ -12,6 +12,7 @@ const FAMILY_ICON: Record<string, keyof typeof Ionicons.glyphMap> = {
   varianza: 'resize',
   aleatoriedad: 'shuffle',
   anova: 'git-compare',
+  regresion: 'trending-up',
 };
 
 export default function StatsCatalog() {
