@@ -101,13 +101,15 @@ export function anovaSteps(core: AnovaCore, critical?: number): Step[] {
     {
       kind: 'table',
       title: 'Tabla ANOVA',
-      columns: ['Fuente', 'SC', 'gl', 'CM', 'F', lastCol],
+      columns: critical !== undefined
+        ? ['Fuente', 'SC', 'gl', 'CM', 'F', 'Valor p', 'F crítico']
+        : ['Fuente', 'SC', 'gl', 'CM', 'F', 'Valor p'],
       rows: [
-        ['Entre grupos', fix(core.ssBetween, 4), core.dfBetween, fix(core.msBetween, 4), fix(core.F, 4), lastVal],
-        ['Dentro (error)', fix(core.ssWithin, 4), core.dfWithin, fix(core.msWithin, 4), '', ''],
-        ['Total', fix(core.ssTotal, 4), core.N - 1, '', '', ''],
+        ['Entre grupos', fix(core.ssBetween, 4), core.dfBetween, fix(core.msBetween, 4), fix(core.F, 4), fmtP(core.p), ...(critical !== undefined ? [fix(critical, 2)] : [])],
+        ['Dentro (error)', fix(core.ssWithin, 4), core.dfWithin, fix(core.msWithin, 4), '', '', ...(critical !== undefined ? [''] : [])],
+        ['Total', fix(core.ssTotal, 4), core.N - 1, '', '', '', ...(critical !== undefined ? [''] : [])],
       ],
-      highlight: [{ row: 0, col: 4 }],
+      highlight: [{ row: 0, col: 4 }, { row: 0, col: 5 }],
     },
   ];
 }

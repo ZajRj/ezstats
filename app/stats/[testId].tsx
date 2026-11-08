@@ -9,6 +9,12 @@ import SegmentedControl from '../../src/components/ui/SegmentedControl';
 import BottomSheetModal from '../../src/components/ui/BottomSheetModal';
 import DataInput from '../../src/components/stats/DataInput';
 import ResultBlock from '../../src/components/stats/ResultBlock';
+import VerifyValueCard from '../../src/components/stats/VerifyValueCard';
+import BestEstimatorCard from '../../src/components/stats/BestEstimatorCard';
+import DirectRegressionView from '../../src/components/stats/DirectRegressionView';
+import { copyToClipboard } from '../../src/utils/clipboard';
+import { downloadTextFile } from '../../src/utils/fileExport';
+import { generateAIReport } from '../../src/stats/reportGenerator';
 import {
   draft, useGroups, parseGroups, parseOne, resolveAlpha, valuesToText,
   SettingsPanel, TextField, PrimaryButton, GhostButton, ErrorBox, SectionTitle, type GroupDraft,
@@ -65,7 +71,7 @@ function TestScreen({ def }: { def: TestDef }) {
   const scrollRef = useRef<ScrollView>(null);
   const resultY = useRef(0);
   const { decimal, setDecimal, mode, setMode } = useStatsPrefs();
-  const { groups, setGroups, update, add, remove } = useGroups(initialDrafts(def.input));
+  const { groups, setGroups, update, toggleEnabled, add, remove } = useGroups(initialDrafts(def.input));
   const [paramText, setParamText] = useState<Record<string, string>>(() =>
     Object.fromEntries(def.params.map((p) => [p.key, p.kind === 'choice' ? p.default : ''])),
   );
@@ -77,6 +83,63 @@ function TestScreen({ def }: { def: TestDef }) {
   const [error, setError] = useState<string | null>(null);
   const [infoOpen, setInfoOpen] = useState(false);
   const [exampleIdx, setExampleIdx] = useState(0);
+  const [procMode, setProcMode] = useState<'directo' | 'detallado'>('directo');
+  const [copied, setCopied] = useState<boolean>(false);
+  const [downloaded, setDownloaded] = useState<boolean>(false);
+
+  const handleCopyReport = async () => {
+    try {
+      const resolvedA = typeof resolveAlpha(alpha, customAlpha, mode, decimal) === 'number'
+        ? (resolveAlpha(alpha, customAlpha, mode, decimal) as number)
+        : alpha;
+
+      const reportText = generateAIReport({
+        def,
+        groups,
+        decimal,
+        alpha: resolvedA,
+        mode: procMode,
+        result,
+        variableName: variableName.trim() || undefined,
+        unit: unit.trim() || undefined,
+      });
+
+      await copyToClipboard(reportText);
+
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch (e) {
+      console.warn('Error al copiar al portapapeles:', e);
+    }
+  };
+
+  const handleDownloadReport = async () => {
+    try {
+      const resolvedA = typeof resolveAlpha(alpha, customAlpha, mode, decimal) === 'number'
+        ? (resolveAlpha(alpha, customAlpha, mode, decimal) as number)
+        : alpha;
+
+      const reportText = generateAIReport({
+        def,
+        groups,
+        decimal,
+        alpha: resolvedA,
+        mode: procMode,
+        result,
+        variableName: variableName.trim() || undefined,
+        unit: unit.trim() || undefined,
+      });
+
+      const dateStr = new Date().toISOString().slice(0, 10);
+      const filename = `reporte_${def.id}_${dateStr}.txt`;
+      await downloadTextFile(filename, reportText);
+
+      setDownloaded(true);
+      setTimeout(() => setDownloaded(false), 2500);
+    } catch (e) {
+      console.warn('Error al descargar reporte:', e);
+    }
+  };
 
   const invalidate = () => {
     setResult(null);
@@ -137,6 +200,37 @@ function TestScreen({ def }: { def: TestDef }) {
     setError(msg);
   };
 
+  const handleApplyBestModel = (activeLabels: string[]) => {
+    const nextGroups = groups.map((g, idx) => {
+      if (idx === 0) return g;
+      return { ...g, enabled: activeLabels.includes(g.label) };
+    });
+    setGroups(nextGroups);
+    const parsed = parseGroups(nextGroups, decimal);
+    if ('groups' in parsed) {
+      const a = resolveAlpha(alpha, customAlpha, mode, decimal);
+      if (typeof a === 'number') {
+        try {
+          const r = runWithModeCheck(def, parsed.groups, {}, {
+            alpha: a,
+            mode,
+            variableName: variableName.trim() || undefined,
+            unit: unit.trim() || undefined,
+          });
+          setResult(r);
+        } catch {
+          invalidate();
+        }
+      }
+    } else {
+      invalidate();
+    }
+    // Desplazar al usuario nuevamente al principio para observar los cambios realizados
+    setTimeout(() => {
+      scrollRef.current?.scrollTo({ y: 0, animated: true });
+    }, 60);
+  };
+
   const isReg = def.input === 'regression';
   const groupHint = def.input === 'sequence'
     ? 'Escribe los datos en el orden en que se observaron; no se reordenan.'
@@ -154,9 +248,35 @@ function TestScreen({ def }: { def: TestDef }) {
         options={{
           title: def.name,
           headerRight: () => (
-            <Pressable onPress={() => setInfoOpen(true)} hitSlop={10} accessibilityRole="button" accessibilityLabel="¿Qué es esta prueba?">
-              <Ionicons name="information-circle-outline" size={26} color={colors.primary} />
-            </Pressable>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+              <Pressable
+                onPress={handleCopyReport}
+                hitSlop={10}
+                accessibilityRole="button"
+                accessibilityLabel="Copiar reporte"
+              >
+                <Ionicons
+                  name={copied ? 'checkmark-circle' : 'copy-outline'}
+                  size={24}
+                  color={copied ? '#16A34A' : colors.primary}
+                />
+              </Pressable>
+              <Pressable
+                onPress={handleDownloadReport}
+                hitSlop={10}
+                accessibilityRole="button"
+                accessibilityLabel="Descargar reporte como TXT"
+              >
+                <Ionicons
+                  name={downloaded ? 'checkmark-circle' : 'download-outline'}
+                  size={24}
+                  color={downloaded ? '#16A34A' : colors.primary}
+                />
+              </Pressable>
+              <Pressable onPress={() => setInfoOpen(true)} hitSlop={10} accessibilityRole="button" accessibilityLabel="¿Qué es esta prueba?">
+                <Ionicons name="information-circle-outline" size={26} color={colors.primary} />
+              </Pressable>
+            </View>
           ),
         }}
       />
@@ -173,21 +293,35 @@ function TestScreen({ def }: { def: TestDef }) {
 
         <View style={styles.rowBetween}>
           <SectionTitle>Datos</SectionTitle>
-          <GhostButton label={`Cargar ejemplo`} icon="flask-outline" onPress={loadExample} />
+          <View style={styles.topActionsRow}>
+            <GhostButton
+              label={copied ? '¡Copiado!' : 'Copiar'}
+              icon={copied ? 'checkmark-circle' : 'copy-outline'}
+              onPress={handleCopyReport}
+            />
+            <GhostButton
+              label={downloaded ? '¡Descargado!' : 'Descargar TXT'}
+              icon={downloaded ? 'checkmark-circle' : 'download-outline'}
+              onPress={handleDownloadReport}
+            />
+            <GhostButton label="Cargar ejemplo" icon="flask-outline" onPress={loadExample} />
+          </View>
         </View>
         <Text style={styles.exampleNote}>Siguiente ejemplo: {exampleLabel}</Text>
 
-        {groups.map((g) => (
+        {groups.map((g, idx) => (
           <DataInput
-            key={g.key}
+            key={`input-group-${g.key ?? idx}-${idx}`}
             label={g.label}
             text={g.text}
             decimal={decimal}
             unit={unit || undefined}
-            hint={isReg ? (g.key === groups[0].key ? 'Variable dependiente. Mismo orden de filas en todas las variables.' : 'Regresora; una fila por observación.') : groupHint}
+            enabled={g.enabled !== false}
+            onToggleEnabled={isReg && idx === 0 ? undefined : () => { toggleEnabled(g.key); invalidate(); }}
+            hint={isReg ? (idx === 0 ? 'Variable dependiente. Mismo orden de filas en todas las variables.' : 'Regresora; una fila por observación.') : groupHint}
             onChangeText={(t) => { update(g.key, { text: t }); invalidate(); }}
             onChangeLabel={def.input === 'groups' || def.input === 'two' || isReg ? (l) => update(g.key, { label: l }) : undefined}
-            onRemove={canRemove && !(isReg && g.key === groups[0].key) ? () => { remove(g.key); invalidate(); } : undefined}
+            onRemove={canRemove && !(isReg && idx === 0) ? () => { remove(g.key); invalidate(); } : undefined}
           />
         ))}
         {isReg && (
@@ -256,7 +390,67 @@ function TestScreen({ def }: { def: TestDef }) {
         {error ? <ErrorBox message={error} /> : null}
 
         <View onLayout={(e) => (resultY.current = e.nativeEvent.layout.y)}>
-          {result ? <ResultBlock result={result} /> : null}
+          {result ? (
+            <View style={{ gap: 14 }}>
+              {isReg && (
+                <View style={styles.procModeContainer}>
+                  <Text style={styles.procModeLabel}>Tipo de procedimiento:</Text>
+                  <SegmentedControl
+                    compact
+                    options={['⚡ Procedimiento Directo', '📐 Procedimiento Detallado (Matricial)']}
+                    selectedIndex={procMode === 'directo' ? 0 : 1}
+                    onChange={(i) => setProcMode(i === 0 ? 'directo' : 'detallado')}
+                  />
+                </View>
+              )}
+
+              {isReg && procMode === 'directo' ? (
+                (() => {
+                  const pActive = parseGroups(groups, decimal, false);
+                  const pAll = parseGroups(groups, decimal, true);
+                  const activeGroups = 'groups' in pActive ? pActive.groups : [];
+                  const allGroups = 'groups' in pAll ? pAll.groups : [];
+                  const resolvedA = typeof resolveAlpha(alpha, customAlpha, mode, decimal) === 'number'
+                    ? (resolveAlpha(alpha, customAlpha, mode, decimal) as number)
+                    : alpha;
+                  return (
+                    <DirectRegressionView
+                      groups={activeGroups}
+                      allGroups={allGroups}
+                      alpha={resolvedA}
+                      onApplyBestModel={handleApplyBestModel}
+                    />
+                  );
+                })()
+              ) : (
+                <>
+                  <ResultBlock result={result} />
+                  {!isReg && (
+                    <>
+                      <VerifyValueCard
+                        testId={def.id}
+                        groups={(() => {
+                          const p = parseGroups(groups, decimal);
+                          return 'groups' in p ? p.groups : [];
+                        })()}
+                        decimal={decimal}
+                        alpha={typeof resolveAlpha(alpha, customAlpha, mode, decimal) === 'number'
+                          ? (resolveAlpha(alpha, customAlpha, mode, decimal) as number)
+                          : alpha}
+                      />
+                      <BestEstimatorCard
+                        testId={def.id}
+                        groups={(() => {
+                          const p = parseGroups(groups, decimal);
+                          return 'groups' in p ? p.groups : [];
+                        })()}
+                      />
+                    </>
+                  )}
+                </>
+              )}
+            </View>
+          ) : null}
         </View>
       </ScrollView>
       <InfoSheet def={def} visible={infoOpen} onClose={() => setInfoOpen(false)} />
@@ -270,6 +464,13 @@ const styles = StyleSheet.create({
   content: { padding: 16, gap: 12 },
   flex: { flex: 1 },
   rowBetween: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  topActionsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flexWrap: 'wrap',
+    justifyContent: 'flex-end',
+  },
   whenBox: {
     padding: 14,
     borderRadius: 14,
@@ -291,6 +492,19 @@ const styles = StyleSheet.create({
   paramHint: { fontSize: 12, color: colors.textSecondary },
   twoCols: { flexDirection: 'row', gap: 10 },
   unitCol: { width: 90 },
+  procModeContainer: {
+    backgroundColor: colors.card,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 12,
+    gap: 8,
+  },
+  procModeLabel: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: colors.text,
+  },
   infoBlock: { marginBottom: 16 },
   infoHeading: { fontSize: 15, fontWeight: 'bold', color: colors.text, marginBottom: 4 },
   infoBody: { fontSize: 15, lineHeight: 22, color: colors.textSecondary },

@@ -33,7 +33,7 @@ describe('one-way ANOVA', () => {
   test('table mode prints the classic ANOVA table and runs Tukey', () => {
     const r = oneWayAnova(G, tabla05);
     const t = r.steps.find((s) => s.kind === 'table' && s.title === 'Tabla ANOVA');
-    expect(t && t.kind === 'table' && t.columns).toEqual(['Fuente', 'SC', 'gl', 'CM', 'F', 'F crítico']);
+    expect(t && t.kind === 'table' && t.columns).toEqual(['Fuente', 'SC', 'gl', 'CM', 'F', 'Valor p', 'F crítico']);
     expect(r.criticalValue?.value).toBe(3.68);
     expect(r.followUp?.[0].testId).toBe('tukeyHsd');
   });

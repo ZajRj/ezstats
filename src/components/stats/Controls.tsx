@@ -15,10 +15,11 @@ export interface GroupDraft {
   key: number;
   label: string;
   text: string;
+  enabled?: boolean;
 }
 
-let nextKey = 1;
-export const draft = (label: string, text = ''): GroupDraft => ({ key: nextKey++, label, text });
+let nextKey = Date.now();
+export const draft = (label: string, text = '', enabled = true): GroupDraft => ({ key: nextKey++, label, text, enabled });
 
 /** Formats values for a text field with the chosen decimal separator. */
 export function valuesToText(values: number[], decimal: DecimalSeparator): string {
@@ -30,18 +31,23 @@ export function useGroups(initial: GroupDraft[]) {
   const update = useCallback((key: number, patch: Partial<GroupDraft>) => {
     setGroups((gs) => gs.map((g) => (g.key === key ? { ...g, ...patch } : g)));
   }, []);
+  const toggleEnabled = useCallback((key: number) => {
+    setGroups((gs) => gs.map((g) => (g.key === key ? { ...g, enabled: g.enabled === false ? true : false } : g)));
+  }, []);
   /** Adds a draft; `makeLabel` receives the current number of drafts. */
   const add = useCallback((makeLabel: (count: number) => string = (c) => `Grupo ${c + 1}`) => {
     setGroups((gs) => [...gs, draft(makeLabel(gs.length))]);
   }, []);
   const remove = useCallback((key: number) => setGroups((gs) => gs.filter((g) => g.key !== key)), []);
-  return { groups, setGroups, update, add, remove };
+  return { groups, setGroups, update, toggleEnabled, add, remove };
 }
 
 /** Parses all drafts; returns a Spanish error when any token is invalid. */
-export function parseGroups(drafts: GroupDraft[], decimal: DecimalSeparator): { groups: Group[] } | { error: string } {
+export function parseGroups(drafts: GroupDraft[], decimal: DecimalSeparator, includeDisabled = false): { groups: Group[] } | { error: string } {
   const out: Group[] = [];
-  for (const d of drafts) {
+  const activeDrafts = includeDisabled ? drafts : drafts.filter((d) => d.enabled !== false);
+  if (activeDrafts.length === 0) return { error: 'No hay variables activas para calcular.' };
+  for (const d of activeDrafts) {
     const r = parseData(d.text, decimal);
     if (r.invalid.length) {
       return { error: `“${d.label}” tiene valores no válidos (${r.invalid.map((t) => `“${t.text}”`).slice(0, 3).join(', ')}). Corrígelos antes de calcular.` };
@@ -70,13 +76,14 @@ interface SettingsProps {
 }
 
 export function SettingsPanel(p: SettingsProps) {
-  const alphaIdx = ALPHAS.findIndex((a) => a === p.alpha);
-  const options = p.mode === 'exacto' ? [...ALPHAS.map((a) => `α ${a}`), 'Otro'] : ALPHAS.map((a) => `α ${a}`);
-  const selected = alphaIdx >= 0 && p.customAlpha === '' ? alphaIdx : p.mode === 'exacto' ? 3 : 1;
+  const isDefaultAlpha = p.customAlpha === '' && ALPHAS.includes(p.alpha);
+  const alphaIdx = isDefaultAlpha ? ALPHAS.indexOf(p.alpha) : 3;
+  const options = ['α 0.10', 'α 0.05', 'α 0.01', 'Manual / Otro'];
+  const selected = alphaIdx;
   return (
     <View style={styles.panel}>
       <View style={styles.field}>
-        <Text style={styles.fieldLabel}>Nivel de significancia</Text>
+        <Text style={styles.fieldLabel}>Nivel de significancia (α)</Text>
         <SegmentedControl
           compact
           options={options}
@@ -86,20 +93,37 @@ export function SettingsPanel(p: SettingsProps) {
               p.setAlpha(ALPHAS[i]);
               p.setCustomAlpha('');
             } else {
-              p.setCustomAlpha(p.customAlpha || '0.025');
+              const defaultCustom = p.customAlpha || '0.025';
+              p.setCustomAlpha(defaultCustom);
+              const num = parseFloat(defaultCustom.replace(',', '.'));
+              if (!isNaN(num) && num > 0 && num < 1) {
+                p.setAlpha(num);
+              }
             }
           }}
         />
-        {p.mode === 'exacto' && selected === 3 && (
-          <TextInput
-            style={styles.input}
-            value={p.customAlpha}
-            onChangeText={p.setCustomAlpha}
-            placeholder="α personalizado, ej. 0.025"
-            placeholderTextColor="#718096"
-            keyboardType="decimal-pad"
-            accessibilityLabel="α personalizado"
-          />
+        {(selected === 3 || p.customAlpha !== '') && (
+          <View style={styles.customAlphaBox}>
+            <Text style={styles.customAlphaPrompt}>Colocar nivel de significancia α a mano:</Text>
+            <TextInput
+              style={styles.input}
+              value={p.customAlpha}
+              onChangeText={(val) => {
+                p.setCustomAlpha(val);
+                const num = parseFloat(val.replace(',', '.'));
+                if (!isNaN(num) && num > 0 && num < 1) {
+                  p.setAlpha(num);
+                }
+              }}
+              placeholder="ej. 0.02, 0.025, 0.005"
+              placeholderTextColor="#718096"
+              keyboardType="decimal-pad"
+              accessibilityLabel="α personalizado"
+            />
+            <Text style={styles.customAlphaHint}>
+              α activo: {p.alpha} (utilizado en tablas ANOVA, pruebas t en 8 pasos y selección de modelo).
+            </Text>
+          </View>
         )}
       </View>
       <View style={styles.field}>
@@ -110,7 +134,6 @@ export function SettingsPanel(p: SettingsProps) {
           selectedIndex={p.mode === 'tabla' ? 0 : 1}
           onChange={(i) => {
             p.setMode(i === 0 ? 'tabla' : 'exacto');
-            if (i === 0) p.setCustomAlpha('');
           }}
         />
       </View>
@@ -129,7 +152,7 @@ export function SettingsPanel(p: SettingsProps) {
 
 /** Resolves the α actually used, or an error for a bad custom value. */
 export function resolveAlpha(alpha: number, custom: string, mode: Mode, decimal: DecimalSeparator): number | string {
-  if (mode !== 'exacto' || custom === '') return alpha;
+  if (custom === '') return alpha;
   const a = parseOne(custom, decimal === ',' ? ',' : '.');
   const b = isNaN(a) ? parseOne(custom, decimal === ',' ? '.' : ',') : a;
   if (!(b > 0 && b < 1)) return 'α personalizado debe estar entre 0 y 1.';
@@ -208,6 +231,25 @@ const styles = StyleSheet.create({
   field: { gap: 6 },
   fieldLabel: { fontSize: 13, fontWeight: '600', color: colors.text },
   hint: { fontSize: 12, color: colors.textSecondary },
+  customAlphaBox: {
+    backgroundColor: '#F0F9FF',
+    borderWidth: 1,
+    borderColor: '#BAE6FD',
+    borderRadius: 10,
+    padding: 10,
+    gap: 6,
+    marginTop: 4,
+  },
+  customAlphaPrompt: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#0369A1',
+  },
+  customAlphaHint: {
+    fontSize: 11,
+    color: '#0284C7',
+    fontStyle: 'italic',
+  },
   input: {
     height: 46,
     backgroundColor: colors.surface,

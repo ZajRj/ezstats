@@ -63,7 +63,7 @@ export function oneWayAnova(groups: Group[], opts: TestOptions, withTukey = true
     statistic: { symbol: 'F', value: core.F },
     df: [core.dfBetween, core.dfWithin],
     criticalValue,
-    pValue: opts.mode === 'exacto' ? core.p : undefined,
+    pValue: core.p,
     decision: comparison.decision,
     conclusion,
     warnings,

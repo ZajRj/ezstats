@@ -57,7 +57,7 @@ const MiniMathView = ({ latex }: { latex: string }) => {
         showsHorizontalScrollIndicator={false} 
       />
       {/* Invisible overlay to capture touches so they pass to the parent ScrollView */}
-      <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'transparent' }} />
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: 'transparent' }]} />
     </View>
   );
 };
@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
     fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
   },
   loader: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill as any,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F3F4F6',

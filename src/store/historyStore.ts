@@ -1,8 +1,21 @@
 import { create } from 'zustand';
 
+export type DistributionType =
+  | 'Normal'
+  | 'Binomial'
+  | 'Poisson'
+  | 'Chi-Square'
+  | 'Exponential'
+  | 'F-Distribution'
+  | 'Geometric'
+  | "Student's t"
+  | 'Uniform'
+  | 'Weibull'
+  | string;
+
 export interface HistoryItem {
   id: string;
-  type: 'Normal' | 'Binomial' | 'Poisson';
+  type: DistributionType;
   timestamp: number;
   parameters: Record<string, string | number>;
   result: number;

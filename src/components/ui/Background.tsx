@@ -6,7 +6,7 @@ const { width, height } = Dimensions.get('window');
 
 export default function Background() {
   return (
-    <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
+    <View style={StyleSheet.absoluteFill} pointerEvents="none">
       <Svg width={width} height={height} style={{ position: 'absolute' }}>
         <Defs>
           <Pattern id="dots" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">

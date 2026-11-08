@@ -17,9 +17,22 @@ interface DataInputProps {
   onRemove?: () => void;
   unit?: string;
   hint?: string;
+  enabled?: boolean;
+  onToggleEnabled?: () => void;
 }
 
-export default function DataInput({ label, text, onChangeText, decimal, onChangeLabel, onRemove, unit, hint }: DataInputProps) {
+export default function DataInput({
+  label,
+  text,
+  onChangeText,
+  decimal,
+  onChangeLabel,
+  onRemove,
+  unit,
+  hint,
+  enabled = true,
+  onToggleEnabled,
+}: DataInputProps) {
   const parsed = useMemo(() => parseData(text, decimal), [text, decimal]);
   const stats = useMemo(() => summary(parsed.values), [parsed]);
   const u = unit ? ` ${unit}` : '';
@@ -28,35 +41,84 @@ export default function DataInput({ label, text, onChangeText, decimal, onChange
     : 'Pega o escribe los datos: 71.8, 72.4, 73.1 …';
 
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, !enabled && styles.cardDisabled]}>
       <View style={styles.header}>
-        {onChangeLabel ? (
-          <TextInput
-            style={styles.labelInput}
-            value={label}
-            onChangeText={onChangeLabel}
-            accessibilityLabel="Nombre del grupo"
-            maxLength={30}
-          />
-        ) : (
-          <Text style={styles.label}>{label}</Text>
-        )}
-        {onRemove && (
-          <Pressable
-            onPress={onRemove}
-            hitSlop={8}
-            style={({ pressed }) => [styles.removeBtn, pressed && { opacity: 0.6 }]}
-            accessibilityRole="button"
-            accessibilityLabel={`Quitar ${label}`}
-          >
-            <Ionicons name="close" size={16} color={colors.danger} />
-            <Text style={styles.removeText}>Quitar</Text>
-          </Pressable>
-        )}
+        <View style={styles.headerLeft}>
+          {onChangeLabel ? (
+            <TextInput
+              style={[styles.labelInput, !enabled && styles.labelDisabled]}
+              value={label}
+              onChangeText={onChangeLabel}
+              accessibilityLabel="Nombre del grupo"
+              maxLength={30}
+            />
+          ) : (
+            <Text style={[styles.label, !enabled && styles.labelDisabled]}>{label}</Text>
+          )}
+          {!enabled && (
+            <View style={styles.pausedBadge}>
+              <Text style={styles.pausedBadgeText}>Excluida</Text>
+            </View>
+          )}
+        </View>
+
+        <View style={styles.headerActions}>
+          {onToggleEnabled && (
+            <Pressable
+              onPress={onToggleEnabled}
+              hitSlop={8}
+              style={({ pressed }) => [
+                styles.actionBtn,
+                enabled ? styles.activeToggle : styles.pausedToggle,
+                pressed && { opacity: 0.7 },
+              ]}
+              accessibilityRole="switch"
+              accessibilityState={{ checked: enabled }}
+              accessibilityLabel={enabled ? `Desactivar ${label}` : `Activar ${label}`}
+            >
+              <Ionicons
+                name={enabled ? 'toggle' : 'toggle-outline'}
+                size={18}
+                color={enabled ? '#15803D' : '#64748B'}
+              />
+              <Text style={[styles.actionBtnText, { color: enabled ? '#15803D' : '#64748B' }]}>
+                {enabled ? 'ON (Activa)' : 'OFF (Pausada)'}
+              </Text>
+            </Pressable>
+          )}
+
+          {onRemove && (
+            <Pressable
+              onPress={onRemove}
+              hitSlop={8}
+              style={({ pressed }) => [styles.removeBtn, pressed && { opacity: 0.6 }]}
+              accessibilityRole="button"
+              accessibilityLabel={`Quitar ${label}`}
+            >
+              <Ionicons name="close" size={16} color={colors.danger} />
+              <Text style={styles.removeText}>Quitar</Text>
+            </Pressable>
+          )}
+        </View>
       </View>
-      {hint ? <Text style={styles.hint}>{hint}</Text> : null}
+
+      {!enabled && onToggleEnabled && (
+        <Pressable onPress={onToggleEnabled} style={styles.pausedBanner}>
+          <Ionicons name="eye-off-outline" size={16} color="#DC2626" />
+          <Text style={styles.pausedBannerText}>
+            Variable pausada / excluida del cálculo (sus datos se conservan). Toca para reactivar.
+          </Text>
+        </Pressable>
+      )}
+
+      {hint ? (
+        <Text style={styles.hint}>
+          {!enabled ? 'Variable pausada: los datos se conservan pero no se incluyen en el cálculo.' : hint}
+        </Text>
+      ) : null}
+
       <TextInput
-        style={styles.input}
+        style={[styles.input, !enabled && styles.inputDisabled]}
         value={text}
         onChangeText={onChangeText}
         multiline
@@ -108,16 +170,84 @@ const styles = StyleSheet.create({
     padding: 14,
     gap: 8,
   },
+  cardDisabled: {
+    backgroundColor: '#F8FAFC',
+    borderColor: '#E2E8F0',
+    opacity: 0.75,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: 8,
   },
+  headerLeft: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
   label: {
     fontSize: 15,
     fontWeight: '600',
     color: colors.text,
+  },
+  labelDisabled: {
+    color: colors.textSecondary,
+    textDecorationLine: 'line-through',
+  },
+  pausedBadge: {
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+    backgroundColor: '#E2E8F0',
+  },
+  pausedBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#475569',
+  },
+  actionBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    minHeight: 32,
+    paddingHorizontal: 10,
+    borderRadius: 16,
+    borderWidth: 1,
+  },
+  actionBtnText: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  activeToggle: {
+    backgroundColor: '#DCFCE7',
+    borderColor: '#22C55E',
+  },
+  pausedToggle: {
+    backgroundColor: '#F1F5F9',
+    borderColor: '#94A3B8',
+  },
+  pausedBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: '#FEF2F2',
+    borderWidth: 1,
+    borderColor: '#FCA5A5',
+  },
+  pausedBannerText: {
+    flex: 1,
+    fontSize: 12,
+    color: '#991B1B',
+    fontWeight: '600',
   },
   labelInput: {
     flex: 1,
@@ -157,6 +287,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Inter_400Regular',
     color: colors.text,
+  },
+  inputDisabled: {
+    backgroundColor: '#F1F5F9',
+    color: '#64748B',
   },
   preview: {
     gap: 6,

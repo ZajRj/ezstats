@@ -14,7 +14,7 @@ export const taxonomyTags = sqliteTable('taxonomy_tags', {
   slug: text('slug').unique(),
   name: text('name').notNull(),
   type: text('type', { enum: nodeTypes }).notNull(),
-  parentId: integer('parent_id').references(() => taxonomyTags.id, { onDelete: 'cascade' }),
+  parentId: integer('parent_id').references((): any => taxonomyTags.id, { onDelete: 'cascade' }),
 });
 
 export const articles = sqliteTable('articles', {

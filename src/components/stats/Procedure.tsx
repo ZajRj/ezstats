@@ -22,7 +22,7 @@ export function StepTable({ step }: { step: Extract<Step, { kind: 'table' }> }) 
   const cell = (r: number, c: number, value: string | number) => {
     const on = hl.has(`${r}:${c}`);
     return (
-      <View key={c} style={[styles.cell, { width: widths[c] }, r % 2 === 1 && styles.cellAlt, on && styles.cellOn]}>
+      <View key={`${r}-${c}`} style={[styles.cell, { width: widths[c] }, r % 2 === 1 && styles.cellAlt, on && styles.cellOn]}>
         <Text style={[styles.cellText, on && styles.cellTextOn]} numberOfLines={1}>
           {value === '' ? ' ' : String(value)}
         </Text>

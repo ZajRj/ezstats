@@ -240,16 +240,19 @@ export function linearRegression(groups: Group[], opts: TestOptions): TestResult
   const F = msr / fit.mse;
   const pF = fDist.sf(F, k, df);
   const fCrit = opts.mode === 'tabla' ? round(fDist.quantile(1 - opts.alpha, k, df), 2) : undefined;
+  const anovaCols = fCrit !== undefined
+    ? ['Fuente', 'SC', 'gl', 'CM', 'F₀', 'Valor p', 'F crítico']
+    : ['Fuente', 'SC', 'gl', 'CM', 'F₀', 'Valor p'];
   steps.push({
     kind: 'table',
     title: 'Tabla ANOVA de la regresión',
-    columns: ['Fuente', 'SC', 'gl', 'CM', 'F₀', fCrit !== undefined ? 'F crítico' : 'p'],
+    columns: anovaCols,
     rows: [
-      ['Regresión', fix(fit.ssr, 4), k, fix(msr, 4), fix(F, 4), fCrit !== undefined ? fix(fCrit, 2) : fmtP(pF)],
-      ['Error', fix(fit.sse, 4), df, fix(fit.mse, 4), '', ''],
-      ['Total', fix(fit.sst, 4), n - 1, '', '', ''],
+      ['Regresión', fix(fit.ssr, 4), k, fix(msr, 4), fix(F, 4), fmtP(pF), ...(fCrit !== undefined ? [fix(fCrit, 2)] : [])],
+      ['Error', fix(fit.sse, 4), df, fix(fit.mse, 4), '', '', ...(fCrit !== undefined ? [''] : [])],
+      ['Total', fix(fit.sst, 4), n - 1, '', '', '', ...(fCrit !== undefined ? [''] : [])],
     ],
-    highlight: [{ row: 0, col: 4 }],
+    highlight: [{ row: 0, col: 4 }, { row: 0, col: 5 }],
   });
   steps.push({
     kind: 'formula',
@@ -336,7 +339,7 @@ export function linearRegression(groups: Group[], opts: TestOptions): TestResult
     statistic: { symbol: 'F₀', value: F },
     df: [k, df],
     criticalValue: fCrit !== undefined ? { value: fCrit, source: `Tabla F con (${k}, ${df}) gl` } : undefined,
-    pValue: opts.mode === 'exacto' ? pF : undefined,
+    pValue: pF,
     decision: comparison.decision,
     conclusion,
     warnings,

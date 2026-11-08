@@ -18,7 +18,7 @@ export default function SegmentedControl({ options, selectedIndex, onChange, com
         const isSelected = index === selectedIndex;
         return (
           <Pressable
-            key={option}
+            key={`${option}-${index}`}
             style={({ pressed }) => [
               styles.segment,
               compact && styles.segmentCompact,

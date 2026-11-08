@@ -11,7 +11,6 @@ export default function TabLayout() {
   const insets = useSafeAreaInsets();
   return (
     <Tabs
-      sceneContainerStyle={{ backgroundColor: 'transparent' }}
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
@@ -34,7 +33,13 @@ export default function TabLayout() {
           fontWeight: '600',
           marginBottom: 4,
         },
-        tabBarButton: (props) => <TouchableOpacity {...props} activeOpacity={0.7} />,
+        tabBarButton: (props: any) => (
+          <TouchableOpacity
+            {...props}
+            delayLongPress={props.delayLongPress ?? undefined}
+            activeOpacity={0.7}
+          />
+        ),
       }}>
       <Tabs.Screen
         name="index"

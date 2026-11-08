@@ -23,7 +23,7 @@ import { tukeyHsd } from './tests/anova/tukeyHsd';
 import { kruskalWallis } from './tests/anova/kruskalWallis';
 import { linearRegression } from './regression/linear';
 import {
-  ANOVA_GROUPS, DATASET_A, DATASET_B, DATASET_C, DATASET_D, REG_MULTIPLE, REG_SIMPLE, RUNS_SEQUENCE,
+  ANOVA_GROUPS, DATASET_A, DATASET_B, DATASET_C, DATASET_D, REG_MULTIPLE, REG_SIMPLE, REG_TELEMETRIA, RUNS_SEQUENCE,
 } from './fixtures';
 
 /** 'regression': first draft is Y, the rest are regressors X₁…Xₖ of equal length. */
@@ -431,6 +431,27 @@ export const TESTS: TestDef[] = [
       formula: 'β̂ = (XᵀX)⁻¹Xᵀy,  F₀ = (SCR/k)/(SCE/(n − k − 1)),  t₀ = β̂ⱼ/√(σ̂²Cⱼⱼ)',
     },
     examples: [
+      {
+        label: 'Telemetría Completo (6 variables: x₁..x₆, n=40)',
+        groups: [
+          g('Latencia', REG_TELEMETRIA.latencia),
+          g('Peticiones (x₁)', REG_TELEMETRIA.peticiones),
+          g('Hilos (x₂)', REG_TELEMETRIA.hilos),
+          g('RAM (x₃)', REG_TELEMETRIA.ram),
+          g('SQL (x₄)', REG_TELEMETRIA.sql),
+          g('CPU (x₅)', REG_TELEMETRIA.cpu),
+          g('Red (x₆)', REG_TELEMETRIA.red),
+        ],
+      },
+      {
+        label: 'Telemetría Enunciado (3 variables: x₃, x₄, x₅)',
+        groups: [
+          g('Latencia', REG_TELEMETRIA.latencia),
+          g('RAM (x₃)', REG_TELEMETRIA.ram),
+          g('SQL (x₄)', REG_TELEMETRIA.sql),
+          g('CPU (x₅)', REG_TELEMETRIA.cpu),
+        ],
+      },
       { label: 'Simple: horas de estudio → nota', groups: [g('Nota', REG_SIMPLE.y), g('Horas', REG_SIMPLE.x)] },
       {
         label: 'Múltiple: cajas y distancia → tiempo',

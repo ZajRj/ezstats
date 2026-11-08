@@ -16,6 +16,7 @@ export interface FreqDataRow {
 
 interface FrequencyTableProps {
   data: FreqDataRow[];
+  isDiscrete?: boolean;
 }
 
 export default function FrequencyTable({ data }: FrequencyTableProps) {
